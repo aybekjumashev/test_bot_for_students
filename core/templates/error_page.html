@@ -1,0 +1,14 @@
+{% extends "base_webapp.html" %} {# Agar base_webapp.html bo'lsa #}
+{% load i18n %}
+{% block title %}{% translate "Xatolik" %}{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">{% translate "Xatolik!" %}</h4>
+        <p>{{ message|default:_("Kechirasiz, kutilmagan xatolik yuz berdi.") }}</p>
+        <hr>
+        <p class="mb-0">{% translate "Iltimos, keyinroq qayta urinib ko'ring yoki bot orqali administratorga murojaat qiling." %}</p>
+    </div>
+    <button onclick="Telegram.WebApp.close();" class="btn btn-secondary">{% translate "Yopish" %}</button>
+</div>
+{% endblock %}

@@ -85,7 +85,7 @@ def start_test_webapp_keyboard(user_id: int, lang_code: str):
     # Domen nomini .env dan oling yoki to'g'ridan-to'g'ri yozing
     # Masalan, WEBAPP_URL="https://seningdomening.com"
     # Til prefiksini qo'shish kerak
-    webapp_url = f"{WEBAPP_BASE_URL}" # URL ni to'g'rilang
+    webapp_url = f"{WEBAPP_BASE_URL}/?startapp={user_id}" # URL ni to'g'rilang
     logger.info(f"Generated WebApp URL: {webapp_url}")
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="🚀 Testni Boshlash", url=webapp_url)]

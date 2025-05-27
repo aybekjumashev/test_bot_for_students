@@ -8,10 +8,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # Boshqa API yoki maxsus yo'llar (til prefiksisiz)
     path('api/tg/', include('tgbot.urls')), # Telegram bot API uchun
+    path('', include('core.urls'))
 ]
 
 urlpatterns += i18n_patterns(
-    path('', include('core.urls')), # Asosiy ilovaning URLlari til prefiksi bilan
     # Boshqa ilovalarning URLlari (agar kerak bo'lsa)
     prefix_default_language=False # Standart til uchun prefiks qo'shmaslik (masalan, /uz/ -> / )
 )

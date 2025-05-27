@@ -1,0 +1,19 @@
+{% extends "base_webapp.html" %}
+{% load i18n %}
+{% block title %}{% translate "Muvaffaqiyatli" %}{% endblock %}
+{% block content %}
+<div class="container mt-5 text-center">
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">{% translate "Tabriklaymiz!" %}</h4>
+        <p>{{ message|default:_("Ma'lumotlaringiz muvaffaqiyatli saqlandi.") }}</p>
+    </div>
+    <p>{% translate "Endi WebApp oynasini yopishingiz mumkin." %}</p>
+    <button onclick="Telegram.WebApp.close();" class="btn btn-primary">{% translate "Yopish va Botga Qaytish" %}</button>
+</div>
+<script>
+    // Avtomatik yopish uchun (ixtiyoriy)
+    // setTimeout(function() {
+    //     Telegram.WebApp.close();
+    // }, 3000); // 3 soniyadan keyin
+</script>
+{% endblock %}

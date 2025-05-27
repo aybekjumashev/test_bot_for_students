@@ -1,0 +1,385 @@
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="{{ request.LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>{% translate "Ro'yxatdan o'tish" %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            padding-top: 1rem;
+            padding-bottom: calc(60px + 1rem); /* MainButton uchun joy */
+            background-color: var(--tg-theme-bg-color, #f8f9fa);
+            color: var(--tg-theme-text-color, #212529);
+            overscroll-behavior-y: contain; /* iOS da orqaga tortishni oldini olish */
+        }
+        .container {
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+        }
+        .form-text {
+            font-size: 0.875em;
+        }
+        .hidden-field {
+            display: none !important;
+        }
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+            border-width: .2em;
+        }
+        #loading-indicator {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: var(--tg-theme-button-color, rgba(0,123,255,0.8));
+            color: var(--tg-theme-button-text-color, white);
+            padding: 5px 10px;
+            border-radius: 5px;
+            z-index: 1000;
+            display: none;
+            font-size: 0.9em;
+        }
+        /* Bootstrapning invalid-feedback stilini d-block qilish uchun */
+        .form-control.is-invalid ~ .invalid-feedback,
+        .form-select.is-invalid ~ .invalid-feedback {
+            display: block;
+        }
+        /* Agar Django xatoni .as_text bilan chiqarsa, uni stilizatsiya qilish */
+        .invalid-feedback ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-indicator">{% translate "Yuklanmoqda..." %}</div>
+    <div class="container pb-3">
+        <h4 class="mb-3 mt-2 text-center">{% translate "Qo'shimcha ma'lumotlarni kiriting" %}</h4>
+
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" id="registrationForm" novalidate> {# novalidate HTML5 validatsiyasini o'chiradi, JS ga topshiramiz #}
+            {% csrf_token %}
+            {{ form.telegram_id_hidden }}
+
+            <div class="mb-3">
+                <label for="{{ form.full_name.id_for_label }}" class="form-label">{{ form.full_name.label }} <span class="text-danger">*</span></label>
+                {{ form.full_name }}
+                {% if form.full_name.help_text %}<div class="form-text">{{ form.full_name.help_text|safe }}</div>{% endif %}
+                {% if form.full_name.errors %}<div class="invalid-feedback">{{ form.full_name.errors }}</div>{% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="{{ form.education_type.id_for_label }}" class="form-label">{{ form.education_type.label }} <span class="text-danger">*</span></label>
+                {{ form.education_type }}
+                {% if form.education_type.errors %}<div class="invalid-feedback">{{ form.education_type.errors }}</div>{% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="{{ form.institution.id_for_label }}" class="form-label">{{ form.institution.label }} <span class="text-danger">*</span></label>
+                {{ form.institution }}
+                {% if form.institution.errors %}<div class="invalid-feedback">{{ form.institution.errors }}</div>{% endif %}
+            </div>
+
+            <div class="mb-3 otm-specific hidden-field" id="education_level_group">
+                <label for="{{ form.education_level.id_for_label }}" class="form-label">{{ form.education_level.label }} <span class="text-danger">*</span></label>
+                {{ form.education_level }}
+                {% if form.education_level.errors %}<div class="invalid-feedback">{{ form.education_level.errors }}</div>{% endif %}
+            </div>
+
+            <div class="mb-3 otm-specific hidden-field" id="faculty_group">
+                <label for="{{ form.faculty.id_for_label }}" class="form-label">{{ form.faculty.label }} <span class="text-danger">*</span></label>
+                {{ form.faculty }}
+                {% if form.faculty.errors %}<div class="invalid-feedback">{{ form.faculty.errors }}</div>{% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="{{ form.course_year.id_for_label }}" class="form-label">{{ form.course_year.label }} <span class="text-danger">*</span></label>
+                {{ form.course_year }}
+                {% if form.course_year.help_text %}<div class="form-text">{{ form.course_year.help_text|safe }}</div>{% endif %}
+                {% if form.course_year.errors %}<div class="invalid-feedback">{{ form.course_year.errors }}</div>{% endif %}
+            </div>
+            
+        </form>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        if (tg) {
+            tg.ready();
+            tg.expand();
+            tg.enableClosingConfirmation(); // Oynani yopishda tasdiq so'rash
+        }
+
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const educationTypeSelect = document.getElementById("{{ form.education_type.id_for_label|escapejs }}");
+        const institutionSelect = document.getElementById("{{ form.institution.id_for_label|escapejs }}");
+        const educationLevelSelect = document.getElementById("{{ form.education_level.id_for_label|escapejs }}");
+        const facultySelect = document.getElementById("{{ form.faculty.id_for_label|escapejs }}");
+
+        const educationLevelGroup = document.getElementById("education_level_group");
+        const facultyGroup = document.getElementById("faculty_group");
+        const registrationForm = document.getElementById('registrationForm');
+
+
+        const currentLang = "{{ request.LANGUAGE_CODE|escapejs }}";
+        // Django loglarida /uz/api/core/... ko'rinayotgan edi. Shuni qoldiramiz.
+        const apiBaseUrl = `/api`;
+
+        let allEducationTypesData = [];
+
+        async function fetchAndPopulate(selectElement, url, params = {}, placeholderText = "{% translate 'Tanlang...' %}") {
+            loadingIndicator.style.display = 'block';
+            selectElement.disabled = true;
+            const originalValue = selectElement.value; // Saqlab qolish uchun
+            selectElement.innerHTML = `<option value="">${placeholderText}</option>`;
+            let fetchedData = [];
+
+            const queryParams = new URLSearchParams(params).toString();
+            const fullUrl = `${url}${queryParams ? '?' + queryParams : ''}`;
+            console.log("Fetching:", fullUrl);
+
+            try {
+                const response = await fetch(fullUrl);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error(`API xatosi ${url} (status ${response.status}):`, errorText);
+                    selectElement.innerHTML = `<option value="">{% translate 'Maʼlumot yuklashda xatolik' %}</option>`;
+                } else {
+                    fetchedData = await response.json();
+                    console.log(`Data for ${selectElement.id}:`, fetchedData);
+                    fetchedData.forEach(item => {
+                        const option = document.createElement("option");
+                        option.value = item.id;
+                        option.textContent = item.name; // Serializer 'name' maydonini qaytaradi
+                        if (item.is_otm !== undefined) {
+                            option.dataset.isOtm = item.is_otm.toString(); // string sifatida saqlash
+                        }
+                        selectElement.appendChild(option);
+                    });
+                    // Agar originalValue mavjud bo'lsa va yangi optionlar orasida bo'lsa, uni tiklash
+                    if (originalValue && Array.from(selectElement.options).some(opt => opt.value == originalValue)) {
+                        selectElement.value = originalValue;
+                    } else if (fetchedData.length === 1 && selectElement.id !== educationTypeSelect.id) {
+                        // Agar faqat bitta option bo'lsa (Tanlang... dan tashqari) va bu educationType emas, avtomatik tanlash
+                        selectElement.value = fetchedData[0].id;
+                        // Avtomatik tanlangandan keyin dependent selectlarni yuklash uchun eventni trigger qilish kerak bo'lishi mumkin
+                        if (selectElement.id === institutionSelect.id) {
+                             await handleInstitutionChange(); // Fakultetni yuklash uchun
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error(`Fetch xatosi ${url}:`, error);
+                selectElement.innerHTML = `<option value="">{% translate 'Server bilan bogʻlanishda xatolik' %}</option>`;
+            } finally {
+                selectElement.disabled = false;
+                loadingIndicator.style.display = 'none';
+            }
+            return fetchedData;
+        }
+
+        function setOTMSpecificFieldsVisibility(isOTM) {
+            console.log("setOTMSpecificFieldsVisibility, isOTM:", isOTM);
+            const fields = [
+                { group: educationLevelGroup, select: educationLevelSelect },
+                { group: facultyGroup, select: facultySelect }
+            ];
+
+            fields.forEach(field => {
+                if (isOTM) {
+                    field.group.classList.remove("hidden-field");
+                    field.select.required = true;
+                } else {
+                    field.group.classList.add("hidden-field");
+                    field.select.required = false;
+                    field.select.value = ""; // Qiymatni tozalash
+                }
+            });
+        }
+
+        async function handleEducationTypeChange() {
+            const typeId = educationTypeSelect.value;
+            console.log("Education Type changed to:", typeId);
+
+            institutionSelect.innerHTML = `<option value="">${typeId ? '{% translate "Yuklanmoqda..." %}' : '{% translate "Avval taʼlim turini tanlang" %}'}</option>`;
+            educationLevelSelect.innerHTML = `<option value="">{% translate 'Avval muassasa turini tanlang' %}</option>`;
+            facultySelect.innerHTML = `<option value="">{% translate 'Avval muassasani tanlang' %}</option>`;
+
+            let isCurrentTypeOTM = false;
+            if (typeId) {
+                const selectedTypeInfo = allEducationTypesData.find(t => String(t.id) === String(typeId));
+                if (selectedTypeInfo) {
+                    isCurrentTypeOTM = selectedTypeInfo.is_otm;
+                    console.log("Selected type is OTM:", isCurrentTypeOTM);
+                } else {
+                    console.warn("Selected education type (ID:", typeId, ") not found in preloaded data:", allEducationTypesData);
+                }
+                await fetchAndPopulate(institutionSelect, `${apiBaseUrl}/institutions/`, { education_type_id: typeId });
+            }
+
+            setOTMSpecificFieldsVisibility(isCurrentTypeOTM);
+
+            if (isCurrentTypeOTM && typeId) {
+                await fetchAndPopulate(educationLevelSelect, `${apiBaseUrl}/education-levels/`);
+            }
+        }
+
+        async function handleInstitutionChange() {
+            const institutionId = institutionSelect.value;
+            console.log("Institution changed to:", institutionId);
+            facultySelect.innerHTML = `<option value="">${institutionId ? '{% translate "Yuklanmoqda..." %}' : '{% translate "Avval muassasani tanlang" %}'}</option>`;
+
+            let isParentTypeOTM = false;
+            const selectedEducationTypeId = educationTypeSelect.value;
+            if (selectedEducationTypeId) {
+                const parentType = allEducationTypesData.find(t => String(t.id) === String(selectedEducationTypeId));
+                if (parentType) {
+                    isParentTypeOTM = parentType.is_otm;
+                }
+            }
+            console.log("Parent type is OTM for institution change:", isParentTypeOTM);
+
+            if (institutionId && isParentTypeOTM) {
+                await fetchAndPopulate(facultySelect, `${apiBaseUrl}/faculties/`, { institution_id: institutionId });
+            } else {
+                facultySelect.innerHTML = `<option value="">${isParentTypeOTM ? '{% translate "Tanlang..." %}' : '{% translate "OTM tanlanganda ochiladi" %}'}</option>`;
+                if (!isParentTypeOTM) facultySelect.value = ""; // Ensure value is cleared
+            }
+        }
+
+        async function initializeForm() {
+            console.log("Initializing form...");
+            allEducationTypesData = await fetchAndPopulate(educationTypeSelect, `${apiBaseUrl}/education-types/`);
+            console.log("All education types data loaded:", allEducationTypesData);
+
+            const initialTypeId = educationTypeSelect.value;
+            console.log("Initial Education Type ID (from Django form):", initialTypeId);
+
+            if (initialTypeId) {
+                const selectedTypeInfo = allEducationTypesData.find(t => String(t.id) === String(initialTypeId));
+                let isInitiallyOTM = false;
+                if (selectedTypeInfo) {
+                    isInitiallyOTM = selectedTypeInfo.is_otm;
+                }
+                console.log("Is initially OTM (based on form value):", isInitiallyOTM);
+                setOTMSpecificFieldsVisibility(isInitiallyOTM);
+
+                // Institution, Education Level, Faculty maydonlarini Django'dan kelgan qiymatlar bilan
+                // va OTM holatiga qarab to'ldirish/yuklash.
+                // `fetchAndPopulate` endi originalValue ni tiklaydi.
+                if (institutionSelect.value || isInitiallyOTM) { // Agar institution tanlangan bo'lsa yoki OTM bo'lsa, institutionlarni yuklash
+                    await fetchAndPopulate(institutionSelect, `${apiBaseUrl}/institutions/`, { education_type_id: initialTypeId });
+                }
+
+                if (isInitiallyOTM) {
+                    await fetchAndPopulate(educationLevelSelect, `${apiBaseUrl}/education-levels/`);
+                    if (institutionSelect.value) { // Faqat institution tanlangan bo'lsa faculty ni yuklash
+                         await fetchAndPopulate(facultySelect, `${apiBaseUrl}/faculties/`, { institution_id: institutionSelect.value });
+                    }
+                }
+            } else {
+                setOTMSpecificFieldsVisibility(false);
+            }
+        }
+
+        // Event Listeners
+        if (educationTypeSelect) educationTypeSelect.addEventListener("change", handleEducationTypeChange);
+        if (institutionSelect) institutionSelect.addEventListener("change", handleInstitutionChange);
+
+        // Telegram WebApp uchun ID ni olish
+        const urlParams = new URLSearchParams(window.location.search);
+        let telegramUserId = urlParams.get('tgWebAppStartParam');
+        if (!telegramUserId && tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
+            // Agar tgWebAppStartParam bo'lmasa, initData dan user.id ni olishga harakat qilish
+            telegramUserId = tg.initDataUnsafe.user.id.toString();
+            console.log("Telegram User ID from initData:", telegramUserId);
+        }
+        if (!telegramUserId && tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
+            // Agar start_param bo'lsa (bu odatda deeplink uchun)
+            telegramUserId = tg.initDataUnsafe.start_param;
+            console.log("Telegram User ID from start_param:", telegramUserId);
+        }
+        if (!telegramUserId) {
+             telegramUserId = "{{ telegram_user_id|default:''|escapejs }}"; // Django contextidan
+             console.log("Telegram User ID from Django context:", telegramUserId);
+        }
+        
+        const hiddenInput = document.querySelector('input[name="telegram_id_hidden"]');
+        if (telegramUserId && telegramUserId !== "None" && telegramUserId !== "") {
+            if (hiddenInput) {
+                hiddenInput.value = telegramUserId;
+            } else {
+                console.warn("Yashirin telegram_id_hidden inputi topilmadi. Dinamik yaratilmoqda.");
+                const newHiddenInput = document.createElement('input');
+                newHiddenInput.type = 'hidden';
+                newHiddenInput.name = 'telegram_id_hidden';
+                newHiddenInput.value = telegramUserId;
+                if (registrationForm) registrationForm.prepend(newHiddenInput);
+            }
+        } else {
+            console.error("KRITIK XATO: Telegram User ID topilmadi! Forma yuborilmaydi.");
+            if (tg && tg.MainButton) tg.MainButton.hide(); // Agar ID bo'lmasa, saqlash tugmasini yashirish
+            // Foydalanuvchiga xabar berish kerak
+            alert("{% translate 'Telegram foydalanuvchi ID si topilmadi. Iltimos, bot orqali qayta kiring.' %}");
+        }
+
+        // Formani yuborishda MainButton spinnerini boshqarish
+        if (registrationForm) {
+            registrationForm.addEventListener('submit', function() {
+                if (tg && tg.MainButton) {
+                    tg.MainButton.showProgress(false); // false = aylanish spinneri
+                    tg.MainButton.disable();
+                }
+            });
+        }
+        
+        // Telegram MainButton ni sozlash
+        if (tg && tg.MainButton && telegramUserId && telegramUserId !== "None" && telegramUserId !== "") {
+            tg.MainButton.setText("{% translate 'Saqlash va Davom Etish' %}");
+            tg.MainButton.onClick(function() {
+                // Formani validatsiya qilish (ixtiyoriy, brauzer o'zi qiladi agar novalidate bo'lmasa)
+                // if (registrationForm.checkValidity()) {
+                //     registrationForm.submit();
+                // } else {
+                //     registrationForm.reportValidity(); // Xatoliklarni ko'rsatish
+                //     tg.MainButton.hideProgress();
+                //     tg.MainButton.enable();
+                // }
+                if (registrationForm) registrationForm.requestSubmit();
+            });
+            tg.MainButton.show();
+        } else if (tg && tg.MainButton) {
+            tg.MainButton.hide(); // Agar ID yo'q bo'lsa tugmani yashirish
+        }
+
+        // Sahifa to'liq yuklangandan so'ng formani initsializatsiya qilish
+        document.addEventListener('DOMContentLoaded', function() {
+            if (educationTypeSelect) { // Element mavjudligini tekshirish
+                 initializeForm();
+            } else {
+                console.error("Education Type Select element topilmadi!");
+            }
+        });
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
