@@ -1,0 +1,86 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django secret keys, environment variables
+.env
+*.env
+
+# macOS
+.DS_Store
+
+# VSCode, PyCharm va boshqa IDElar
+.vscode/
+.idea/
+
+# Virtual environments
+venv/
+env/
+.venv/
+.env/
+
+# SQLite baza fayli (agar sizda mavjud bo‘lsa)
+db.sqlite3
+db.sqlite3-journal
+
+# Django collectstatic fayllari
+/staticfiles_collected/
+
+# Media uploads (agar siz ularni track qilmoqchi bo‘lmasangiz)
+media/
+
+# Migrations cache
+*/migrations/__pycache__/
+*/migrations/*.pyc
+
+# Coverage, testing
+htmlcov/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+
+# MyPy, Pytest, Pylint, Black va boshqa linter/cache fayllari
+.mypy_cache/
+.pytest_cache/
+.tox/
+*.log
+*.pot
+*.pyc
+
+# Local config
+local_settings.py
+
+# Celery beat schedule database
+celerybeat-schedule
+
+# JetBrains IDEs
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Docker
+*.pid
+
+# Logs
+*.log
+
+# Gunicorn
+gunicorn.pid
+
+# NodeJS (agar frontend alohida bo‘lsa)
+node_modules/
+
+# Build files
+build/
+dist/
+*.egg-info/
+
+# Tilda/Figma export
+*.tilda*
+*.fig
