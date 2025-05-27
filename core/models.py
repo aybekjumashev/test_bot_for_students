@@ -296,7 +296,6 @@ class Question(models.Model):
 
 class Test(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='tests', on_delete=models.CASCADE, verbose_name=_("Foydalanuvchi")) # AUTH_USER_MODEL = 'core.User'
-    subject = models.ForeignKey(Subject, related_name='tests', on_delete=models.CASCADE, verbose_name=_("Fan"))
     # `date` -> `started_at` va `completed_at` ga ajratish mumkin
     started_at = models.DateTimeField(default=timezone.now, verbose_name=_("Boshlangan vaqti"))
     completed_at = models.DateTimeField(null=True, blank=True, verbose_name=_("Tugatilgan vaqti"))
@@ -313,7 +312,7 @@ class Test(models.Model):
 
 
     def __str__(self):
-        return f"{self.user} - {self.subject.get_localized_name()} ({self.started_at.strftime('%Y-%m-%d %H:%M')})"
+        return f"{self.user} - {_('Aralash Test')} ({self.started_at.strftime('%Y-%m-%d %H:%M')})"
 
     class Meta:
         verbose_name = _("Test")

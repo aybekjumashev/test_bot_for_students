@@ -100,15 +100,42 @@ class TestQuestionsInline(admin.TabularInline): # Testga qaysi savollar tushgani
 
 @admin.register(Test)
 class TestAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'subject', 'score', 'started_at', 'completed_at', 'voucher_sent')
-    list_filter = ('subject', 'voucher_sent', 'started_at')
-    search_fields = ('user__full_name', 'user__telegram_id', 'subject__name_uz', 'voucher_code')
-    readonly_fields = ('started_at', 'completed_at', 'questions') # Testdagi savollarni o'zgartirib bo'lmaydi
-    autocomplete_fields = ['user', 'subject']
-    # inlines = [TestQuestionsInline] # Agar Testdagi savollarni inline ko'rsatmoqchi bo'lsangiz
-                                    # Bu M2M 'questions' uchun alohida admin interfeys yaratadi.
-                                    # Yoki Test modelida 'questions' ni readonly qilib qo'yish mumkin.
+    list_display = ('id', 'user', 'get_test_description', 'score', 'started_at', 'completed_at', 'voucher_sent') # 'subject' o'rniga 'get_test_description'
+    list_filter = ('voucher_sent', 'started_at', 'user') # 'subject' olib tashlandi, 'user' qo'shilishi mumkin
+    search_fields = ('user__full_name', 'user__telegram_id', 'voucher_code', 'id') # 'subject__name_uz' olib tashlandi
+    readonly_fields = ('started_at', 'completed_at', 'get_questions_display') # 'questions' o'rniga 'get_questions_display'
+    autocomplete_fields = ['user'] # 'subject' olib tashlandi
+    # inlines = [TestQuestionsInline] # Agar savollarni inline ko'rsatmoqchi bo'lsangiz
+
+    fieldsets = (
+        (None, {'fields': ('user', 'score', 'voucher_sent', 'voucher_code')}),
+        (_("Vaqt belgilari"), {'fields': ('started_at', 'completed_at', 'time_spent_seconds')}),
+        (_("Test Savollari"), {'fields': ('get_questions_display',)}), # Savollarni ko'rsatish uchun
+    )
 
     def get_queryset(self, request):
-        # User va Subject ni oldindan yuklash (optimallashtirish)
-        return super().get_queryset(request).select_related('user', 'subject')
+        return super().get_queryset(request).select_related('user') # 'subject' olib tashlandi
+
+    def get_test_description(self, obj):
+        # Test qaysi fanlarni o'z ichiga olganini ko'rsatish (agar kerak bo'lsa)
+        # Bu sekin ishlashi mumkin, agar savollar ko'p bo'lsa
+        # Yaxshiroq yechim - Test modeliga qaysi fanlardan ekanligini saqlash (masalan, M2M bilan)
+        # Hozircha, birinchi bir nechta savolning fanlarini ko'rsatamiz yoki "Aralash Test" deymiz
+        # questions_qs = obj.questions.all().select_related('subject')[:3] # Birinchi 3 savol
+        # if questions_qs:
+        #     subject_names = list(set([q.subject.get_localized_name() for q in questions_qs]))
+        #     return ", ".join(subject_names) + ("..." if obj.questions.count() > 3 else "")
+        return _("Aralash Test") # Yoki obj.__str__() dan foydalanish
+    get_test_description.short_description = _("Test Tavsifi")
+
+    def get_questions_display(self, obj):
+        # Testdagi savollarni admin panelda chiroyli ko'rsatish uchun
+        from django.utils.html import format_html
+        questions_html = "<ul>"
+        for question in obj.questions.all()[:15]: # Ko'p bo'lsa, birinchi 15 tasini ko'rsatish
+            questions_html += f"<li>{question.id}: {question.subject.get_localized_name()} ({question.correct_answer})</li>"
+        questions_html += "</ul>"
+        if obj.questions.count() > 15:
+            questions_html += f"<p>{_('va yana')} {obj.questions.count() - 15} {_('ta savol...')}</p>"
+        return format_html(questions_html)
+    get_questions_display.short_description = _("Test Savollari")

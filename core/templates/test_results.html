@@ -1,0 +1,114 @@
+{% extends "base_webapp.html" %}
+{% load i18n static %}
+{% block title %}{% translate "Test Natijalari" %}{% endblock %}
+
+{% block head_extra %}
+<style>
+    .result-correct { color: var(--tg-theme-accent-text-color, green); } /* Yoki boshqa yashil rang */
+    .result-incorrect { color: var(--tg-theme-destructive-text-color, red); }
+    .result-missed { color: orange; }
+    #detailed-results-container img { max-width: 100%; height: auto; margin-bottom: 10px; }
+    .question-preview {
+        border: 1px solid #eee;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-3 mb-5">
+    <div class="card shadow-sm">
+        <div class="card-header text-center">
+            <h4>{% translate "Sizning Test Natijangiz" %}</h4>
+        </div>
+        <div class="card-body">
+            <p class="lead text-center">
+                {% translate "Foydalanuvchi" %}: <strong>{{ user.full_name|default:user.telegram_id }}</strong>
+            </p>
+            <hr>
+            <h3 class="text-center {% if percentage_correct >= 80 %}text-success{% elif percentage_correct >= 50 %}text-primary{% else %}text-danger{% endif %}">
+                {% blocktranslate with score=correct_answers_count total=total_questions %}
+                {{ score }} / {{ total }}
+                {% endblocktranslate %}
+                ({{ percentage_correct }}%)
+            </h3>
+            <p class="text-center text-muted">
+                ({% translate "Sarflangan vaqt" %}: {{ test.time_spent_seconds|default:0 }} {% translate "sekund" %})
+            </p>
+
+            {% if voucher_type %}
+            <div class="alert alert-success text-center mt-3">
+                <h5>🎉 {% translate "Tabriklaymiz!" %} 🎉</h5>
+                <p>
+                {% blocktranslate trimmed with amount=voucher_amount_text %}
+                Siz {{ amount }} voucher yutib oldingiz!
+                {% endblocktranslate %}
+                </p>
+                {% if voucher_code %}
+                <p>{% translate "Voucher kodingiz" %}: <strong>{{ voucher_code }}</strong></p>
+                {% endif %}
+                <small>{% translate "Voucher tez orada Telegram orqali yuboriladi." %}</small>
+            </div>
+            {% else %}
+            <div class="alert alert-info text-center mt-3">
+                <p>{% translate "Yaxshi harakat! Keyingi safar omad tilaymiz." %}</p>
+            </div>
+            {% endif %}
+
+            <div class="mt-4">
+                <button class="btn btn-outline-info w-100" type="button" data-bs-toggle="collapse" data-bs-target="#detailedResultsCollapse" aria-expanded="false" aria-controls="detailedResultsCollapse">
+                    <i class="bi bi-card-list"></i> {% translate "Batafsil Natijalarni Ko'rish" %}
+                </button>
+            </div>
+
+            <div class="collapse mt-3" id="detailedResultsCollapse">
+                <h5>{% translate "Javoblaringiz:" %}</h5>
+                {% for result_item in detailed_results %}
+                <div class="question-preview">
+                    <p><strong>{{ result_item.question_text_preview }}</strong></p>
+                    <p>
+                        {% translate "Sizning javobingiz" %}:
+                        <span class="fw-bold 
+                            {% if not result_item.user_answer %}result-missed
+                            {% elif result_item.is_correct %}result-correct
+                            {% else %}result-incorrect{% endif %}">
+                            {{ result_item.user_answer|upper|default:_("Javob berilmagan") }}
+                        </span>
+                        {% if not result_item.is_correct and result_item.user_answer %}
+                            <br> {% translate "To'g'ri javob" %}: <span class="fw-bold result-correct">{{ result_item.correct_answer|upper }}</span>
+                        {% endif %}
+                    </p>
+                    {% if result_item.question_file_url %}
+                        {# Bu yerda savolni ko'rsatish uchun mammoth bilan HTML generatsiya qilib ko'rsatish kerak #}
+                        {# Hozircha faqat yuklab olish linki #}
+                        {# <a href="{{ result_item.question_file_url }}" target="_blank">Savolni ko'rish (DOCX)</a> #}
+                        {# Yoki AJAX orqali DOCXni HTMLga o'girib ko'rsatish #}
+                    {% endif %}
+                </div>
+                {% empty %}
+                <p>{% translate "Batafsil natijalar mavjud emas." %}</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="card-footer text-center">
+             <button onclick="Telegram.WebApp.close();" class="btn btn-secondary">
+                <i class="bi bi-x-circle"></i> {% translate "Yopish" %}
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script>
+    // Agar WebAppni yopishdan oldin biror narsa qilish kerak bo'lsa
+    // const tg = window.Telegram.WebApp;
+    // if (tg) {
+    //     // Masalan, natijalar ko'rsatilgandan keyin botga xabar yuborish
+    //     // tg.sendData(JSON.stringify({event: 'test_completed', score: {{ correct_answers_count }} }));
+    // }
+</script>
+{% endblock %}

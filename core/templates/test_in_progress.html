@@ -1,0 +1,266 @@
+{% extends "base_webapp.html" %}
+{% load i18n static %}
+{% block title %}{% translate "Test Jarayonida" %}{% endblock %}
+
+{% block head_extra %}
+<style>
+    #question-container img { max-width: 100%; height: auto; }
+    .answer-options .btn-check:checked + .btn-outline-primary {
+        background-color: var(--tg-theme-button-color, #0d6efd);
+        color: var(--tg-theme-button-text-color, white);
+        border-color: var(--tg-theme-button-color, #0d6efd);
+    }
+    .timer-highlight { color: var(--tg-theme-destructive-text-color, red); font-weight: bold; }
+    #timer-display { font-size: 1.2em; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="loading-indicator">{% translate "Yuklanmoqda..." %}</div>
+<div class="container mt-3 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 id="question-counter" class="mb-0">
+            {% blocktranslate with current=question_number total=total_questions %}
+            Savol {{ current }}/{{ total }}
+            {% endblocktranslate %}
+        </h5>
+        <div id="timer-display" class="text-primary">
+            <i class="bi bi-stopwatch"></i> <span id="time">--:--</span>
+        </div>
+    </div>
+
+    <div class="progress mb-3" style="height: 5px;">
+        <div id="progress-bar" class="progress-bar" role="progressbar" style="width: {% widthratio question_number total_questions 100 %}%;" aria-valuenow="{{ question_number }}" aria-valuemin="0" aria-valuemax="{{ total_questions }}"></div>
+    </div>
+
+    <div id="question-area" class="card shadow-sm">
+        <div class="card-body">
+            <div id="question-container">
+                {{ question_html|safe }}
+            </div>
+            <hr>
+            <input type="hidden" id="current-question-id" value="{{ current_question.id }}">
+            <div class="answer-options btn-group w-100 mb-2" role="group" aria-label="Javob variantlari">
+                {% for choice_val, choice_disp in current_question.ANSWER_CHOICES %}
+                <input type="radio" class="btn-check answer-radio" name="answer" id="answer_{{ choice_val }}" value="{{ choice_val }}" autocomplete="off" {% if previous_answer == choice_val %}checked{% endif %}>
+                <label class="btn btn-outline-primary" for="answer_{{ choice_val }}">{{ choice_disp }}</label>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between mt-3 fixed-bottom bg-light p-3 border-top">
+        <button id="prev-question-btn" class="btn btn-outline-secondary" {% if question_number == 1 %}disabled{% endif %}>
+            <i class="bi bi-arrow-left"></i> {% translate "Oldingi" %}
+        </button>
+        <button id="next-question-btn" class="btn btn-primary">
+            {% translate "Keyingi" %} <i class="bi bi-arrow-right"></i>
+        </button>
+        <button id="submit-test-btn" class="btn btn-success" style="display: none;">
+            <i class="bi bi-check2-circle"></i> {% translate "Testni Yakunlash" %}
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script>
+    const tg = window.Telegram.WebApp;
+    if (tg) {
+        tg.BackButton.hide(); // Orqaga qaytish tugmasini yashirish
+        tg.MainButton.hide(); // Asosiy tugmani yashirish (biz o'zimiznikini ishlatamiz)
+    }
+
+    const questionContainer = document.getElementById('question-container');
+    const questionCounter = document.getElementById('question-counter');
+    const currentQuestionIdInput = document.getElementById('current-question-id');
+    const answerRadios = document.querySelectorAll('.answer-radio');
+    const progressBar = document.getElementById('progress-bar');
+
+    const prevBtn = document.getElementById('prev-question-btn');
+    const nextBtn = document.getElementById('next-question-btn');
+    const submitBtn = document.getElementById('submit-test-btn');
+    const loadingIndicator = document.getElementById('loading-indicator');
+
+    const timeDisplay = document.getElementById('time');
+    const initialTimeLimitMinutes = {{ time_limit_minutes }}; // Django'dan
+    let timeLeftSeconds = initialTimeLimitMinutes * 60;
+    let timerInterval;
+    let testStartTime = Date.now();
+
+    let currentQuestionNumber = {{ question_number }};
+    let totalQuestions = {{ total_questions }};
+
+    function updateQuestionDisplay(data) {
+        console.log("updateQuestionDisplay called with data:", data);
+        questionContainer.innerHTML = data.question_html;
+        currentQuestionIdInput.value = data.question_id;
+        questionCounter.textContent = `{% translate "Savol" %} ${data.question_number}/${data.total_questions}`;
+        
+        progressBar.style.width = `${(data.question_number / data.total_questions) * 100}%`;
+        progressBar.setAttribute('aria-valuenow', data.question_number);
+
+        currentQuestionNumber = data.question_number; // Global o'zgaruvchini yangilash
+
+        // Radio buttonlarni tozalash va oldingi javobni belgilash
+        answerRadios.forEach(radio => {
+            radio.checked = (radio.value === data.previous_answer);
+        });
+
+        prevBtn.disabled = data.is_first;
+        nextBtn.style.display = data.is_last ? 'none' : 'inline-block';
+        submitBtn.style.display = data.is_last ? 'inline-block' : 'none';
+    }
+
+    async function navigateQuestion(action) {
+        console.log("navigateQuestion called with action:", action);
+        const currentQId = currentQuestionIdInput.value;
+        let selectedAnswer = null;
+        document.querySelectorAll('input[name="answer"]:checked').forEach(radio => {
+            selectedAnswer = radio.value;
+        });
+
+        // Agar keyingi tugmasi bosilsa va javob berilmagan bo'lsa, 'next_unanswered' jo'natamiz
+        let effectiveAction = action;
+        if (action === 'next' && !selectedAnswer) {
+            effectiveAction = 'next_unanswered';
+        }
+
+        console.log("Sending action:", effectiveAction, "for QID:", currentQId, "Answer:", selectedAnswer);
+
+        const formData = new FormData();
+        formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+        formData.append('question_id', currentQId);
+        if (selectedAnswer) { // Faqat javob bor bo'lsa qo'shish
+            formData.append('answer', selectedAnswer);
+        }
+        formData.append('action', effectiveAction);
+        for (var pair of formData.entries()) { // FormData tarkibini ko'rish
+            console.log("FormData entry:", pair[0]+ ': ' + pair[1]);
+        }
+
+        try {
+            loadingIndicator.style.display = 'block';
+            const response = await fetch("{% url 'core:test_in_progress' %}", {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest' // Agar kerak bo'lsa
+                }
+            });
+            const data = await response.json();
+            loadingIndicator.style.display = 'none';
+
+            if (data.success) {
+                if (data.finished) { // Agar server 'finished: true' qaytarsa (barcha savollar tugagan)
+                    console.log("All questions answered or end reached.");
+                    nextBtn.style.display = 'none';
+                    submitBtn.style.display = 'inline-block';
+                    prevBtn.disabled = (currentQuestionNumber <= 1); // Agar oxirgi savolda bo'lsa, orqaga qaytish mumkin
+                    if (data.message) alert(data.message); // "Barcha savollarga javob berildi..."
+                    // Agar data.redirect_url bo'lsa, o'sha yerga o'tish
+                    if (data.redirect_url) {
+                        window.location.href = data.redirect_url;
+                    }
+                } else {
+                    updateQuestionDisplay(data);
+                }
+            } else {
+                console.error("Navigatsiya xatosi:", data.error);
+                alert("{% translate 'Xatolik yuz berdi:' %} " + (data.error || "{% translate 'Nomaʼlum xato.' %}"));
+            }
+        } catch (error) {
+            loadingIndicator.style.display = 'none';
+            console.error("Fetch xatosi (navigatsiya):", error);
+            alert("{% translate 'Server bilan bogʻlanishda xatolik.' %}");
+        }
+    }
+
+    function submitTest() {
+        if (!confirm("{% translate 'Testni yakunlashga ishonchingiz komilmi?' %}")) {
+            return;
+        }
+        clearInterval(timerInterval); // Taymerni to'xtatish
+
+        const timeSpentSeconds = Math.floor((Date.now() - testStartTime) / 1000);
+
+        const formData = new FormData();
+        formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+        // Oxirgi savolning javobini ham qo'shish (agar tanlangan bo'lsa)
+        const lastQuestionId = currentQuestionIdInput.value;
+        let lastAnswer = null;
+        document.querySelectorAll('input[name="answer"]:checked').forEach(radio => {
+            lastAnswer = radio.value;
+        });
+        if (lastQuestionId && lastAnswer) {
+             formData.append('question_id', lastQuestionId); // Muhim emas, lekin yuborish mumkin
+             formData.append('answer', lastAnswer);
+        }
+        formData.append('action', 'submit_test');
+        formData.append('time_spent', timeSpentSeconds);
+
+
+        loadingIndicator.style.display = 'block';
+        fetch("{% url 'core:test_in_progress' %}", { // Yoki alohida /submit-test/ URL
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            loadingIndicator.style.display = 'none';
+            console.log("Server response data:", data);
+            if (data.success && data.redirect_url) {
+                window.location.href = data.redirect_url;
+            } else {
+                console.error("Testni yakunlashda xatolik:", data.error);
+                alert("{% translate 'Testni yakunlashda xatolik yuz berdi.' %}");
+            }
+        })
+        .catch(error => {
+            loadingIndicator.style.display = 'none';
+            console.error("Fetch xatosi (yakunlash):", error);
+            alert("{% translate 'Server bilan bogʻlanishda xatolik.' %}");
+        });
+    }
+
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            timeLeftSeconds--;
+            const minutes = Math.floor(timeLeftSeconds / 60);
+            const seconds = timeLeftSeconds % 60;
+            timeDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+            if (timeLeftSeconds <= 0) {
+                clearInterval(timerInterval);
+                alert("{% translate 'Vaqt tugadi! Test avtomatik yakunlanadi.' %}");
+                submitTest();
+            } else if (timeLeftSeconds <= 60) { // Oxirgi 1 daqiqa
+                timeDisplay.classList.add('timer-highlight');
+            }
+        }, 1000);
+    }
+
+    // Event Listeners
+    if (prevBtn) prevBtn.addEventListener('click', () => navigateQuestion('prev'));
+    if (nextBtn) {
+        console.log("Next button event listener attached.");
+        nextBtn.addEventListener('click', () => {
+            console.log("Next button clicked!"); // BOSILGANINI TEKSHIRISH
+            navigateQuestion('next');
+        });
+    } else {
+        console.error("Next button not found!");
+    }
+    if (submitBtn) submitBtn.addEventListener('click', submitTest);
+
+    // Sahifa yuklanganda taymerni boshlash va dastlabki holatni sozlash
+    document.addEventListener('DOMContentLoaded', function() {
+        startTimer();
+        // Dastlabki tugmalar holati
+        prevBtn.disabled = (currentQuestionNumber <= 1);
+        nextBtn.style.display = (currentQuestionNumber >= totalQuestions) ? 'none' : 'inline-block';
+        submitBtn.style.display = (currentQuestionNumber >= totalQuestions) ? 'inline-block' : 'none';
+    });
+
+</script>
+{% endblock %}

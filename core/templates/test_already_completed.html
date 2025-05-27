@@ -1,0 +1,13 @@
+{% extends "base_webapp.html" %}
+{% load i18n %}
+{% block title %}{% translate "Test Topshirilgan" %}{% endblock %}
+{% block content %}
+<div class="container mt-5 text-center">
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">{% translate "Ma'lumot!" %}</h4>
+        <p>{% translate "Siz allaqachon test topshirgansiz." %}</p>
+        {# Bu yerda natijani ko'rsatish yoki boshqa harakatlar bo'lishi mumkin #}
+    </div>
+    <button onclick="Telegram.WebApp.close();" class="btn btn-secondary">{% translate "Yopish" %}</button>
+</div>
+{% endblock %}
