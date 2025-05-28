@@ -19,6 +19,12 @@ from .serializers import (
 )
 from django.http import JsonResponse, Http404 # JsonResponse va Http404
 from .utils import convert_docx_to_html # Avval yaratgan utils.py dan
+from tgbot.utils import send_test_result_to_user
+import logging
+import os
+from asgiref.sync import async_to_sync
+logger = logging.getLogger(__name__)
+
 
 class UserRegistrationInfoFormView(View):
     form_class = UserRegistrationInfoForm
@@ -401,24 +407,22 @@ class TestInProgressView(View):
 
 
 class SubmitTestView(View):
-    template_name = 'test_results.html'
+    template_name = 'test_results.html' # Shablon nomini to'g'riladim
 
-    @transaction.atomic # Ma'lumotlar bazasiga yozish atomik bo'lishi uchun
-    def get(self, request, *args, **kwargs): # POST o'rniga GET, chunki TestInProgressView redirect qiladi
+    @transaction.atomic
+    def get(self, request, *args, **kwargs):
         test_id = request.session.get('current_test_id')
         user_answers_session = request.session.get(f'test_{test_id}_answers', {})
         time_spent_str = request.session.get('time_spent_on_test', '0')
         
-        # Test submit qilinganligini tekshirish (qayta submit qilishni oldini olish uchun)
         if not request.session.get('test_submitted_for_processing', False):
+            # ... (avvalgidek) ...
             messages.warning(request, _("Test hali yakunlanmagan yoki allaqachon qayta ishlangan."))
-            # Foydalanuvchini qayergadir yo'naltirish, masalan, tayyorgarlik sahifasiga
-            # Bu yerda user_id ni olish kerak bo'ladi
-            # return redirect(reverse('core:prepare_test') + f'?user_tg_id={request.user.telegram_id}') # Agar request.user mavjud bo'lsa
-            return redirect(reverse('core:some_error_page')) # Yoki xatolik sahifasiga
+            return redirect(reverse('core:some_error_page'))
 
 
         if not test_id:
+            # ... (avvalgidek) ...
             messages.error(request, _("Test ID si topilmadi. Natijalarni ko'rsatib bo'lmaydi."))
             return redirect(reverse('core:some_error_page'))
 
@@ -428,23 +432,21 @@ class SubmitTestView(View):
             if user.language_code:
                 activate(user.language_code)
         except Test.DoesNotExist:
+            # ... (avvalgidek) ...
             messages.error(request, _("Test topilmadi."))
             return redirect(reverse('core:some_error_page'))
 
-        # Agar test allaqachon yakunlangan bo'lsa (score mavjud bo'lsa), shunchaki natijani ko'rsatish
         if test_instance.score is not None and test_instance.completed_at is not None:
-            messages.info(request, _("Bu test natijalari allaqachon saqlangan."))
-            # Natijalar sahifasini qayta render qilish kerak bo'ladi
-            # context = self.prepare_results_context(test_instance, user_answers_session) # Bu funksiyani yaratish kerak
-            # return render(request, self.template_name, context)
-            # Hozircha sodda qilamiz, agar score bo'lsa, boshqa xabar
+            # ... (avvalgidek) ...
+            # Agar test allaqachon qayta ishlangan bo'lsa va voucher yuborilgan bo'lsa,
+            # shunchaki natijalar sahifasini context bilan render qilish yaxshiroq.
+            # Hozircha HttpResponse qoldiramiz, keyin yaxshilaymiz.
             return HttpResponse(f"Test {test_id} allaqachon yakunlangan. Natija: {test_instance.score}")
 
 
-        # Natijalarni hisoblash
         correct_answers_count = 0
         test_questions = test_instance.questions.all()
-        detailed_results = [] # Har bir savol uchun natijani saqlash
+        detailed_results = []
 
         for question in test_questions:
             user_answer = user_answers_session.get(str(question.id))
@@ -453,89 +455,88 @@ class SubmitTestView(View):
                 correct_answers_count += 1
             detailed_results.append({
                 'question_id': question.id,
-                'question_text_preview': f"{question.subject.get_localized_name()} - Savol {question.id}", # Haqiqiy matn o'rniga
+                'question_text_preview': "%s - %s %s" % (question.subject.get_localized_name(),_('Savol'),question.id),
                 'user_answer': user_answer,
                 'correct_answer': question.correct_answer,
                 'is_correct': is_correct,
-                'question_file_url': question.question_file.url if question.question_file else None # DOCXni yuklab olish uchun
+                'question_file_url': question.question_file.url if question.question_file else None
             })
         
-        # Test obyektini yangilash
         test_instance.score = correct_answers_count
         test_instance.completed_at = timezone.now()
         try:
             test_instance.time_spent_seconds = int(time_spent_str)
         except ValueError:
-            test_instance.time_spent_seconds = 0 # Agar xatolik bo'lsa
+            test_instance.time_spent_seconds = 0
         
-        # Voucher logikasi (soddalashtirilgan)
-        total_q_count = test_questions.count() if test_questions else 1 # 0 ga bo'lishni oldini olish
+        total_q_count = test_questions.count() if test_questions.exists() else 1 # exists() bilan tekshirish yaxshiroq
         percentage_correct = (correct_answers_count / total_q_count) * 100 if total_q_count > 0 else 0
         
         voucher_type = None
         voucher_amount_text = ""
-        voucher_image_postfix = "3" # Standart (50k)
+        voucher_image_postfix = "3"
 
-        # Bu shartlar eski loyihadagidek
-        if correct_answers_count == total_q_count and total_q_count > 0 : # Barchasi to'g'ri
-            voucher_type = "gold"
-            voucher_amount_text = _("250 000 so'mlik")
-            voucher_image_postfix = "1"
-        elif correct_answers_count >= (total_q_count / 2) and total_q_count > 0: # Kamida yarmi to'g'ri (50%)
-             # Yoki eski loyihadagidek 5 ta
-            # if correct_answers_count >= 5:
-            voucher_type = "silver"
-            voucher_amount_text = _("100 000 so'mlik")
-            voucher_image_postfix = "2"
-        elif total_q_count > 0 : # Agar testda savol bo'lsa, eng kamida bitta voucher
-            voucher_type = "bronze"
-            voucher_amount_text = _("50 000 so'mlik")
-            voucher_image_postfix = "3"
+        if total_q_count > 0: # Faqat agar savollar bo'lsa voucher beriladi
+            if correct_answers_count == total_q_count:
+                voucher_type = "gold"
+                voucher_amount_text = _("250 000 so'mlik")
+                voucher_image_postfix = "1"
+            elif correct_answers_count >= (total_q_count / 2): # Yoki >= 5 sharti
+                voucher_type = "silver"
+                voucher_amount_text = _("100 000 so'mlik")
+                voucher_image_postfix = "2"
+            else: # Qolgan barcha holatlar (0 dan (yarmi-1) gacha to'g'ri javob)
+                voucher_type = "bronze"
+                voucher_amount_text = _("50 000 so'mlik")
+                voucher_image_postfix = "3"
+        else: # Agar testda savol bo'lmasa (bu holat bo'lmasligi kerak)
+            voucher_amount_text = _("0 so'mlik") # Yoki boshqa xabar
 
-        # Haqiqiy voucher rasmini generatsiya qilish va yuborish keyingi qadamlarda
-        # Hozircha test_instance ga saqlaymiz
         if voucher_type:
-            test_instance.voucher_code = f"VC{timezone.now().strftime('%Y%m%d')}{test_instance.id}{random.randint(100,999)}"
-            # test_instance.voucher_sent = True # Bu telegramga yuborilgandan keyin True bo'ladi
-
+            test_instance.voucher_code = f"IBT{timezone.now().strftime('%y%m%d%H%M')}{test_instance.id}{random.randint(10,99)}"
+        
+        # test_instance ni birinchi marta saqlash (voucher_code bilan, voucher_sent hali False)
         test_instance.save()
+        logger.info(f"Test {test_id} natijalari saqlandi. Hisob: {test_instance.score}, Voucher kodi: {test_instance.voucher_code}")
 
-        # Telegramga xabar yuborish (keyinroq)
-        # try:
-        #     # Fan nomini aniqlash (aralash test uchun bu murakkabroq)
-        #     # Hozircha "Aralash Test" deymiz
-        #     # subject_name_for_voucher = _("Aralash Test")
-        #     # Agar testda faqat bitta fandan savollar bo'lsa (bu holat bo'lmasligi kerak)
-        #     # unique_subjects = list(set(q.subject for q in test_questions))
-        #     # if len(unique_subjects) == 1:
-        #     #     subject_name_for_voucher = unique_subjects[0].get_localized_name()
-        #     # Yoki Subject modelidagi voucher_template_name dan foydalanish
-        #     # Bu aralash test uchun mos kelmaydi. Umumiy voucher shabloni kerak.
-        #
-        #     # image_path_template = f'static/vouchers/VoucherUmumiy{voucher_image_postfix}.jpg' # Yoki fanga bog'liq
-        #     # voucher_image_bytes = get_photo(
-        #     #     fullname=user.full_name,
-        #     #     date=(timezone.now() + timezone.timedelta(weeks=1)).strftime("%d.%m.%Y"),
-        #     #     path=image_path_template, # Bu static faylga yo'l bo'lishi kerak
-        #     #     num=test_instance.voucher_code,
-        #     #     subjectname="" # Aralash test uchun bo'sh
-        #     # )
-        #     # if voucher_image_bytes:
-        #     #     send_test_result_to_telegram(
-        #     #         user_telegram_id=user.telegram_id,
-        #     #         user_fullname=user.full_name,
-        #     #         subject_name_display=subject_name_for_voucher,
-        #     #         score=correct_answers_count,
-        #     #         total_questions=total_q_count,
-        #     #         voucher_amount_text=voucher_amount_text,
-        #     #         voucher_code=test_instance.voucher_code,
-        #     #         image_bytes=voucher_image_bytes
-        #     #     )
-        #     #     test_instance.voucher_sent = True
-        #     #     test_instance.save(update_fields=['voucher_sent'])
-        # except Exception as e:
-        #     logger.error(f"Error sending result to Telegram for test {test_id}: {e}")
-        #     # Bu xatolik foydalanuvchiga ko'rsatilmasligi kerak
+        # Telegramga xabar yuborish
+        message_was_sent_to_user = False
+        if user.telegram_id and voucher_type: # Faqat telegram_id va voucher_type mavjud bo'lsa
+            logger.info(f"Telegramga yuborish boshlandi: User {user.telegram_id}, Voucher {voucher_type}")
+            try:
+                admin_tg_chat_id_str = os.getenv('ADMIN_TELEGRAM_CHAT_ID')
+                admin_tg_chat_id = int(admin_tg_chat_id_str) if admin_tg_chat_id_str and admin_tg_chat_id_str.lstrip('-').isdigit() else None
+                if admin_tg_chat_id:
+                    logger.info(f"Admin chat ID: {admin_tg_chat_id}")
+                else:
+                    logger.warning("ADMIN_TELEGRAM_CHAT_ID topilmadi yoki yaroqsiz.")
+
+                message_was_sent_to_user = async_to_sync(send_test_result_to_user)(
+                    user_telegram_id=int(user.telegram_id), # Int ga o'tkazish
+                    user_fullname=user.full_name or str(user.telegram_id),
+                    score=correct_answers_count,
+                    total_questions=total_q_count,
+                    voucher_amount_text=str(voucher_amount_text), # str() ga o'tkazish (__proxy__ bo'lishi mumkin)
+                    voucher_code=test_instance.voucher_code,
+                    voucher_image_postfix=voucher_image_postfix,
+                    admin_chat_id=admin_tg_chat_id
+                )
+                logger.info(f"Telegramga yuborish statusi (user {user.telegram_id}): {message_was_sent_to_user}")
+
+                if message_was_sent_to_user:
+                    test_instance.voucher_sent = True
+                    test_instance.save(update_fields=['voucher_sent'])
+                    logger.info(f"Test {test_id} uchun voucher_sent=True qilib saqlandi.")
+                else:
+                    logger.error(f"Test {test_id} uchun Telegramga xabar YUBORILMADI (send_test_result_to_user False qaytardi).")
+
+            except Exception as e:
+                logger.error(f"SubmitTestView: Telegramga xabar yuborishda KRITIK xatolik (test {test_id}): {e}", exc_info=True)
+        elif not user.telegram_id:
+            logger.warning(f"Test {test_id} uchun foydalanuvchining telegram_id si yo'q.")
+        elif not voucher_type:
+             logger.info(f"Test {test_id} uchun voucher berilmadi (voucher_type None). Telegramga yuborilmadi.")
+
 
         context = {
             'test': test_instance,
@@ -544,10 +545,11 @@ class SubmitTestView(View):
             'total_questions': total_q_count,
             'percentage_correct': round(percentage_correct, 1),
             'detailed_results': detailed_results,
-            'user_answers_session': user_answers_session, # Qayta ko'rsatish uchun
+            'user_answers_session': user_answers_session,
             'voucher_type': voucher_type,
-            'voucher_amount_text': voucher_amount_text,
+            'voucher_amount_text': voucher_amount_text, # Bu endi string bo'lishi kerak
             'voucher_code': test_instance.voucher_code,
+            'voucher_sent_to_telegram': message_was_sent_to_user,
         }
 
         # Sessiondagi testga oid ma'lumotlarni tozalash
@@ -555,7 +557,8 @@ class SubmitTestView(View):
         request.session.pop('current_question_index', None)
         request.session.pop(f'test_{test_id}_answers', None)
         request.session.pop('time_spent_on_test', None)
-        request.session.pop('test_submitted_for_processing', None) # Muhim!
+        request.session.pop('test_submitted_for_processing', None)
         request.session.modified = True
+        logger.info(f"Test {test_id} uchun session ma'lumotlari tozalandi.")
 
         return render(request, self.template_name, context)

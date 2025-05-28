@@ -286,7 +286,8 @@ class Question(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{_('Savol')} #{self.id} ({self.subject.get_localized_name()})"
+        return "%s #%s (%s)" % (_('Savol'), self.id, self.subject.get_localized_name())
+
 
     class Meta:
         verbose_name = _("Savol")
@@ -312,7 +313,11 @@ class Test(models.Model):
 
 
     def __str__(self):
-        return f"{self.user} - {_('Aralash Test')} ({self.started_at.strftime('%Y-%m-%d %H:%M')})"
+        return "%s - %s (%s)" % (
+            self.user,
+            _('Aralash Test'),
+            self.started_at.strftime('%Y-%m-%d %H:%M')
+        )
 
     class Meta:
         verbose_name = _("Test")

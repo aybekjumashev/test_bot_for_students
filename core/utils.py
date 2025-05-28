@@ -4,6 +4,7 @@ from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 from django.conf import settings
 import os
+from django.contrib.staticfiles import finders
 
 def convert_docx_to_html(docx_file_field):
     """
@@ -24,83 +25,70 @@ def convert_docx_to_html(docx_file_field):
         print(f"Error converting DOCX to HTML: {e}")
         return "<p>Error displaying question.</p>"
 
-
-def get_photo(fullname, date_str, base_image_path, num_code, subjectname_text=''):
+def get_photo(fullname, date_str, voucher_template_filename, num_code, subjectname_text=''):
     """
     Generates a voucher image.
-    base_image_path should be an absolute path to the template image.
+    voucher_template_filename - 'vouchers/' papkasidagi shablon fayl nomi (masalan, 'VoucherUmumiy1.jpg')
     """
     try:
-        # Asosiy rasmni ochish
-        # Fayl yo'lini to'g'ri ko'rsatish kerak. Masalan, settings.STATIC_ROOT dan
-        # yoki settings.BASE_DIR bilan birlashtirib.
-        # Agar base_image_path nisbiy bo'lsa, uni to'liq yo'lga aylantirish kerak.
-        # Masalan: os.path.join(settings.BASE_DIR, 'static', 'vouchers', 'VoucherMatematika1.jpg')
+        # Statik fayllar qidiruvchisi orqali shablon rasmini topish
+        # Bu 'vouchers/VoucherUmumiy1.jpg' kabi yo'lni qidiradi
+        base_image_full_path = finders.find(os.path.join('vouchers', voucher_template_filename))
+        if not base_image_full_path or not os.path.exists(base_image_full_path):
+            print(f"Error: Voucher template image not found: vouchers/{voucher_template_filename}")
+            return None
         
-        # Agar base_image_path to'liq yo'l bo'lmasa:
-        if not os.path.isabs(base_image_path):
-            # Bu staticfiles_dirs dagi birinchi papkaga nisbatan bo'lishi mumkin
-            # Yoki aniqroq qilib BASE_DIR ga bog'lash kerak
-            full_path = os.path.join(settings.BASE_DIR, base_image_path) # Misol
-            if not os.path.exists(full_path) and settings.STATICFILES_DIRS:
-                 # Yoki STATICFILES_DIRS dagi birinchi papkani qidirish
-                full_path = os.path.join(settings.STATICFILES_DIRS[0], base_image_path.replace('static/', '', 1))
-
-            if not os.path.exists(full_path):
-                print(f"Error: Voucher template image not found at {full_path} (original: {base_image_path})")
-                return None
-        else:
-            full_path = base_image_path
-            if not os.path.exists(full_path):
-                print(f"Error: Voucher template image not found at {full_path}")
-                return None
-
-        image = Image.open(full_path)
+        image = Image.open(base_image_full_path)
         draw = ImageDraw.Draw(image)
 
-        # Shriftlarni topish. STATICFILES_DIRS da bo'lishi kerak.
-        # Yoki shrift fayllarini loyiha ildizidagi 'static/fonts/' kabi joyga qo'ying
-        # va settings.STATICFILES_DIRS ga shu papkani qo'shing.
+        # Shriftlarni topish
+        font_arial_path = finders.find('fonts/arial.ttf')
+        font_fullname_path = finders.find('fonts/forFullname.ttf') # Sizning fayl nomingiz
+
+        if not font_arial_path: font_arial_path = "arial.ttf" # Fallback
+        if not font_fullname_path: font_fullname_path = font_arial_path # Fallback
+
         try:
-            font_path_arial = os.path.join(settings.STATICFILES_DIRS[0], "fonts/arial.ttf") if settings.STATICFILES_DIRS else "arial.ttf"
-            font_path_fullname = os.path.join(settings.STATICFILES_DIRS[0], "fonts/forFullname.ttf") if settings.STATICFILES_DIRS else "static/forFullname.ttf" # Eski yo'l
-            
-            if not os.path.exists(font_path_arial): font_path_arial = "arial.ttf" # Fallback
-            if not os.path.exists(font_path_fullname): font_path_fullname = font_path_arial # Fallback
-
-            font_date_num = ImageFont.truetype(font_path_arial, 36)
-            font_fullname = ImageFont.truetype(font_path_fullname, 72)
-        except IOError:
-            print("Warning: Fonts not found, using default.")
+            font_date_num = ImageFont.truetype(font_arial_path, 36)
+            font_fullname_obj = ImageFont.truetype(font_fullname_path, 72)
+        except IOError as e:
+            print(f"Warning: Fonts not found ({e}), using default.")
             font_date_num = ImageFont.load_default()
-            font_fullname = ImageFont.load_default()
+            font_fullname_obj = ImageFont.load_default()
 
-
-        # Matnlarni yozish (koordinatalar va ranglar sizning shabloningizga mos bo'lishi kerak)
-        # draw.text((10, 10), subjectname_text, fill="black", font=font_date_num) # Agar fan nomi kerak bo'lsa
+        # Matnlarni yozish (koordinatalar sizning shabloningizga mos bo'lishi kerak)
+        # Bu koordinatalar eski loyihadagi get_photo dan olingan
         draw.text((335, 970), date_str, fill="#400025", font=font_date_num)
         draw.text((695, 970), str(num_code), fill="#400025", font=font_date_num)
 
         # Ism-sharifni markazlashtirish
-        try: # textbbox Pillow ning yangi versiyalarida (masalan, 9.0.0+)
-            text_bbox = draw.textbbox((0, 0), fullname, font=font_fullname)
+        # Pillow 9.0.0+ da textbbox, undan oldin textsize
+        try:
+            text_bbox = draw.textbbox((0, 0), fullname, font=font_fullname_obj)
             text_width = text_bbox[2] - text_bbox[0]
-        except AttributeError: # textsize eski versiyalar uchun
-             # textsize dan qaytgan (width, height)
-            text_size_tuple = draw.textsize(fullname, font=font_fullname)
-            text_width = text_size_tuple[0]
+            # text_height = text_bbox[3] - text_bbox[1] # Agar balandlik ham kerak bo'lsa
+        except AttributeError: # Eski Pillow uchun fallback
+            text_width, _ = draw.textsize(fullname, font=font_fullname_obj)
 
-        draw.text(((1560 - text_width) / 2, 420), fullname, fill="#400025", font=font_fullname) # 1560 rasmning taxminiy eni
+        # Shablon rasmining eni (taxminan, o'zingiznikiga moslang)
+        image_width = image.width # 1560
+        # Yoziladigan joyning markazi (taxminan, o'zingiznikiga moslang)
+        center_x_for_name = image_width / 2 # 780
+        text_x = center_x_for_name - (text_width / 2)
+        text_y = 420 # Eski kodingizdagi Y koordinata
 
-        # Rasmni BytesIO obyektiga saqlash
+        draw.text((text_x, text_y), fullname, fill="#400025", font=font_fullname_obj)
+
+        if subjectname_text: # Agar fan nomi ham yozilishi kerak bo'lsa (eski kodda bor edi)
+             # draw.text((10, 10), subjectname_text, fill="black", font=font_date_num)
+             pass # Hozircha aralash test uchun bu shart emas
+
         image_bytes = BytesIO()
         image.save(image_bytes, format='JPEG')
         image_bytes.seek(0)
         return image_bytes
 
-    except FileNotFoundError:
-        print(f"Error: Base image not found at {base_image_path} or {full_path if 'full_path' in locals() else ''}")
-        return None
     except Exception as e:
-        print(f"Error generating photo: {e}")
+        print(f"Error in get_photo: {e}")
+        # traceback.print_exc() # Batafsil xato uchun
         return None
