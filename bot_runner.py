@@ -24,6 +24,8 @@ logger = logging.getLogger(__name__)
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher()
 
+# {"kaa": "", "ru": "","uz": ""}.get(lang_code, "")
+
 # --- API bilan ishlash uchun yordamchi funksiyalar ---
 async def api_request(method: str, endpoint: str, data: dict = None, params: dict = None):
     url = f"{DJANGO_API_BASE_URL}/{endpoint}"
@@ -55,29 +57,26 @@ async def api_request(method: str, endpoint: str, data: dict = None, params: dic
 # --- Keyboardlar ---
 def language_keyboard():
     builder = InlineKeyboardBuilder()
-    builder.button(text="🇺🇿 O'zbekcha", callback_data="setlang_uz")
-    builder.button(text="ҚҚ Қарақалпақша", callback_data="setlang_kaa") # To'g'ri qoraqalpoqcha yozing
-    builder.button(text="🇷🇺 Русский", callback_data="setlang_ru")
+    builder.button(text="Qaraqalpaqsha", callback_data="setlang_kaa")
+    builder.button(text="Русский", callback_data="setlang_ru")
+    builder.button(text="O'zbekcha", callback_data="setlang_uz")
     builder.adjust(1) # Har bir tugma yangi qatorda
     return builder.as_markup()
 
-def request_contact_keyboard():
+def request_contact_keyboard(lang_code):
     keyboard = ReplyKeyboardMarkup(
-        keyboard=[[KeyboardButton(text="📱 Telefon raqamni yuborish", request_contact=True)]],
+        keyboard=[[KeyboardButton(text={"kaa": "📱 Telefon nomerdi jiberiw", "ru": "📱 Отправить номер телефона","uz": "📱 Telefon raqamni yuborish"}.get(lang_code, "📱 Telefon nomerdi jiberiw"), request_contact=True)]],    
         resize_keyboard=True,
         one_time_keyboard=True
     )
     return keyboard
 
-def channels_keyboard(subscribed_all=False): # Kanallarga a'zolikni tekshirish uchun
+def channels_keyboard(lang_code): # Kanallarga a'zolikni tekshirish uchun
     builder = InlineKeyboardBuilder()
     # Kanallaringiz linklarini qo'shing
     builder.button(text="Kanal 1", url="https://t.me/your_channel_1")
     builder.button(text="Kanal 2", url="https://t.me/your_channel_2")
-    if subscribed_all: # Bu funksiya hozircha to'liq ishlamaydi, shunchaki keyingi qadam uchun
-        builder.button(text="✅ Tekshirildi, davom etish", callback_data="channels_checked_proceed")
-    else:
-        builder.button(text="🔁 Tekshirish", callback_data="check_channels") # Haqiqiy tekshiruv yo'q
+    builder.button(text={"kaa": "🔁 Tekseriw", "ru": "🔁 Проверить","uz": "🔁 Tekshirish"}.get(lang_code, "🔁 Tekseriw"), callback_data="check_channels")  
     builder.adjust(1)
     return builder.as_markup()
 
@@ -87,8 +86,8 @@ def start_test_webapp_keyboard(user_id: int, lang_code: str):
     # Til prefiksini qo'shish kerak
     webapp_url = f"{WEBAPP_BASE_URL}/?startapp={user_id}" # URL ni to'g'rilang
     logger.info(f"Generated WebApp URL: {webapp_url}")
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🚀 Testni Boshlash", url=webapp_url)]
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[ 
+        [InlineKeyboardButton(text={"kaa": "🚀 Testti Baslaw", "ru": "🚀 Начать тест","uz": "🚀 Testni Boshlash"}.get(lang_code, "🚀 Testti Baslaw"), url=webapp_url)] 
     ])
     return keyboard
 
@@ -103,15 +102,13 @@ async def send_welcome(message: Message):
 
     if api_response and "error" not in api_response:
         await message.answer(
-            "Assalomu alaykum! Tilni tanlang:\n"
-            "Ҳүрметли қатнасыўшы! Тилди сайлаң:\n"
-            "Здравствуйте! Выберите язык:",
+            "🗺️ Til saylań / Выберите язык / Til tanlang:",
             reply_markup=language_keyboard()
         )
     elif api_response and "error" in api_response and api_response.get("status_code") == 400 and "telegram_id" in api_response["error"]:
-         await message.answer("Botga qayta /start bosing.") # Agar ID kelmasa
+         await message.answer("Botqa qaytadan /start basıń.") # Agar ID kelmasa
     else:
-        await message.answer("Xatolik yuz berdi. Keyinroq urinib ko'ring.")
+        await message.answer("Qátelik júz berdi.")
         logger.error(f"Failed to register/get user {user_id}: {api_response}")
 
 
@@ -124,14 +121,14 @@ async def process_language_select(callback_query: types.CallbackQuery):
 
     if api_response and "error" not in api_response:
         await callback_query.message.edit_text(
-            {"uz": "Til tanlandi. Davom etish uchun kanallarimizga a'zo bo'ling:",
-             "kaa": "Тил сайланды. Даўам етиў ушын каналларымызға ағза болың:", # To'g'rilang
-             "ru": "Язык выбран. Для продолжения подпишитесь на наши каналы:"}
-            .get(lang_code, "Kanallarimizga a'zo bo'ling:"),
-            reply_markup=channels_keyboard()
+            {"kaa": "Dawam etiw ushın kanallarımızǵa aǵza bolıń:", 
+             "ru": "Для продолжения подпишитесь на наши каналы:",
+             "uz": "Davom etish uchun kanallarimizga a'zo bo'ling:"}
+            .get(lang_code, "Dawam etiw ushın kanallarımızǵa aǵza bolıń:"),
+            reply_markup=channels_keyboard(lang_code)
         )
     else:
-        await callback_query.message.answer("Tilni saqlashda xatolik. Qaytadan urinib ko'ring.")
+        await callback_query.message.answer("Tildi saylawda qátelik.")
         logger.error(f"Failed to set language for {user_id}: {api_response}")
     await callback_query.answer()
 
@@ -145,7 +142,7 @@ async def process_channels_check(callback_query: types.CallbackQuery):
 
     # 1. Avvalgi inline klaviaturani olib tashlash uchun xabarni tahrirlash (ixtiyoriy, lekin chiroyli)
     try:
-        await callback_query.message.edit_reply_markup(reply_markup=None)
+        await callback_query.message.delete()
     except Exception as e:
         logger.warning(f"Could not edit reply markup for user {user_id}: {e}")
 
@@ -153,12 +150,12 @@ async def process_channels_check(callback_query: types.CallbackQuery):
     # 2. Yangi xabar yuborish va unga ReplyKeyboardMarkup biriktirish
     await callback_query.message.answer( # Yoki bot.send_message(chat_id=callback_query.message.chat.id, ...)
         text=(
-            {"uz": "Rahmat! Endi telefon raqamingizni yuboring.",
-             "kaa": "Рахмет! Енди телефон номериңизди жибериң.", # To'g'rilang
-             "ru": "Спасибо! Теперь отправьте свой номер телефона."}
-            .get(lang_code, "Telefon raqamingizni yuboring.")
+            {"uz": "Telefon raqamingizni yuboring.",
+             "kaa": "Telefon nomerińizdi jiberiń.", # To'g'rilang
+             "ru": "Теперь отправьте свой номер телефона."}
+            .get(lang_code, "Telefon nomerińizdi jiberiń.")
         ),
-        reply_markup=request_contact_keyboard()
+        reply_markup=request_contact_keyboard(lang_code)
     )
     await callback_query.answer() # Callback query ga javob berishni unutmang
 
@@ -173,29 +170,30 @@ async def process_contact(message: Message):
     api_response = await api_request("POST", f"users/{user_id}/set-phone/", data={"phone_number": phone_number})
 
     user_data = await api_request("GET", f"users/{user_id}/") # Tilni olish uchun
-    lang_code = user_data.get("user", {}).get("language_code", "uz") if user_data and "user" in user_data else "uz"
+    lang_code = user_data.get("language_code", "uz") if user_data and "error" not in user_data else "uz"
 
     if api_response and "error" not in api_response:        
-        await message.answer(
-            "...", # Qandaydir kichik xabar, masalan, nuqtalar
+        msg = await message.answer(
+            {"kaa": "Raxmet!", "ru": "Спасибо!","uz": "Rahmat!"}.get(lang_code, "Raxmet!"), 
             reply_markup=types.ReplyKeyboardRemove()
         )
         await message.answer(
-            {"uz": "Telefon raqamingiz qabul qilindi! Testni boshlash uchun quyidagi tugmani bosing.",
-             "kaa": "Телефоныңыз қабыл етилди! Тестти баслаў ушын төмендеги дүймени басың.", # To'g'rilang
-             "ru": "Ваш номер телефона принят! Нажмите кнопку ниже, чтобы начать тест."}
-            .get(lang_code, "Testni boshlash uchun quyidagi tugmani bosing."),
+            {"uz": "Testni boshlash uchun quyidagi tugmani bosing.",
+             "kaa": "Testti baslaw ushın tómendegi túymeni basıń.", # To'g'rilang
+             "ru": "Нажмите кнопку ниже, чтобы начать тест."}
+            .get(lang_code, "Testti baslaw ushın tómendegi túymeni basıń."),
             reply_markup=start_test_webapp_keyboard(user_id, lang_code)
         )
+        await msg.delete()
     elif api_response and "error" in api_response and "phone_number" in api_response.get("error", {}):
         # Agar telefon raqami band bo'lsa (API dan keladigan xato)
          await message.answer(api_response["error"]["phone_number"][0]) # Xato matnini ko'rsatish
     else:
         await message.answer(
-            {"uz": "Telefon raqamini saqlashda xatolik. Qaytadan urinib ko'ring.",
-             "kaa": "Телефон номерин сақлаўда қәтелик. Қайтадан урынып көриң.", # To'g'rilang
-             "ru": "Ошибка при сохранении номера телефона. Пожалуйста, попробуйте еще раз."}
-            .get(lang_code, "Xatolik. Qaytadan urinib ko'ring.")
+            {"uz": "Telefon raqamini saqlashda xatolik.",
+             "kaa": "Telefon nomerin anıqlawda qátelik.", # To'g'rilang
+             "ru": "Ошибка при сохранении номера телефона."}
+            .get(lang_code, "Telefon nomerin anıqlawda qátelik.")
         )
         logger.error(f"Failed to set phone for {user_id}: {api_response}")
 

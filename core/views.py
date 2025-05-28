@@ -243,11 +243,19 @@ class StartMixedTestView(View):
         questions_per_subject = 5 # Har bir fandan olinadigan savollar soni
 
         for subject in active_subjects:
-            subject_questions = list(subject.questions.filter(is_active=True))
-            if len(subject_questions) >= questions_per_subject:
-                all_selected_questions.extend(random.sample(subject_questions, questions_per_subject))
-            elif len(subject_questions) > 0: # Agar 5 tadan kam bo'lsa, borini oladi
-                 all_selected_questions.extend(subject_questions) # Barchasini oladi, random shart emas
+            # Joriy til uchun fayli bor aktiv savollarni olish
+            # Bu qism biroz murakkab, chunki har bir savolni tekshirish kerak
+            # Yaxshiroq yo'li - Question modeliga property qo'shish yoki queryni optimallashtirish
+            
+            potential_questions = []
+            for q in subject.questions.filter(is_active=True):
+                if q.get_question_file_for_current_lang(): # Joriy til uchun fayl bormi?
+                    potential_questions.append(q)
+
+            if len(potential_questions) >= questions_per_subject:
+                all_selected_questions.extend(random.sample(potential_questions, questions_per_subject))
+            elif len(potential_questions) > 0:
+                 all_selected_questions.extend(potential_questions)
 
         if not all_selected_questions:
             messages.error(request, _("Test uchun savollar topilmadi."))
@@ -306,7 +314,14 @@ class TestInProgressView(View):
             return redirect(reverse('core:submit_test')) # SubmitTestView ni hali yaratmadik
 
         current_question = all_questions_in_test[question_index]
-        question_html = convert_docx_to_html(current_question.question_file)
+        question_file_to_render = current_question.get_question_file_for_current_lang() # YANGILANDI
+
+        if not question_file_to_render:
+            # Bu holat bo'lmasligi kerak, agar savollar to'g'ri filtrlangan bo'lsa
+            logger.error(f"Test {test_instance.id}, Savol {current_question.id} uchun joriy tilda fayl topilmadi!")
+            question_html = f"<p>{_('Savol matni topilmadi.')}</p>"
+        else:
+            question_html = convert_docx_to_html(question_file_to_render) # YANGILANDI
 
         # Foydalanuvchining bu savolga bergan javobini sessiondan olish (agar mavjud bo'lsa)
         user_answers = request.session.get(f'test_{test_instance.id}_answers', {})
@@ -389,8 +404,14 @@ class TestInProgressView(View):
 
         # Keyingi savolni yuklash uchun ma'lumotlarni qaytarish (AJAX so'rovi uchun)
         next_question_obj = all_questions_in_test[question_index]
-        next_question_html = convert_docx_to_html(next_question_obj.question_file)
-        
+        next_question_file_to_render = next_question_obj.get_question_file_for_current_lang() # YANGILANDI
+
+        if not next_question_file_to_render:
+            logger.error(f"Test {test_instance.id}, Keyingi savol {next_question_obj.id} uchun joriy tilda fayl topilmadi!")
+            next_question_html = f"<p>{_('Savol matni topilmadi.')}</p>"
+        else:
+            next_question_html = convert_docx_to_html(next_question_file_to_render) # YANGILANDI
+            
         previous_answer_for_next_q = user_answers.get(str(next_question_obj.id))
 
 
@@ -459,7 +480,7 @@ class SubmitTestView(View):
                 'user_answer': user_answer,
                 'correct_answer': question.correct_answer,
                 'is_correct': is_correct,
-                'question_file_url': question.question_file.url if question.question_file else None
+                'question_file_url': question.get_question_file_for_current_lang().url if question.get_question_file_for_current_lang() else None,
             })
         
         test_instance.score = correct_answers_count
@@ -471,29 +492,7 @@ class SubmitTestView(View):
         
         total_q_count = test_questions.count() if test_questions.exists() else 1 # exists() bilan tekshirish yaxshiroq
         percentage_correct = (correct_answers_count / total_q_count) * 100 if total_q_count > 0 else 0
-        
-        voucher_type = None
-        voucher_amount_text = ""
-        voucher_image_postfix = "3"
-
-        if total_q_count > 0: # Faqat agar savollar bo'lsa voucher beriladi
-            if correct_answers_count == total_q_count:
-                voucher_type = "gold"
-                voucher_amount_text = _("250 000 so'mlik")
-                voucher_image_postfix = "1"
-            elif correct_answers_count >= (total_q_count / 2): # Yoki >= 5 sharti
-                voucher_type = "silver"
-                voucher_amount_text = _("100 000 so'mlik")
-                voucher_image_postfix = "2"
-            else: # Qolgan barcha holatlar (0 dan (yarmi-1) gacha to'g'ri javob)
-                voucher_type = "bronze"
-                voucher_amount_text = _("50 000 so'mlik")
-                voucher_image_postfix = "3"
-        else: # Agar testda savol bo'lmasa (bu holat bo'lmasligi kerak)
-            voucher_amount_text = _("0 so'mlik") # Yoki boshqa xabar
-
-        if voucher_type:
-            test_instance.voucher_code = f"IBT{timezone.now().strftime('%y%m%d%H%M')}{test_instance.id}{random.randint(10,99)}"
+        test_instance.voucher_code = f"IBT{timezone.now().strftime('%m%d')}{test_instance.id}"   
         
         # test_instance ni birinchi marta saqlash (voucher_code bilan, voucher_sent hali False)
         test_instance.save()
@@ -501,25 +500,17 @@ class SubmitTestView(View):
 
         # Telegramga xabar yuborish
         message_was_sent_to_user = False
-        if user.telegram_id and voucher_type: # Faqat telegram_id va voucher_type mavjud bo'lsa
-            logger.info(f"Telegramga yuborish boshlandi: User {user.telegram_id}, Voucher {voucher_type}")
+        if user.telegram_id: 
+            logger.info(f"Telegramga yuborish boshlandi: User {user.telegram_id}")
             try:
-                admin_tg_chat_id_str = os.getenv('ADMIN_TELEGRAM_CHAT_ID')
-                admin_tg_chat_id = int(admin_tg_chat_id_str) if admin_tg_chat_id_str and admin_tg_chat_id_str.lstrip('-').isdigit() else None
-                if admin_tg_chat_id:
-                    logger.info(f"Admin chat ID: {admin_tg_chat_id}")
-                else:
-                    logger.warning("ADMIN_TELEGRAM_CHAT_ID topilmadi yoki yaroqsiz.")
-
                 message_was_sent_to_user = async_to_sync(send_test_result_to_user)(
                     user_telegram_id=int(user.telegram_id), # Int ga o'tkazish
                     user_fullname=user.full_name or str(user.telegram_id),
                     score=correct_answers_count,
                     total_questions=total_q_count,
-                    voucher_amount_text=str(voucher_amount_text), # str() ga o'tkazish (__proxy__ bo'lishi mumkin)
+                    voucher_amount_text="", 
                     voucher_code=test_instance.voucher_code,
-                    voucher_image_postfix=voucher_image_postfix,
-                    admin_chat_id=admin_tg_chat_id
+                    voucher_image_postfix=""
                 )
                 logger.info(f"Telegramga yuborish statusi (user {user.telegram_id}): {message_was_sent_to_user}")
 
@@ -534,8 +525,6 @@ class SubmitTestView(View):
                 logger.error(f"SubmitTestView: Telegramga xabar yuborishda KRITIK xatolik (test {test_id}): {e}", exc_info=True)
         elif not user.telegram_id:
             logger.warning(f"Test {test_id} uchun foydalanuvchining telegram_id si yo'q.")
-        elif not voucher_type:
-             logger.info(f"Test {test_id} uchun voucher berilmadi (voucher_type None). Telegramga yuborilmadi.")
 
 
         context = {
@@ -546,8 +535,8 @@ class SubmitTestView(View):
             'percentage_correct': round(percentage_correct, 1),
             'detailed_results': detailed_results,
             'user_answers_session': user_answers_session,
-            'voucher_type': voucher_type,
-            'voucher_amount_text': voucher_amount_text, # Bu endi string bo'lishi kerak
+            'voucher_type': "",
+            'voucher_amount_text': "", 
             'voucher_code': test_instance.voucher_code,
             'voucher_sent_to_telegram': message_was_sent_to_user,
         }

@@ -90,11 +90,21 @@ class QuestionInline(admin.TabularInline): # Yoki StackedInline
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'subject', 'correct_answer', 'is_active', 'created_at')
+    list_display = ('id', 'subject', 'get_available_files_summary', 'correct_answer', 'is_active', 'created_at')
     list_filter = ('subject', 'is_active', 'correct_answer')
-    search_fields = ('subject__name_uz', 'id') # Savol matnini qidirish qiyin, chunki u faylda
+    search_fields = ('subject__name_uz', 'id')
     autocomplete_fields = ['subject']
-    # readonly_fields = ('get_question_preview',)
+    # Endi bitta fayl o'rniga uchtasi bor
+    fields = ('subject', 'correct_answer', 'is_active', 'question_file_uz', 'question_file_kaa', 'question_file_ru')
+    # readonly_fields = ('get_question_preview_admin',) # Buni ham har bir til uchun alohida qilish kerak bo'ladi
+
+    def get_available_files_summary(self, obj):
+        langs = []
+        if obj.question_file_uz: langs.append("UZ")
+        if obj.question_file_kaa: langs.append("KAA")
+        if obj.question_file_ru: langs.append("RU")
+        return ", ".join(langs) if langs else _("Fayl yo'q")
+    get_available_files_summary.short_description = _("Mavjud Tillar")
 
 
 class TestQuestionsInline(admin.TabularInline): # Testga qaysi savollar tushganini ko'rsatish

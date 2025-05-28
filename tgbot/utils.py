@@ -55,18 +55,13 @@ async def send_test_result_to_user(
     voucher_image_postfix: str,
     admin_chat_id: int = None
 ):
-    logger.info(f"send_test_result_to_user chaqirildi: user_id={user_telegram_id}, fullname={user_fullname}, voucher_postfix={voucher_image_postfix}")
+    logger.info(f"send_test_result_to_user chaqirildi: user_id={user_telegram_id}, fullname={user_fullname}")
     
     future_date = (timezone.now() + timezone.timedelta(weeks=1)).strftime("%d.%m.%Y")
     
-    message_to_user = f"<b>{user_fullname}, {_('sizning test natijangiz')}: {score}/{total_questions}</b>\n\n"
-    if voucher_amount_text and voucher_code:
-        message_to_user += f"✅ {_('Siz')} {str(voucher_amount_text)} {_('voucherni qoʻlga kiritdingiz.')}\n" # str() qo'shildi
-        message_to_user += f"❗️ {_('Voucherning amal qilish muddati')} {future_date} {_('sanasigacha.')}\n\n"
-    else:
-        message_to_user += f"{_('Ishtirokingiz uchun rahmat!')}\n\n"
+    message_to_user = f"<b>{user_fullname}, {_('sizning test natijangiz')}: {score}/{total_questions}</b>\n\n"    
+    message_to_user += f"{_('Ishtirokingiz uchun rahmat!')}\n\n"
     message_to_user += f"📞 {_('Toʻliq maʻlumot uchun telefon')}: +998 XX XXX XX XX\n"
-    message_to_user += f"📌 {_('Manzil')}: Manzilingiz shu yerda\n"
 
     voucher_template_filename = f"voucher.jpg"
     logger.info(f"Voucher shabloni izlanmoqda: {voucher_template_filename}")
@@ -95,72 +90,5 @@ async def send_test_result_to_user(
         logger.warning(f"Foydalanuvchi {user_telegram_id} uchun voucher rasmi generatsiya QILINMADI.")
         # Rasm bo'lmasa, oddiy matnli xabar yuborish
         # Hozircha bu qismni qo'shmaymiz, rasm bilan yuborishga e'tibor qaratamiz
-
-    if admin_chat_id and user_message_sent:
-        logger.info(f"Adminga ({admin_chat_id}) natija yuborilmoqda...")
-        user_phone = _("Noma'lum")
-        user_course = _("Noma'lum")
-        user_institution_name = _("Noma'lum")
-        user_education_type_name = _("Noma'lum")
-        user_education_level_name = _("Noma'lum")
-        user_faculty_name = _("Noma'lum")
-
-        try:
-            # User obyektini kerakli bog'liq maydonlar bilan birga olish
-            user_obj = await User.objects.select_related(
-                'institution__education_type', # institution va uning education_type'i
-                'education_level',
-                'faculty'
-            ).aget(telegram_id=user_telegram_id) # aget ishlatiladi
-
-            user_phone = user_obj.phone_number or _("Noma'lum")
-            user_course = user_obj.course_year or _("Noma'lum")
-            
-            if user_obj.institution:
-                user_institution_name = user_obj.institution.get_localized_name()
-                if user_obj.institution.education_type:
-                     user_education_type_name = user_obj.institution.education_type.get_localized_name()
-            if user_obj.education_level:
-                user_education_level_name = user_obj.education_level.get_localized_name()
-            if user_obj.faculty:
-                user_faculty_name = user_obj.faculty.get_localized_name()
-
-        except User.DoesNotExist:
-            logger.warning(f"Adminga xabar uchun User {user_telegram_id} topilmadi (bu bo'lmasligi kerak edi).")
-        except Exception as e: # Boshqa kutilmagan xatolar
-            logger.error(f"Adminga xabar tayyorlashda user ma'lumotlarini olishda xato: {e}", exc_info=True)
-
-
-        admin_caption = (
-            f"<b>{_('Yangi Test Natijasi!')}</b>\n\n"
-            f"👤 {_('F.I.Sh')}: {user_fullname}\n"
-            f"🆔 Telegram ID: {user_telegram_id}\n"
-            f"📞 {_('Telefon')}: {user_phone}\n"
-            f"🎓 {_('Ta\'lim Turi')}: {user_education_type_name}\n"
-            f"🏛️ {_('Muassasa')}: {user_institution_name}\n"
-            f"🪜 {_('Bosqich (OTM)')}: {user_education_level_name}\n"
-            f"📚 {_('Fakultet (OTM)')}: {user_faculty_name}\n"
-            f"📈 {_('Kurs/Sinf')}: {user_course}\n"
-            f"📊 {_('Natija')}: {score}/{total_questions}\n"
-            f"🎟️ {_('Voucher')}: {str(voucher_amount_text)} ({voucher_code})\n"
-            f"🕒 {_('Vaqt')}: {timezone.now().strftime('%Y-%m-%d %H:%M')}"
-        )
-        
-        if image_bytes:
-            image_bytes.seek(0)
-            admin_send_status = await send_telegram_photo_message(
-                chat_id=admin_chat_id,
-                caption=admin_caption,
-                photo_bytes=image_bytes
-            )
-            if not admin_send_status:
-                logger.error(f"Adminga ({admin_chat_id}) rasm bilan xabar yuborishda XATOLIK.")
-        else: # Agar rasm bo'lmasa, adminga faqat matn yuborish
-            # Hozircha matnli xabar yuborish funksiyasi yo'q, shuning uchun pass
-            logger.warning(f"Adminga ({admin_chat_id}) yuborish uchun rasm yo'q, matnli xabar yuborilmadi.")
-            pass
-
-    elif admin_chat_id and not user_message_sent:
-        logger.warning(f"Foydalanuvchiga xabar yuborilmagani uchun adminga ({admin_chat_id}) yuborilmadi.")
             
     return user_message_sent

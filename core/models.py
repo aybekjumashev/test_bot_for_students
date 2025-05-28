@@ -6,7 +6,7 @@ import uuid # Agar UUID ishlatmoqchi bo'lsangiz, lekin telegram_id unique bo'lga
 from django.utils import translation # Joriy tilni olish uchun
 from django.utils import timezone # datetime.now() o'rniga
 from django.conf import settings
-
+import os
 
 
 class EducationType(models.Model):
@@ -264,16 +264,33 @@ class Subject(models.Model):
         ordering = ['name_uz']
 
 
-def question_file_path(instance, filename):
-    # Fayl subjects/<subject_id>/questions/<filename> manziliga yuklanadi
-    return f'subjects/{instance.subject.id}/questions/{filename}'
+def question_file_path_lang(instance, filename, lang_code):
+    # Fayl subjects/<subject_id>/questions/<lang_code>/<filename> manziliga yuklanadi
+    # Fayl nomiga til kodini qo'shish yaxshi, chalkashmasligi uchun
+    name, ext = os.path.splitext(filename)
+    return f'subjects/{instance.subject.id}/questions/{lang_code}/{name}_{lang_code}{ext}'
+
+def question_file_path_uz(instance, filename):
+    return question_file_path_lang(instance, filename, 'uz')
+
+def question_file_path_kaa(instance, filename):
+    return question_file_path_lang(instance, filename, 'kaa')
+
+def question_file_path_ru(instance, filename):
+    return question_file_path_lang(instance, filename, 'ru')
 
 class Question(models.Model):
     subject = models.ForeignKey(Subject, related_name='questions', on_delete=models.CASCADE, verbose_name=_("Fan"))
-    # Eski `data = Column(LargeBinary)` o'rniga `FileField`
-    # DOCX fayllarni saqlash uchun maxsus papka (masalan, `media/questions/`)
-    question_file = models.FileField(upload_to=question_file_path, verbose_name=_("Savol fayli (DOCX)"))
-    # Javob variantlari odatda a, b, c, d bo'ladi
+    
+    # Har bir til uchun alohida fayl maydoni
+    question_file_uz = models.FileField(upload_to=question_file_path_uz, verbose_name=_("Savol fayli (O'zbekcha, DOCX)"), blank=True, null=True)
+    question_file_kaa = models.FileField(upload_to=question_file_path_kaa, verbose_name=_("Savol fayli (Qoraqalpoqcha, DOCX)"), blank=True, null=True)
+    question_file_ru = models.FileField(upload_to=question_file_path_ru, verbose_name=_("Savol fayli (Ruscha, DOCX)"), blank=True, null=True)
+    
+    # Asosiy tilni belgilash (ixtiyoriy, agar bitta fayl majburiy bo'lsa)
+    # Agar hech bo'lmaganda bitta fayl bo'lishi kerak bo'lsa, ulardan birini blank=False qiling.
+    # Masalan, question_file_uz ni asosiy deb, blank=False qilish mumkin.
+
     ANSWER_CHOICES = [
         ('a', 'A'),
         ('b', 'B'),
@@ -285,15 +302,36 @@ class Question(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return "%s #%s (%s)" % (_('Savol'), self.id, self.subject.get_localized_name())
+    def get_question_file_for_current_lang(self):
+        """Joriy aktiv til uchun savol faylini qaytaradi."""
+        lang = translation.get_language() # Joriy tilni olish
+        if lang == 'kaa' and self.question_file_kaa:
+            return self.question_file_kaa
+        elif lang == 'ru' and self.question_file_ru:
+            return self.question_file_ru
+        elif self.question_file_uz: # Standart yoki o'zbekcha
+            return self.question_file_uz
+        # Agar joriy til uchun fayl bo'lmasa, boshqa mavjud faylni qaytarish (ixtiyoriy)
+        elif self.question_file_kaa: return self.question_file_kaa
+        elif self.question_file_ru: return self.question_file_ru
+        return None # Hech qaysi tilda fayl yo'q
 
+    def __str__(self):
+        # Qaysidir tildagi fayl nomini ko'rsatish (agar bo'lsa)
+        file_to_show = self.get_question_file_for_current_lang()
+        filename = os.path.basename(file_to_show.name) if file_to_show else _("Fayl yuklanmagan")
+        return f"{_('Savol')} #{self.id} ({self.subject.get_localized_name()}) - {filename}"
+
+    def clean(self):
+        # Hech bo'lmaganda bitta tilda savol fayli yuklanganligini tekshirish (ixtiyoriy)
+        from django.core.exceptions import ValidationError
+        if not (self.question_file_uz or self.question_file_kaa or self.question_file_ru):
+            raise ValidationError(_("Hech bo'lmaganda bitta tilda savol faylini yuklang."))
 
     class Meta:
         verbose_name = _("Savol")
         verbose_name_plural = _("Savollar")
         ordering = ['subject', '-created_at']
-
 
 class Test(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='tests', on_delete=models.CASCADE, verbose_name=_("Foydalanuvchi")) # AUTH_USER_MODEL = 'core.User'

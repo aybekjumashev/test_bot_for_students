@@ -165,7 +165,7 @@ msgstr ""
 
 #: .\core\forms.py:17
 msgid "Ism va sharifingiz"
-msgstr ""
+msgstr "Atıńız familiyańız"
 
 #: .\core\forms.py:22
 msgid "Masalan: 1"
@@ -173,7 +173,7 @@ msgstr ""
 
 #: .\core\forms.py:25 .\core\models.py:162
 msgid "Ism va sharif"
-msgstr ""
+msgstr "Atıńız familiyańız"
 
 #: .\core\forms.py:26 .\core\models.py:32 .\core\models.py:177
 msgid "Ta'lim muassasasi turi"
