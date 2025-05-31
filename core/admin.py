@@ -27,7 +27,7 @@ class UserAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {'fields': ('telegram_id', 'username', 'language_code', 'is_active')}),
-        (_('Shaxsiy maʻlumotlar'), {'fields': ('full_name', 'phone_number')}),
+        (_('Shaxsiy maʻlumotlar'), {'fields': ('name', 'surname', 'patronymic', 'phone_number')}),
         (_('Taʻlim maʻlumotlari'), {'fields': ('education_type', 'institution', 'education_level', 'faculty', 'course_year')}),
         (_('Vaqt belgilari'), {'fields': ('created_at', 'updated_at')}),
     )
@@ -289,7 +289,9 @@ class TestAdmin(admin.ModelAdmin):
         column_names = {
             'test_id': str(_('Test ID')),
             'tg_id': str(_('Telegram ID')),
-            'full_name': str(_('F.A.Á.')),
+            'name': str(_('Atı')),
+            'surname': str(_('Familiyası')),
+            'patronymic': str(_('Ákesiniń Atı')),
             'phone': str(_('Telefon')),
             'edu_type': str(_('Bilimlendiriw Túri')),
             'institution': str(_('Mákeme')),
@@ -311,7 +313,9 @@ class TestAdmin(admin.ModelAdmin):
             data_for_excel.append({
                 column_names['test_id']: test_obj.id,
                 column_names['tg_id']: user.telegram_id,
-                column_names['full_name']: user.full_name or "",
+                column_names['name']: user.name or "",
+                column_names['surname']: user.surname or "",
+                column_names['patronymic']: user.patronymic or "",
                 column_names['phone']: user.phone_number or "",
                 column_names['edu_type']: str(user.education_type.name_kaa) if user.education_type else "",
                 column_names['institution']: str(user.institution.name_kaa) if user.institution else "",

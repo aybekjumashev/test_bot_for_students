@@ -2,7 +2,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from core.models import User
+from core.models import User, Test
 from .serializers import (
     UserCreateSerializer,
     UserLanguageUpdateSerializer,
@@ -17,6 +17,10 @@ from asgiref.sync import sync_to_async # Import qilingan
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
+from django.http import HttpResponse, JsonResponse
+from django.utils import timezone
+import pandas as pd
+from io import BytesIO
 
 
 
@@ -88,3 +92,134 @@ class UserSetPhoneAPIView(APIView):
             except serializers.ValidationError as e:
                 return Response(e.detail, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+class ExportTestsAPIView(APIView):
+    # Bu viewni himoyalash kerak (masalan, faqat adminlar uchun)
+    # permission_classes = [IsAdminUser] # Agar DRF ishlatsangiz
+    # Yoki custom decorator bilan
+
+    def get(self, request, *args, **kwargs):
+        # Xavfsizlik tekshiruvi (masalan, maxsus token yoki admin huquqi)
+        # Misol uchun, oddiy 'secret_key' parametri bilan tekshirish (production uchun yaroqsiz!)
+        # secret_key_from_request = request.GET.get('secret_key')
+        # if not secret_key_from_request or secret_key_from_request != "SIZNING_MAXFIY_KALITINGIZ":
+        #     return JsonResponse({"error": "Unauthorized"}, status=401)
+
+        try:
+            tests_queryset = Test.objects.select_related(
+                'user__education_type',
+                'user__institution__education_type',
+                'user__education_level',
+                'user__faculty'
+            ).prefetch_related(
+                'questions__subject' # Testdagi savollar va ularning fanlari
+            ).order_by('-started_at').all()
+
+            if not tests_queryset.exists():
+                return JsonResponse({"message": _("Eksport uchun test ma'lumotlari topilmadi.")}, status=404)
+
+            data_for_excel = []
+            # DataFrame uchun ustun nomlari (tarjima qilingan)
+            column_names = {
+                'test_id': str(_('Test ID')),
+                'tg_id': str(_('Telegram ID')),
+                'name': str(_('Atı')),
+                'surname': str(_('Familiyası')),
+                'patronymic': str(_('Ákesiniń Atı')),
+                'phone': str(_('Telefon')),
+                'edu_type': str(_('Bilimlendiriw Túri')),
+                'institution': str(_('Mákeme')),
+                'edu_level_otm': str(_('Basqısh (JOO)')),
+                'faculty_otm': str(_('Fakultet (JOO)')),
+                'course': str(_('Kurs')),
+                'test_date_started': str(_('Test Baslanıw Waqıtı')),
+                'test_date_completed': str(_('Test Tamamlanıw Waqıtı')),
+                'score': str(_('Nátiyje (Ball)')),
+                'total_q': str(_('Jámi Sorawlar')),
+                'time_spent': str(_('Sarplaǵan Waqıtı (s)')),
+                'voucher_code': str(_('Sertifikat Kodı')),
+                'voucher_sent': str(_('Sertifikat Jiberildi')),
+            }
+            # Agar User modelida name, surname, patronymic alohida bo'lsa:
+            # column_names['name'] = str(_('Atı'))
+            # column_names['surname'] = str(_('Familiyası'))
+            # column_names['patronymic'] = str(_('Ákesiniń Atı'))
+
+
+            for test_obj in tests_queryset:
+                user = test_obj.user
+                subject_names_in_test = str(_("Aralash Test"))
+                if test_obj.questions.exists():
+                    unique_subject_names = list(set(
+                        str(q.subject.get_localized_name()) for q in test_obj.questions.all()[:5]
+                    ))
+                    if unique_subject_names:
+                        subject_names_in_test = ", ".join(unique_subject_names)
+                        if test_obj.questions.count() > 5:
+                            subject_names_in_test += "..."
+                
+                row_data = {
+                    column_names['test_id']: test_obj.id,
+                    column_names['tg_id']: user.telegram_id,
+                    column_names['name']: user.name or "",
+                    column_names['surname']: user.surname or "",
+                    column_names['patronymic']: user.patronymic or "",
+                    column_names['phone']: user.phone_number or "",
+                    column_names['edu_type']: str(user.education_type.get_localized_name()) if user.education_type else "",
+                    column_names['institution']: str(user.institution.get_localized_name()) if user.institution else "",
+                    column_names['edu_level_otm']: str(user.education_level.get_localized_name()) if user.education_level else "",
+                    column_names['faculty_otm']: str(user.faculty.get_localized_name()) if user.faculty else "",
+                    column_names['course']: user.course_year or "",
+                    column_names['test_date_started']: test_obj.started_at.strftime('%Y-%m-%d %H:%M') if test_obj.started_at else "",
+                    column_names['test_date_completed']: test_obj.completed_at.strftime('%Y-%m-%d %H:%M') if test_obj.completed_at else "",
+                    column_names['score']: test_obj.score if test_obj.score is not None else "",
+                    column_names['total_q']: test_obj.questions.count(),
+                    column_names['time_spent']: test_obj.time_spent_seconds if test_obj.time_spent_seconds is not None else "",
+                    column_names['voucher_code']: test_obj.voucher_code or "",
+                    column_names['voucher_sent']: str(_("Awa")) if test_obj.voucher_sent else str(_("Yaq")),
+                }
+                # Agar User modelida name, surname, patronymic alohida bo'lsa:
+                # row_data[column_names['name']] = user.name or ""
+                # row_data[column_names['surname']] = user.surname or ""
+                # row_data[column_names['patronymic']] = user.patronymic or ""
+                data_for_excel.append(row_data)
+
+            df = pd.DataFrame(data_for_excel)
+            
+            output = BytesIO()
+            sheet_name_str = str(_('Test_Natijalari'))
+
+            with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+                df.to_excel(writer, index=False, sheet_name=sheet_name_str)
+                worksheet = writer.sheets[sheet_name_str]
+                for idx, col_name_proxy in enumerate(df.columns):
+                    col_name_str = str(col_name_proxy)
+                    series = df[col_name_proxy]
+                    try:
+                        data_max_len = series.fillna('').astype(str).map(len).max()
+                    except Exception:
+                        data_max_len = 0
+                    header_len = len(col_name_str)
+                    max_len = max(data_max_len, header_len) + 2
+                    worksheet.set_column(idx, idx, max_len)
+
+            output.seek(0)
+
+            filename = f"test_results_{timezone.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+            response = HttpResponse(
+                output,
+                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            )
+            response['Content-Disposition'] = f'attachment; filename="{filename}"'
+            return response
+
+        except Exception as e:
+            # logger.error(f"Error exporting tests to Excel via API: {e}", exc_info=True) # Agar logger sozlagan bo'lsangiz
+            print(f"Error exporting tests to Excel via API: {e}") # Oddiy print
+            import traceback
+            traceback.print_exc() # Batafsil xato uchun
+            return JsonResponse({"error": _("Excel faylini yaratishda xatolik yuz berdi."), "details": str(e)}, status=500)

@@ -3,11 +3,13 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls.i18n import i18n_patterns # Til prefikslari uchun
+from tgbot.views import ExportTestsAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     # Boshqa API yoki maxsus yo'llar (til prefiksisiz)
     path('api/tg/', include('tgbot.urls')), # Telegram bot API uchun
+    path('api/export-all-tests/', ExportTestsAPIView.as_view(), name='export_all_tests_api'), 
 ]
 
 urlpatterns += i18n_patterns(

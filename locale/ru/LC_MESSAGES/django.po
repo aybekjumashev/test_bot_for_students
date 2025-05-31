@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-31 11:51+0500\n"
-"PO-Revision-Date: 2024-06-14 12:00+0000\n"
+"POT-Creation-Date: 2025-05-31 21:32+0500\n"
+"PO-Revision-Date: 2024-06-14 18:00+0000\n"
 "Last-Translator: AI Assistant <>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "Language: ru\n"
@@ -20,231 +20,309 @@ msgstr ""
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: .\CONFIG\settings.py:118 .\core\models.py:166
+#: .\CONFIG\settings.py:118 .\core\models.py:168
 msgid "Uzbek"
 msgstr "Узбекский"
 
-#: .\CONFIG\settings.py:119 .\core\models.py:167
+#: .\CONFIG\settings.py:119 .\core\models.py:169
 msgid "Karakalpak"
 msgstr "Каракалпакский"
 
-#: .\CONFIG\settings.py:120 .\core\models.py:168
+#: .\CONFIG\settings.py:120 .\core\models.py:170
 msgid "Russian"
 msgstr "Русский"
 
-#: .\core\admin.py:26
+#: .\core\admin.py:30
 msgid "Shaxsiy maʻlumotlar"
 msgstr "Личные данные"
 
-#: .\core\admin.py:27
+#: .\core\admin.py:31
 msgid "Taʻlim maʻlumotlari"
 msgstr "Данные об образовании"
 
-#: .\core\admin.py:28 .\core\admin.py:129
+#: .\core\admin.py:32 .\core\admin.py:247
 msgid "Vaqt belgilari"
 msgstr "Временные отметки"
 
-#: .\core\admin.py:67
+#: .\core\admin.py:71
 msgid "Nomi"
 msgstr "Название"
 
-#: .\core\admin.py:106
+#: .\core\admin.py:110
 msgid "Fayl yo'q"
 msgstr "Файл отсутствует"
 
-#: .\core\admin.py:107
+#: .\core\admin.py:111
 msgid "Mavjud Tillar"
 msgstr "Доступные языки"
 
-#: .\core\admin.py:113
+#: .\core\admin.py:158
+msgid "Turli tillardagi fayllarda savollar soni mos kelmadi: {}"
+msgstr "Количество вопросов в файлах на разных языках не совпало: {}"
+
+#: .\core\admin.py:167
+msgid "Savollarni ommaviy yuklash xatosi"
+msgstr "Ошибка массовой загрузки вопросов"
+
+#: .\core\admin.py:181
+msgid "Yuklash uchun savollar topilmadi (fayllar bo'sh yoki ajratilmadi)."
+msgstr "Вопросы для загрузки не найдены (файлы пусты или не разделены)."
+
+#: .\core\admin.py:196
+msgid "{}-savol uchun javob topilmadi."
+msgstr "Ответ для {}-го вопроса не найден."
+
+#: .\core\admin.py:211
+msgid "{} ta savol muvaffaqiyatli yuklandi."
+msgid_plural "{} ta savol muvaffaqiyatli yuklandi."
+msgstr[0] "{} вопрос успешно загружен."
+msgstr[1] "{} вопроса успешно загружено."
+msgstr[2] "{} вопросов успешно загружено."
+msgstr[3] "{} вопросов успешно загружено."
+
+
+#: .\core\admin.py:220
+msgid "Savollarni Ommaviy Yuklash"
+msgstr "Массовая загрузка вопросов"
+
+#: .\core\admin.py:231
 msgid "Test Savoli"
 msgstr "Вопрос теста"
 
-#: .\core\admin.py:114 .\core\admin.py:130 .\core\admin.py:152
+#: .\core\admin.py:232 .\core\admin.py:248 .\core\admin.py:270
 msgid "Test Savollari"
 msgstr "Вопросы теста"
 
-#: .\core\admin.py:139 .\core\admin.py:193 .\core\models.py:356
+#: .\core\admin.py:257 .\core\models.py:362
 msgid "Aralash Test"
 msgstr "Смешанный тест"
 
-#: .\core\admin.py:140
+#: .\core\admin.py:258
 msgid "Test Tavsifi"
 msgstr "Описание теста"
 
-#: .\core\admin.py:150
+#: .\core\admin.py:268
 msgid "va yana"
 msgstr "и еще"
 
-#: .\core\admin.py:150
+#: .\core\admin.py:268
 msgid "ta savol..."
 msgstr "вопросов..."
 
-#: .\core\admin.py:155
+#: .\core\admin.py:273
 msgid "Tanlangan testlarni Excelga eksport qilish"
 msgstr "Экспортировать выбранные тесты в Excel"
 
-#: .\core\admin.py:158
+#: .\core\admin.py:276
 msgid "Eksport uchun testlar tanlanmadi."
 msgstr "Тесты для экспорта не выбраны."
 
-#: .\core\admin.py:172
+#: .\core\admin.py:290
 msgid "Test ID"
 msgstr "ID Теста"
 
-#: .\core\admin.py:173 .\core\models.py:157
+#: .\core\admin.py:291 .\core\models.py:157
 msgid "Telegram ID"
 msgstr "ID Telegram"
 
-#: .\core\admin.py:174
-msgid "F.I.Sh."
+#: .\core\admin.py:292
+msgid "F.A.Á."
 msgstr "Ф.И.О."
 
-#: .\core\admin.py:175
+#: .\core\admin.py:293
 msgid "Telefon"
 msgstr "Телефон"
 
-#: .\core\admin.py:176
-msgid "Ta'lim Turi"
+#: .\core\admin.py:294
+msgid "Bilimlendiriw Túri"
 msgstr "Тип образования"
 
-#: .\core\admin.py:177
-msgid "Muassasa"
+#: .\core\admin.py:295
+msgid "Mákeme"
 msgstr "Учреждение"
 
-#: .\core\admin.py:178
-msgid "Bosqich (OTM)"
+#: .\core\admin.py:296
+msgid "Basqısh (JOO)"
 msgstr "Ступень (ВУЗ)"
 
-#: .\core\admin.py:179 .\core\models.py:180
-msgid "Fakultet (OTM)"
+#: .\core\admin.py:297
+msgid "Fakultet (JOO)"
 msgstr "Факультет (ВУЗ)"
 
-#: .\core\admin.py:180
-msgid "Kurs/Sinf"
-msgstr "Курс/Класс"
+#: .\core\admin.py:298
+msgid "Kurs"
+msgstr "Курс"
 
-#: .\core\admin.py:181
-msgid "Test Boshlangan Sanasi"
-msgstr "Дата начала теста"
+#: .\core\admin.py:299
+msgid "Test Baslanıw Waqıtı"
+msgstr "Время начала теста"
 
-#: .\core\admin.py:182
-msgid "Test Tugatilgan Sanasi"
-msgstr "Дата окончания теста"
+#: .\core\admin.py:300
+msgid "Test Tamamlanıw Waqıtı"
+msgstr "Время окончания теста"
 
-#: .\core\admin.py:183
-msgid "Natija (Ball)"
+#: .\core\admin.py:301
+msgid "Nátiyje (Ball)"
 msgstr "Результат (Балл)"
 
-#: .\core\admin.py:184
-msgid "Jami Savollar"
+#: .\core\admin.py:302
+msgid "Jámi Sorawlar"
 msgstr "Всего вопросов"
 
-#: .\core\admin.py:185
-msgid "Sarflangan Vaqt (s)"
+#: .\core\admin.py:303
+msgid "Sarplaǵan Waqıtı (s)"
 msgstr "Затраченное время (с)"
 
-#: .\core\admin.py:186
-msgid "Voucher Kodi"
-msgstr "Код ваучера"
+#: .\core\admin.py:304
+msgid "Sertifikat Kodı"
+msgstr "Код сертификата"
 
-#: .\core\admin.py:187
-msgid "Voucher Yuborildi"
-msgstr "Ваучер отправлен"
+#: .\core\admin.py:305
+msgid "Sertifikat Jiberildi"
+msgstr "Сертификат отправлен"
 
-#: .\core\admin.py:188
-msgid "Testdagi Fanlar"
-msgstr "Предметы в тесте"
-
-#: .\core\admin.py:219
-msgid "Ha"
+#: .\core\admin.py:327
+msgid "Awa"
 msgstr "Да"
 
-#: .\core\admin.py:219
-msgid "Yo'q"
+#: .\core\admin.py:327
+msgid "Yaq"
 msgstr "Нет"
 
-#: .\core\admin.py:224
+#: .\core\admin.py:331
 msgid "Eksport uchun ma'lumot topilmadi."
 msgstr "Данные для экспорта не найдены."
 
-#: .\core\admin.py:230
+#: .\core\admin.py:337
 msgid "Test_Natijalari"
 msgstr "Результаты_Теста"
 
-#: .\core\forms.py:17
-msgid "Ism va sharifingiz"
-msgstr "Ваше имя и фамилия"
+#: .\core\forms.py:18 .\core\forms.py:28
+msgid "Ismingiz"
+msgstr "Ваше имя"
 
-#: .\core\forms.py:22
+#: .\core\forms.py:19 .\core\forms.py:29
+msgid "Familiyangiz"
+msgstr "Ваша фамилия"
+
+#: .\core\forms.py:20 .\core\forms.py:30
+msgid "Otangizning ismi"
+msgstr "Имя вашего отца"
+
+#: .\core\forms.py:25
 msgid "Masalan: 1"
 msgstr "Например: 1"
 
-#: .\core\forms.py:25 .\core\models.py:162
-msgid "Ism va sharif"
-msgstr "Имя и фамилия"
-
-#: .\core\forms.py:26 .\core\models.py:32 .\core\models.py:177
+#: .\core\forms.py:31 .\core\models.py:32 .\core\models.py:179
 msgid "Ta'lim muassasasi turi"
 msgstr "Тип учебного заведения"
 
-#: .\core\forms.py:27 .\core\models.py:178
+#: .\core\forms.py:32 .\core\models.py:180
 msgid "Muassasa nomi"
 msgstr "Название учебного заведения"
 
-#: .\core\forms.py:28
+#: .\core\forms.py:33
 msgid "Ta'lim bosqichi (OTM uchun)"
 msgstr "Ступень обучения (для ВУЗа)"
 
-#: .\core\forms.py:29
+#: .\core\forms.py:34
 msgid "Fakultet (OTM uchun)"
 msgstr "Факультет (для ВУЗа)"
 
-#: .\core\forms.py:30 .\core\models.py:181
+#: .\core\forms.py:35 .\core\models.py:183
 msgid "Kurs (bosqich)"
 msgstr "Курс (ступень)"
 
-#: .\core\forms.py:33
+#: .\core\forms.py:38
 msgid ""
 "Nechanchi kursda (yoki litsey/kollejda nechanchi bosqichda) o'qishingizni "
 "kiriting."
-msgstr "Введите, на каком курсе (или на какой ступени в лицее/колледже) вы учитесь."
+msgstr ""
+"Введите, на каком курсе (или на какой ступени в лицее/колледже) вы учитесь."
 
-#: .\core\forms.py:42 .\core\forms.py:85 .\core\forms.py:88 .\core\forms.py:95
-#: .\core\templates\registration_info_form.html:153
-#: .\core\templates\registration_info_form.html:268
+#: .\core\forms.py:47 .\core\forms.py:90 .\core\forms.py:93 .\core\forms.py:100
+#: .\core\templates\registration_info_form.html:158
+#: .\core\templates\registration_info_form.html:273
 msgid "Tanlang..."
 msgstr "Выберите..."
 
-#: .\core\forms.py:49
+#: .\core\forms.py:54
 msgid "Avval ta'lim turini tanlang"
 msgstr "Сначала выберите тип образования"
 
-#: .\core\forms.py:50 .\core\forms.py:51
-#: .\core\templates\registration_info_form.html:268
+#: .\core\forms.py:55 .\core\forms.py:56
+#: .\core\templates\registration_info_form.html:273
 msgid "OTM tanlanganda ochiladi"
 msgstr "Откроется при выборе ВУЗа"
 
-#: .\core\forms.py:128
+#: .\core\forms.py:133
 msgid "OTM uchun ta'lim bosqichini tanlang."
 msgstr "Выберите ступень обучения для ВУЗа."
 
-#: .\core\forms.py:132
+#: .\core\forms.py:137
 msgid "OTM uchun fakultetni tanlang."
 msgstr "Выберите факультет для ВУЗа."
 
+#: .\core\forms.py:154 .\core\models.py:268 .\core\models.py:289
+msgid "Fan"
+msgstr "Предмет"
+
+#: .\core\forms.py:155
+msgid "Fanni tanlang"
+msgstr "Выберите предмет"
+
+#: .\core\forms.py:159
+msgid "Savollar fayli (O'zbekcha, DOCX)"
+msgstr "Файл с вопросами (Узбекский, DOCX)"
+
+#: .\core\forms.py:164
+msgid "Savollar fayli (Qoraqalpoqcha, DOCX)"
+msgstr "Файл с вопросами (Каракалпакский, DOCX)"
+
+#: .\core\forms.py:169
+msgid "Savollar fayli (Ruscha, DOCX)"
+msgstr "Файл с вопросами (Русский, DOCX)"
+
+#: .\core\forms.py:174
+msgid "Javoblar ketma-ketligi"
+msgstr "Последовательность ответов"
+
+#: .\core\forms.py:175
+msgid "Masalan: ABADDCB... Har bir fayldagi savollar soniga mos kelishi kerak."
+msgstr "Например: ABADDCB... Должно соответствовать количеству вопросов в каждом файле."
+
+#: .\core\forms.py:180
+msgid "Savol ajratuvchi belgi"
+msgstr "Разделитель вопросов"
+
+#: .\core\forms.py:184
+msgid "DOCX faylida savollarni ajratib turuvchi belgi."
+msgstr "Символ, разделяющий вопросы в файле DOCX."
+
+#: .\core\forms.py:191
+msgid "Javoblar faqat A, B, C, D harflaridan iborat bo'lishi kerak."
+msgstr "Ответы должны состоять только из букв A, B, C, D."
+
+#: .\core\forms.py:202
+msgid "Hech bo'lmaganda bitta tilda savollar faylini yuklang."
+msgstr "Загрузите файл с вопросами хотя бы на одном языке."
+
+#: .\core\forms.py:205
+msgid "Javoblar ketma-ketligini kiriting."
+msgstr "Введите последовательность ответов."
+
 #: .\core\models.py:13 .\core\models.py:39 .\core\models.py:62
-#: .\core\models.py:94 .\core\models.py:227
+#: .\core\models.py:94 .\core\models.py:233
 msgid "Nomi (O'zbekcha)"
 msgstr "Название (Узбекский)"
 
 #: .\core\models.py:14 .\core\models.py:40 .\core\models.py:63
-#: .\core\models.py:95 .\core\models.py:228
+#: .\core\models.py:95 .\core\models.py:234
 msgid "Nomi (Qoraqalpoqcha)"
 msgstr "Название (Каракалпакский)"
 
 #: .\core\models.py:15 .\core\models.py:41 .\core\models.py:64
-#: .\core\models.py:96 .\core\models.py:229
+#: .\core\models.py:96 .\core\models.py:235
 msgid "Nomi (Ruscha)"
 msgstr "Название (Русский)"
 
@@ -268,7 +346,7 @@ msgstr "Учебное заведение"
 msgid "Ta'lim muassasalari"
 msgstr "Учебные заведения"
 
-#: .\core\models.py:78 .\core\models.py:179
+#: .\core\models.py:78 .\core\models.py:181
 msgid "Ta'lim bosqichi (OTM)"
 msgstr "Ступень обучения (ВУЗ)"
 
@@ -304,147 +382,180 @@ msgstr "У суперпользователей должен быть парол
 msgid "Telegram Username"
 msgstr "Имя пользователя Telegram"
 
+#: .\core\models.py:162
+msgid "Ismi"
+msgstr "Имя"
+
 #: .\core\models.py:163
+msgid "Familiyasi"
+msgstr "Фамилия"
+
+#: .\core\models.py:164
+msgid "Otasining ismi"
+msgstr "Отчество"
+
+#: .\core\models.py:165
 msgid "Telefon raqami"
 msgstr "Номер телефона"
 
-#: .\core\models.py:174
+#: .\core\models.py:176
 msgid "Til"
 msgstr "Язык"
 
-#: .\core\models.py:184
+#: .\core\models.py:182
+msgid "Fakultet (OTM)"
+msgstr "Факультет (ВУЗ)"
+
+#: .\core\models.py:186
 msgid "staff status"
 msgstr "статус сотрудника"
 
-#: .\core\models.py:186
+#: .\core\models.py:188
 msgid "Designates whether the user can log into this admin site."
-msgstr "Определяет, может ли пользователь войти на этот сайт администрирования."
+msgstr ""
+"Определяет, может ли пользователь войти на этот сайт администрирования."
 
-#: .\core\models.py:189
+#: .\core\models.py:191
 msgid "active"
 msgstr "активен"
 
-#: .\core\models.py:192
+#: .\core\models.py:194
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
-msgstr "Определяет, следует ли считать этого пользователя активным. Снимите этот флажок вместо удаления учетных записей."
+msgstr ""
+"Определяет, следует ли считать этого пользователя активным. Снимите этот "
+"флажок вместо удаления учетных записей."
 
-#: .\core\models.py:198
+#: .\core\models.py:200
 msgid "Yaratilgan sana"
 msgstr "Дата создания"
 
-#: .\core\models.py:199
+#: .\core\models.py:201
 msgid "Yangilangan sana"
 msgstr "Дата обновления"
 
-#: .\core\models.py:220 .\core\models.py:337
+#: .\core\models.py:226 .\core\models.py:343
 #: .\core\templates\test_results.html:29
 msgid "Foydalanuvchi"
 msgstr "Пользователь"
 
-#: .\core\models.py:221
+#: .\core\models.py:227
 msgid "Foydalanuvchilar"
 msgstr "Пользователи"
 
-#: .\core\models.py:236
+#: .\core\models.py:242
 msgid "Minimal kurs/bosqich"
 msgstr "Минимальный курс/ступень"
 
-#: .\core\models.py:237
+#: .\core\models.py:243
 msgid "Maksimal kurs/bosqich"
 msgstr "Максимальный курс/ступень"
 
-#: .\core\models.py:244
+#: .\core\models.py:250
 msgid ""
 "Voucher rasmi uchun shablon nomi (masalan, Matematika -> VoucherMatematika). "
 "Agar bo'sh bo'lsa, standart ishlatiladi."
-msgstr "Имя шаблона для изображения ваучера (например, Математика -> VoucherMatematika). Если пусто, используется стандартный."
+msgstr ""
+"Имя шаблона для изображения ваучера (например, Математика -> "
+"VoucherMatematika). Если пусто, используется стандартный."
 
-#: .\core\models.py:245
+#: .\core\models.py:251
 msgid "Voucher shabloni nomi"
 msgstr "Имя шаблона ваучера"
 
-#: .\core\models.py:247 .\core\models.py:301
+#: .\core\models.py:253 .\core\models.py:307
 msgid "Aktiv"
 msgstr "Активен"
 
-#: .\core\models.py:262 .\core\models.py:283
-msgid "Fan"
-msgstr "Предмет"
-
-#: .\core\models.py:263
+#: .\core\models.py:269
 msgid "Fanlar"
 msgstr "Предметы"
 
-#: .\core\models.py:286
+#: .\core\models.py:292
 msgid "Savol fayli (O'zbekcha, DOCX)"
 msgstr "Файл с вопросами (Узбекский, DOCX)"
 
-#: .\core\models.py:287
+#: .\core\models.py:293
 msgid "Savol fayli (Qoraqalpoqcha, DOCX)"
 msgstr "Файл с вопросами (Каракалпакский, DOCX)"
 
-#: .\core\models.py:288
+#: .\core\models.py:294
 msgid "Savol fayli (Ruscha, DOCX)"
 msgstr "Файл с вопросами (Русский, DOCX)"
 
-#: .\core\models.py:300 .\core\templates\test_results.html:62
+#: .\core\models.py:306 .\core\templates\test_results.html:62
 msgid "To'g'ri javob"
 msgstr "Правильный ответ"
 
-#: .\core\models.py:322
+#: .\core\models.py:328
 msgid "Fayl yuklanmagan"
 msgstr "Файл не загружен"
 
-#: .\core\models.py:323 .\core\models.py:332
+#: .\core\models.py:329 .\core\models.py:338
 #: .\core\templates\test_in_progress.html:112 .\core\views.py:487
 msgid "Savol"
 msgstr "Вопрос"
 
-#: .\core\models.py:329
+#: .\core\models.py:335
 msgid "Hech bo'lmaganda bitta tilda savol faylini yuklang."
 msgstr "Загрузите файл с вопросами хотя бы на одном языке."
 
-#: .\core\models.py:333
+#: .\core\models.py:339
 msgid "Savollar"
 msgstr "Вопросы"
 
-#: .\core\models.py:339
+#: .\core\models.py:345
 msgid "Boshlangan vaqti"
 msgstr "Время начала"
 
-#: .\core\models.py:340
+#: .\core\models.py:346
 msgid "Tugatilgan vaqti"
 msgstr "Время окончания"
 
-#: .\core\models.py:342
+#: .\core\models.py:348
 msgid "Natija (ball)"
 msgstr "Результат (балл)"
 
-#: .\core\models.py:344
+#: .\core\models.py:350
 msgid "Berilgan savollar"
 msgstr "Заданные вопросы"
 
-#: .\core\models.py:348
+#: .\core\models.py:354
 msgid "Sarflangan vaqt (sekund)"
 msgstr "Затраченное время (секунд)"
 
-#: .\core\models.py:349
+#: .\core\models.py:355
 msgid "Voucher yuborildimi?"
 msgstr "Ваучер отправлен?"
 
-#: .\core\models.py:350
+#: .\core\models.py:356
 msgid "Voucher kodi/raqami"
 msgstr "Код/номер ваучера"
 
-#: .\core\models.py:361
+#: .\core\models.py:367
 msgid "Test"
 msgstr "Тест"
 
-#: .\core\models.py:362
+#: .\core\models.py:368
 msgid "Testlar"
 msgstr "Тесты"
+
+#: .\core\templates\bulk_upload_form.html:15
+msgid "Home"
+msgstr "Главная"
+
+#: .\core\templates\bulk_upload_form.html:27
+msgid "Please correct the error below."
+msgid_plural "Please correct the errors below."
+msgstr[0] "Пожалуйста, исправьте ошибку ниже."
+msgstr[1] "Пожалуйста, исправьте ошибки ниже."
+msgstr[2] "Пожалуйста, исправьте ошибки ниже."
+msgstr[3] "Пожалуйста, исправьте ошибки ниже."
+
+#: .\core\templates\bulk_upload_form.html:54
+msgid "Yuklash"
+msgstr "Загрузить"
 
 #: .\core\templates\error_page.html:3
 msgid "Xatolik"
@@ -462,7 +573,8 @@ msgstr "Извините, произошла непредвиденная оши
 msgid ""
 "Iltimos, keyinroq qayta urinib ko'ring yoki bot orqali administratorga "
 "murojaat qiling."
-msgstr "Пожалуйста, попробуйте позже или свяжитесь с администратором через бота."
+msgstr ""
+"Пожалуйста, попробуйте позже или свяжитесь с администратором через бота."
 
 #: .\core\templates\error_page.html:12
 #: .\core\templates\test_already_completed.html:11
@@ -520,13 +632,21 @@ msgstr "Время, отведенное на тест"
 msgid "daqiqa"
 msgstr "минут"
 
-#: .\core\templates\prepare_test.html:31
+#: .\core\templates\prepare_test.html:28
+msgid "Orqaga"
+msgstr "Назад"
+
+#: .\core\templates\prepare_test.html:33
 msgid "Testni Boshlash"
 msgstr "Начать тест"
 
-#: .\core\templates\prepare_test.html:36
+#: .\core\templates\prepare_test.html:39
 msgid "Omad tilaymiz!"
 msgstr "Желаем удачи!"
+
+#: .\core\templates\question_changelist.html:7
+msgid "Ko'p Savol Yuklash"
+msgstr "Массовая загрузка вопросов"
 
 #: .\core\templates\registration_info_form.html:8
 msgid "Ro'yxatdan o'tish"
@@ -536,41 +656,42 @@ msgstr "Регистрация"
 msgid "Qo'shimcha ma'lumotlarni kiriting"
 msgstr "Введите дополнительную информацию"
 
-#: .\core\templates\registration_info_form.html:123
-#: .\core\templates\registration_info_form.html:361
+#: .\core\templates\registration_info_form.html:128
+#: .\core\templates\registration_info_form.html:366
 msgid "Saqlash va Davom Etish"
 msgstr "Сохранить и продолжить"
 
-#: .\core\templates\registration_info_form.html:169
+#: .\core\templates\registration_info_form.html:174
 msgid "Maʼlumot yuklashda xatolik"
 msgstr "Ошибка при загрузке данных"
 
-#: .\core\templates\registration_info_form.html:196
+#: .\core\templates\registration_info_form.html:201
 msgid "Server bilan bogʻlanishda xatolik"
 msgstr "Ошибка соединения с сервером"
 
-#: .\core\templates\registration_info_form.html:227
-#: .\core\templates\registration_info_form.html:253
+#: .\core\templates\registration_info_form.html:232
+#: .\core\templates\registration_info_form.html:258
 msgid "Yuklanmoqda..."
 msgstr "Загрузка..."
 
-#: .\core\templates\registration_info_form.html:227
+#: .\core\templates\registration_info_form.html:232
 msgid "Avval taʼlim turini tanlang"
 msgstr "Сначала выберите тип образования"
 
-#: .\core\templates\registration_info_form.html:228
+#: .\core\templates\registration_info_form.html:233
 msgid "Avval muassasa turini tanlang"
 msgstr "Сначала выберите тип учебного заведения"
 
-#: .\core\templates\registration_info_form.html:229
-#: .\core\templates\registration_info_form.html:253
+#: .\core\templates\registration_info_form.html:234
+#: .\core\templates\registration_info_form.html:258
 msgid "Avval muassasani tanlang"
 msgstr "Сначала выберите учебное заведение"
 
-#: .\core\templates\registration_info_form.html:346
+#: .\core\templates\registration_info_form.html:351
 msgid ""
 "Telegram foydalanuvchi ID si topilmadi. Iltimos, bot orqali qayta kiring."
-msgstr "ID пользователя Telegram не найден. Пожалуйста, войдите снова через бота."
+msgstr ""
+"ID пользователя Telegram не найден. Пожалуйста, войдите снова через бота."
 
 #: .\core\templates\registration_success.html:3
 msgid "Muvaffaqiyatli"
@@ -704,6 +825,47 @@ msgstr "Ответ не дан"
 msgid "Batafsil natijalar mavjud emas."
 msgstr "Подробные результаты отсутствуют."
 
+#: .\core\utils.py:111
+msgid "Fayl yuklanmagan."
+msgstr "Файл не загружен."
+
+#: .\core\utils.py:113
+msgid "Javoblar ketma-tetligi kiritilmagan."
+msgstr "Последовательность ответов не введена."
+
+#: .\core\utils.py:135
+msgid "DOCX fayl yaroqsiz (document.xml topilmadi)."
+msgstr "Файл DOCX недействителен (document.xml не найден)."
+
+#: .\core\utils.py:192
+msgid ""
+"DOCX faylidan savollar ajratib olinmadi (ehtimol delimiter \"{}\" topilmadi "
+"yoki fayl formati noto'g'ri), lekin javoblar mavjud."
+msgstr ""
+"Вопросы из файла DOCX не извлечены (возможно, разделитель \"{}\" не найден "
+"или формат файла неверный), но ответы присутствуют."
+
+#: .\core\utils.py:194
+msgid "DOCX fayli bo'sh yoki savol topilmadi va javoblar ham kiritilmagan."
+msgstr "Файл DOCX пуст или вопрос не найден, и ответы также не введены."
+
+#: .\core\utils.py:198
+msgid ""
+"Ajratilgan savollar soni ({}) kiritilgan javoblar soniga ({}) mos kelmadi."
+msgstr "Количество извлеченных вопросов ({}) не соответствует количеству введенных ответов ({})."
+
+#: .\core\utils.py:277
+msgid "DOCX fayl yaroqsiz zip arxiv (asosiy fayl)."
+msgstr "Файл DOCX является недействительным zip-архивом (основной файл)."
+
+#: .\core\utils.py:280
+msgid "DOCX fayl yaroqsiz XML tuzilishiga ega: {}"
+msgstr "Файл DOCX имеет недействительную структуру XML: {}"
+
+#: .\core\utils.py:283
+msgid "DOCX faylini qayta ishlashda kutilmagan xato: {}"
+msgstr "Непредвиденная ошибка при обработке файла DOCX: {}"
+
 #: .\core\views.py:37
 msgid "Telegram ID topilmadi. Iltimos, bot orqali qayta urinib ko'ring."
 msgstr "ID Telegram не найден. Пожалуйста, попробуйте снова через бота."
@@ -728,7 +890,9 @@ msgstr "Ваши данные успешно сохранены!"
 msgid ""
 "Formani to'ldirishda xatoliklar mavjud. Iltimos, tekshirib qayta urinib "
 "ko'ring."
-msgstr "При заполнении формы возникли ошибки. Пожалуйста, проверьте и попробуйте снова."
+msgstr ""
+"При заполнении формы возникли ошибки. Пожалуйста, проверьте и попробуйте "
+"снова."
 
 #: .\core\views.py:110
 msgid "Xatolik yuz berdi."

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-31 11:51+0500\n"
-"PO-Revision-Date: 2024-06-14 12:00+0000\n"
+"POT-Creation-Date: 2025-05-31 21:35+0500\n"
+"PO-Revision-Date: 2024-06-14 18:00+0000\n"
 "Last-Translator: AI Assistant <>\n"
 "Language-Team: Karakalpak <kar@li.org>\n"
 "Language: kaa\n"
@@ -18,231 +18,306 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\CONFIG\settings.py:118 .\core\models.py:166
+#: .\CONFIG\settings.py:118 .\core\models.py:168
 msgid "Uzbek"
 msgstr "Ózbek"
 
-#: .\CONFIG\settings.py:119 .\core\models.py:167
+#: .\CONFIG\settings.py:119 .\core\models.py:169
 msgid "Karakalpak"
 msgstr "Qaraqalpaq"
 
-#: .\CONFIG\settings.py:120 .\core\models.py:168
+#: .\CONFIG\settings.py:120 .\core\models.py:170
 msgid "Russian"
 msgstr "Rus"
 
-#: .\core\admin.py:26
+#: .\core\admin.py:30
 msgid "Shaxsiy maʻlumotlar"
 msgstr "Jeke maǵlıwmatlar"
 
-#: .\core\admin.py:27
+#: .\core\admin.py:31
 msgid "Taʻlim maʻlumotlari"
 msgstr "Bilimlendiriw maǵlıwmatları"
 
-#: .\core\admin.py:28 .\core\admin.py:129
+#: .\core\admin.py:32 .\core\admin.py:247
 msgid "Vaqt belgilari"
 msgstr "Waqıt belgileri"
 
-#: .\core\admin.py:67
+#: .\core\admin.py:71
 msgid "Nomi"
 msgstr "Atı"
 
-#: .\core\admin.py:106
+#: .\core\admin.py:110
 msgid "Fayl yo'q"
 msgstr "Fayl joq"
 
-#: .\core\admin.py:107
+#: .\core\admin.py:111
 msgid "Mavjud Tillar"
 msgstr "Bar Tiller"
 
-#: .\core\admin.py:113
+#: .\core\admin.py:158
+msgid "Turli tillardagi fayllarda savollar soni mos kelmadi: {}"
+msgstr "Hár qıylı tildegi fayllarda sorawlar sanı sáykes kelmedi: {}"
+
+#: .\core\admin.py:167
+msgid "Savollarni ommaviy yuklash xatosi"
+msgstr "Sorawlardı kópşilik júklew qátesi"
+
+#: .\core\admin.py:181
+msgid "Yuklash uchun savollar topilmadi (fayllar bo'sh yoki ajratilmadi)."
+msgstr "Júklew ushın sorawlar tabılmadı (fayllar bos yaki ajıratılmadı)."
+
+#: .\core\admin.py:196
+msgid "{}-savol uchun javob topilmadi."
+msgstr "{}-soraw ushın juwap tabılmadı."
+
+#: .\core\admin.py:211
+msgid "{} ta savol muvaffaqiyatli yuklandi."
+msgstr "{} soraw tabıslı júklendi."
+
+#: .\core\admin.py:220
+msgid "Savollarni Ommaviy Yuklash"
+msgstr "Sorawlardı Kópşilik Júklew"
+
+#: .\core\admin.py:231
 msgid "Test Savoli"
 msgstr "Test Sorawı"
 
-#: .\core\admin.py:114 .\core\admin.py:130 .\core\admin.py:152
+#: .\core\admin.py:232 .\core\admin.py:248 .\core\admin.py:270
 msgid "Test Savollari"
 msgstr "Test Sorawları"
 
-#: .\core\admin.py:139 .\core\admin.py:193 .\core\models.py:356
+#: .\core\admin.py:257 .\core\models.py:362
 msgid "Aralash Test"
 msgstr "Aralas Test"
 
-#: .\core\admin.py:140
+#: .\core\admin.py:258
 msgid "Test Tavsifi"
 msgstr "Test Sıpatlaması"
 
-#: .\core\admin.py:150
+#: .\core\admin.py:268
 msgid "va yana"
 msgstr "hám jáne"
 
-#: .\core\admin.py:150
+#: .\core\admin.py:268
 msgid "ta savol..."
 msgstr "soraw..."
 
-#: .\core\admin.py:155
+#: .\core\admin.py:273
 msgid "Tanlangan testlarni Excelga eksport qilish"
 msgstr "Saylanǵan testlerdi Excelge eksport etiw"
 
-#: .\core\admin.py:158
+#: .\core\admin.py:276
 msgid "Eksport uchun testlar tanlanmadi."
 msgstr "Eksport ushın testler saylanbadı."
 
-#: .\core\admin.py:172
+#: .\core\admin.py:290
 msgid "Test ID"
 msgstr "Test ID"
 
-#: .\core\admin.py:173 .\core\models.py:157
+#: .\core\admin.py:291 .\core\models.py:157
 msgid "Telegram ID"
 msgstr "Telegram ID"
 
-#: .\core\admin.py:174
-msgid "F.I.Sh."
-msgstr "A.Á.F."
+#: .\core\admin.py:292
+msgid "F.A.Á."
+msgstr "A.Á.A."
 
-#: .\core\admin.py:175
+#: .\core\admin.py:293
 msgid "Telefon"
 msgstr "Telefon"
 
-#: .\core\admin.py:176
-msgid "Ta'lim Turi"
+#: .\core\admin.py:294
+msgid "Bilimlendiriw Túri"
 msgstr "Bilimlendiriw Túri"
 
-#: .\core\admin.py:177
-msgid "Muassasa"
+#: .\core\admin.py:295
+msgid "Mákeme"
 msgstr "Mákeme"
 
-#: .\core\admin.py:178
-msgid "Bosqich (OTM)"
+#: .\core\admin.py:296
+msgid "Basqısh (JOO)"
 msgstr "Basqısh (JOO)"
 
-#: .\core\admin.py:179 .\core\models.py:180
-msgid "Fakultet (OTM)"
+#: .\core\admin.py:297
+msgid "Fakultet (JOO)"
 msgstr "Fakultet (JOO)"
 
-#: .\core\admin.py:180
-msgid "Kurs/Sinf"
-msgstr "Kurs/Klass"
+#: .\core\admin.py:298
+msgid "Kurs"
+msgstr "Kurs"
 
-#: .\core\admin.py:181
-msgid "Test Boshlangan Sanasi"
-msgstr "Test Baslanǵan Sánesi"
+#: .\core\admin.py:299
+msgid "Test Baslanıw Waqıtı"
+msgstr "Test Baslanıw Waqıtı"
 
-#: .\core\admin.py:182
-msgid "Test Tugatilgan Sanasi"
-msgstr "Test Pitkerilgen Sánesi"
+#: .\core\admin.py:300
+msgid "Test Tamamlanıw Waqıtı"
+msgstr "Test Tamamlanıw Waqıtı"
 
-#: .\core\admin.py:183
-msgid "Natija (Ball)"
+#: .\core\admin.py:301
+msgid "Nátiyje (Ball)"
 msgstr "Nátiyje (Ball)"
 
-#: .\core\admin.py:184
-msgid "Jami Savollar"
+#: .\core\admin.py:302
+msgid "Jámi Sorawlar"
 msgstr "Jámi Sorawlar"
 
-#: .\core\admin.py:185
-msgid "Sarflangan Vaqt (s)"
-msgstr "Sarplanǵan Waqıt (s)"
+#: .\core\admin.py:303
+msgid "Sarplaǵan Waqıtı (s)"
+msgstr "Sarplaǵan Waqıtı (s)"
 
-#: .\core\admin.py:186
-msgid "Voucher Kodi"
-msgstr "Vaucher Kodı"
+#: .\core\admin.py:304
+msgid "Sertifikat Kodı"
+msgstr "Sertifikat Kodı"
 
-#: .\core\admin.py:187
-msgid "Voucher Yuborildi"
-msgstr "Vaucher Jiberildi"
+#: .\core\admin.py:305
+msgid "Sertifikat Jiberildi"
+msgstr "Sertifikat Jiberildi"
 
-#: .\core\admin.py:188
-msgid "Testdagi Fanlar"
-msgstr "Testtegi Pánler"
-
-#: .\core\admin.py:219
-msgid "Ha"
+#: .\core\admin.py:327
+msgid "Awa"
 msgstr "Awa"
 
-#: .\core\admin.py:219
-msgid "Yo'q"
+#: .\core\admin.py:327
+msgid "Yaq"
 msgstr "Joq"
 
-#: .\core\admin.py:224
+#: .\core\admin.py:331
 msgid "Eksport uchun ma'lumot topilmadi."
 msgstr "Eksport ushın maǵlıwmat tabılmadı."
 
-#: .\core\admin.py:230
+#: .\core\admin.py:337
 msgid "Test_Natijalari"
 msgstr "Test_Nátiyjeleri"
 
-#: .\core\forms.py:17
-msgid "Ism va sharifingiz"
-msgstr "Atıńız hám familiyańız"
+#: .\core\forms.py:18 .\core\forms.py:28
+msgid "Ismingiz"
+msgstr "Atıńız"
 
-#: .\core\forms.py:22
+#: .\core\forms.py:19 .\core\forms.py:29
+msgid "Familiyangiz"
+msgstr "Familiyańız"
+
+#: .\core\forms.py:20 .\core\forms.py:30
+msgid "Otangizning ismi"
+msgstr "Ákeńizdiń atı"
+
+#: .\core\forms.py:25
 msgid "Masalan: 1"
 msgstr "Mısalı: 1"
 
-#: .\core\forms.py:25 .\core\models.py:162
-msgid "Ism va sharif"
-msgstr "Atı hám familiyası"
-
-#: .\core\forms.py:26 .\core\models.py:32 .\core\models.py:177
+#: .\core\forms.py:31 .\core\models.py:32 .\core\models.py:179
 msgid "Ta'lim muassasasi turi"
 msgstr "Bilimlendiriw mákemesiniń túri"
 
-#: .\core\forms.py:27 .\core\models.py:178
+#: .\core\forms.py:32 .\core\models.py:180
 msgid "Muassasa nomi"
 msgstr "Mákeme atı"
 
-#: .\core\forms.py:28
+#: .\core\forms.py:33
 msgid "Ta'lim bosqichi (OTM uchun)"
 msgstr "Bilimlendiriw basqıshı (JOO ushın)"
 
-#: .\core\forms.py:29
+#: .\core\forms.py:34
 msgid "Fakultet (OTM uchun)"
 msgstr "Fakultet (JOO ushın)"
 
-#: .\core\forms.py:30 .\core\models.py:181
+#: .\core\forms.py:35 .\core\models.py:183
 msgid "Kurs (bosqich)"
 msgstr "Kurs (basqısh)"
 
-#: .\core\forms.py:33
+#: .\core\forms.py:38
 msgid ""
 "Nechanchi kursda (yoki litsey/kollejda nechanchi bosqichda) o'qishingizni "
 "kiriting."
-msgstr "Neshenshi kursta (yamasa licey/kolledjde neshenshi basqıshta) oqıytuǵınıńızdı kiritiń."
+msgstr ""
+"Neshenshi kursta (yamasa licey/kolledjde neshenshi basqıshta) "
+"oqıytuǵınıńızdı kiritiń."
 
-#: .\core\forms.py:42 .\core\forms.py:85 .\core\forms.py:88 .\core\forms.py:95
-#: .\core\templates\registration_info_form.html:153
-#: .\core\templates\registration_info_form.html:268
+#: .\core\forms.py:47 .\core\forms.py:90 .\core\forms.py:93 .\core\forms.py:100
+#: .\core\templates\registration_info_form.html:158
+#: .\core\templates\registration_info_form.html:273
 msgid "Tanlang..."
 msgstr "Saylań..."
 
-#: .\core\forms.py:49
+#: .\core\forms.py:54
 msgid "Avval ta'lim turini tanlang"
 msgstr "Dáslep bilimlendiriw túrin saylań"
 
-#: .\core\forms.py:50 .\core\forms.py:51
-#: .\core\templates\registration_info_form.html:268
+#: .\core\forms.py:55 .\core\forms.py:56
+#: .\core\templates\registration_info_form.html:273
 msgid "OTM tanlanganda ochiladi"
 msgstr "JOO saylanǵanda ashıladı"
 
-#: .\core\forms.py:128
+#: .\core\forms.py:133
 msgid "OTM uchun ta'lim bosqichini tanlang."
 msgstr "JOO ushın bilimlendiriw basqıshın saylań."
 
-#: .\core\forms.py:132
+#: .\core\forms.py:137
 msgid "OTM uchun fakultetni tanlang."
 msgstr "JOO ushın fakultetti saylań."
 
+#: .\core\forms.py:154 .\core\models.py:268 .\core\models.py:289
+msgid "Fan"
+msgstr "Pán"
+
+#: .\core\forms.py:155
+msgid "Fanni tanlang"
+msgstr "Pándi saylań"
+
+#: .\core\forms.py:159
+msgid "Savollar fayli (O'zbekcha, DOCX)"
+msgstr "Sorawlar faylı (Ózbekshe, DOCX)"
+
+#: .\core\forms.py:164
+msgid "Savollar fayli (Qoraqalpoqcha, DOCX)"
+msgstr "Sorawlar faylı (Qaraqalpaqsha, DOCX)"
+
+#: .\core\forms.py:169
+msgid "Savollar fayli (Ruscha, DOCX)"
+msgstr "Sorawlar faylı (Russha, DOCX)"
+
+#: .\core\forms.py:174
+msgid "Javoblar ketma-ketligi"
+msgstr "Juwaplar izbe-izligi"
+
+#: .\core\forms.py:175
+msgid "Masalan: ABADDCB... Har bir fayldagi savollar soniga mos kelishi kerak."
+msgstr ""
+"Mısalı: ABADDCB... Hár bir fayldaǵı sorawlar sanına sáykes keliwi kerek."
+
+#: .\core\forms.py:180
+msgid "Savol ajratuvchi belgi"
+msgstr "Soraw ajıratıwshı belgi"
+
+#: .\core\forms.py:184
+msgid "DOCX faylida savollarni ajratib turuvchi belgi."
+msgstr "DOCX faylında sorawlardı ajıratıp turıwshı belgi."
+
+#: .\core\forms.py:191
+msgid "Javoblar faqat A, B, C, D harflaridan iborat bo'lishi kerak."
+msgstr "Juwaplar tek A, B, C, D háriplerinen ibarat bolıwı kerek."
+
+#: .\core\forms.py:202
+msgid "Hech bo'lmaganda bitta tilda savollar faylini yuklang."
+msgstr "Keminde bir tilde sorawlar faylın júkleń."
+
+#: .\core\forms.py:205
+msgid "Javoblar ketma-ketligini kiriting."
+msgstr "Juwaplar izbe-izligin kiritiń."
+
 #: .\core\models.py:13 .\core\models.py:39 .\core\models.py:62
-#: .\core\models.py:94 .\core\models.py:227
+#: .\core\models.py:94 .\core\models.py:233
 msgid "Nomi (O'zbekcha)"
 msgstr "Atı (Ózbekshe)"
 
 #: .\core\models.py:14 .\core\models.py:40 .\core\models.py:63
-#: .\core\models.py:95 .\core\models.py:228
+#: .\core\models.py:95 .\core\models.py:234
 msgid "Nomi (Qoraqalpoqcha)"
 msgstr "Atı (Qaraqalpaqsha)"
 
 #: .\core\models.py:15 .\core\models.py:41 .\core\models.py:64
-#: .\core\models.py:96 .\core\models.py:229
+#: .\core\models.py:96 .\core\models.py:235
 msgid "Nomi (Ruscha)"
 msgstr "Atı (Russha)"
 
@@ -266,7 +341,7 @@ msgstr "Bilimlendiriw mákemesi"
 msgid "Ta'lim muassasalari"
 msgstr "Bilimlendiriw mákemeleri"
 
-#: .\core\models.py:78 .\core\models.py:179
+#: .\core\models.py:78 .\core\models.py:181
 msgid "Ta'lim bosqichi (OTM)"
 msgstr "Bilimlendiriw basqıshı (JOO)"
 
@@ -302,147 +377,186 @@ msgstr "Superpaydalanıwshılarda qupıya sóz bolıwı kerek."
 msgid "Telegram Username"
 msgstr "Telegram Paydalanıwshı Atı"
 
+#: .\core\models.py:162
+msgid "Ismi"
+msgstr "Atı"
+
 #: .\core\models.py:163
+msgid "Familiyasi"
+msgstr "Familiyası"
+
+#: .\core\models.py:164
+msgid "Otasining ismi"
+msgstr "Ákesiniń atı"
+
+#: .\core\models.py:165
 msgid "Telefon raqami"
 msgstr "Telefon nomeri"
 
-#: .\core\models.py:174
+#: .\core\models.py:176
 msgid "Til"
 msgstr "Til"
 
-#: .\core\models.py:184
+#: .\core\models.py:182
+msgid "Fakultet (OTM)"
+msgstr "Fakultet (JOO)"
+
+#: .\core\models.py:186
 msgid "staff status"
 msgstr "xızmetker statusı"
 
-#: .\core\models.py:186
+#: .\core\models.py:188
 msgid "Designates whether the user can log into this admin site."
-msgstr "Paydalanıwshınıń usı administrator saytına kire alatuǵınlıǵın belgileydi."
+msgstr ""
+"Paydalanıwshınıń usı administrator saytına kire alatuǵınlıǵın belgileydi."
 
-#: .\core\models.py:189
+#: .\core\models.py:191
 msgid "active"
 msgstr "aktiv"
 
-#: .\core\models.py:192
+#: .\core\models.py:194
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
-msgstr "Bul paydalanıwshınıń aktiv dep esaplanıwın belgileydi. Akkauntlardı óshiriw ornına bunı biykarlań."
+msgstr ""
+"Bul paydalanıwshınıń aktiv dep esaplanıwın belgileydi. Akkauntlardı óshiriw "
+"ornına bunı biykarlań."
 
-#: .\core\models.py:198
+#: .\core\models.py:200
 msgid "Yaratilgan sana"
 msgstr "Dóretilgen sáne"
 
-#: .\core\models.py:199
+#: .\core\models.py:201
 msgid "Yangilangan sana"
 msgstr "Jańalanǵan sáne"
 
-#: .\core\models.py:220 .\core\models.py:337
+#: .\core\models.py:226 .\core\models.py:343
 #: .\core\templates\test_results.html:29
 msgid "Foydalanuvchi"
 msgstr "Paydalanıwshı"
 
-#: .\core\models.py:221
+#: .\core\models.py:227
 msgid "Foydalanuvchilar"
 msgstr "Paydalanıwshılar"
 
-#: .\core\models.py:236
+#: .\core\models.py:242
 msgid "Minimal kurs/bosqich"
 msgstr "Minimal kurs/basqısh"
 
-#: .\core\models.py:237
+#: .\core\models.py:243
 msgid "Maksimal kurs/bosqich"
 msgstr "Maksimal kurs/basqısh"
 
-#: .\core\models.py:244
+#: .\core\models.py:250
 msgid ""
 "Voucher rasmi uchun shablon nomi (masalan, Matematika -> VoucherMatematika). "
 "Agar bo'sh bo'lsa, standart ishlatiladi."
-msgstr "Vaucher súwreti ushın shablon atı (mısalı, Matematika -> VaucherMatematika). Eger bos bolsa, standart qollanıladı."
+msgstr ""
+"Vaucher súwreti ushın shablon atı (mısalı, Matematika -> VaucherMatematika). "
+"Eger bos bolsa, standart qollanıladı."
 
-#: .\core\models.py:245
+#: .\core\models.py:251
 msgid "Voucher shabloni nomi"
 msgstr "Vaucher shablonınıń atı"
 
-#: .\core\models.py:247 .\core\models.py:301
+#: .\core\models.py:253 .\core\models.py:307
 msgid "Aktiv"
 msgstr "Aktiv"
 
-#: .\core\models.py:262 .\core\models.py:283
-msgid "Fan"
-msgstr "Pán"
-
-#: .\core\models.py:263
+#: .\core\models.py:269
 msgid "Fanlar"
 msgstr "Pánler"
 
-#: .\core\models.py:286
+#: .\core\models.py:292
 msgid "Savol fayli (O'zbekcha, DOCX)"
 msgstr "Soraw faylı (Ózbekshe, DOCX)"
 
-#: .\core\models.py:287
+#: .\core\models.py:293
 msgid "Savol fayli (Qoraqalpoqcha, DOCX)"
 msgstr "Soraw faylı (Qaraqalpaqsha, DOCX)"
 
-#: .\core\models.py:288
+#: .\core\models.py:294
 msgid "Savol fayli (Ruscha, DOCX)"
 msgstr "Soraw faylı (Russha, DOCX)"
 
-#: .\core\models.py:300 .\core\templates\test_results.html:62
+#: .\core\models.py:306 .\core\templates\test_results.html:62
 msgid "To'g'ri javob"
 msgstr "Durıs juwap"
 
-#: .\core\models.py:322
+#: .\core\models.py:328
 msgid "Fayl yuklanmagan"
 msgstr "Fayl júklenbegen"
 
-#: .\core\models.py:323 .\core\models.py:332
+#: .\core\models.py:329 .\core\models.py:338
 #: .\core\templates\test_in_progress.html:112 .\core\views.py:487
 msgid "Savol"
 msgstr "Soraw"
 
-#: .\core\models.py:329
+#: .\core\models.py:335
 msgid "Hech bo'lmaganda bitta tilda savol faylini yuklang."
 msgstr "Keminde bir tilde soraw faylın júkleń."
 
-#: .\core\models.py:333
+#: .\core\models.py:339
 msgid "Savollar"
 msgstr "Sorawlar"
 
-#: .\core\models.py:339
+#: .\core\models.py:345
 msgid "Boshlangan vaqti"
 msgstr "Baslanǵan waqtı"
 
-#: .\core\models.py:340
+#: .\core\models.py:346
 msgid "Tugatilgan vaqti"
 msgstr "Pitkerilgen waqtı"
 
-#: .\core\models.py:342
+#: .\core\models.py:348
 msgid "Natija (ball)"
 msgstr "Nátiyje (ball)"
 
-#: .\core\models.py:344
+#: .\core\models.py:350
 msgid "Berilgan savollar"
 msgstr "Berilgen sorawlar"
 
-#: .\core\models.py:348
+#: .\core\models.py:354
 msgid "Sarflangan vaqt (sekund)"
 msgstr "Sarplanǵan waqıt (sekund)"
 
-#: .\core\models.py:349
+#: .\core\models.py:355
 msgid "Voucher yuborildimi?"
 msgstr "Vaucher jiberildi me?"
 
-#: .\core\models.py:350
+#: .\core\models.py:356
 msgid "Voucher kodi/raqami"
 msgstr "Vaucher kodı/nomeri"
 
-#: .\core\models.py:361
+#: .\core\models.py:367
 msgid "Test"
 msgstr "Test"
 
-#: .\core\models.py:362
+#: .\core\models.py:368
 msgid "Testlar"
 msgstr "Testler"
+
+#: .\core\templates\bulk_upload_form.html:15
+msgid "Home"
+msgstr "Bas bet"
+
+#: .\core\templates\bulk_upload_form.html:27
+#, fuzzy
+#| msgid "Please correct the error below."
+#| msgid_plural "Please correct the errors below."
+msgid "Please correct the error below."
+msgstr "Tómendegi qáteni dúzetiń."
+
+#: .\core\templates\bulk_upload_form.html:27
+#, fuzzy
+#| msgid "Please correct the error below."
+#| msgid_plural "Please correct the errors below."
+msgid "Please correct the errors below."
+msgstr "Tómendegi qáteni dúzetiń."
+
+#: .\core\templates\bulk_upload_form.html:54
+msgid "Yuklash"
+msgstr "Júklew"
 
 #: .\core\templates\error_page.html:3
 msgid "Xatolik"
@@ -460,7 +574,9 @@ msgstr "Keshiriń, kútilmegen qátelik júz berdi."
 msgid ""
 "Iltimos, keyinroq qayta urinib ko'ring yoki bot orqali administratorga "
 "murojaat qiling."
-msgstr "Iltimas, keyinirek qayta urınıp kóriń yaki bot arqalı administratorǵa múrájat etiń."
+msgstr ""
+"Iltimas, keyinirek qayta urınıp kóriń yaki bot arqalı administratorǵa "
+"múrájat etiń."
 
 #: .\core\templates\error_page.html:12
 #: .\core\templates\test_already_completed.html:11
@@ -510,13 +626,21 @@ msgstr "Test ushın ajıratılǵan waqıt"
 msgid "daqiqa"
 msgstr "minut"
 
-#: .\core\templates\prepare_test.html:31
+#: .\core\templates\prepare_test.html:28
+msgid "Orqaga"
+msgstr "Artqa"
+
+#: .\core\templates\prepare_test.html:33
 msgid "Testni Boshlash"
 msgstr "Testti Baslaw"
 
-#: .\core\templates\prepare_test.html:36
+#: .\core\templates\prepare_test.html:39
 msgid "Omad tilaymiz!"
 msgstr "Áwmet tileymiz!"
+
+#: .\core\templates\question_changelist.html:7
+msgid "Ko'p Savol Yuklash"
+msgstr "Kóp Soraw Júklew"
 
 #: .\core\templates\registration_info_form.html:8
 msgid "Ro'yxatdan o'tish"
@@ -526,41 +650,42 @@ msgstr "Dizimnen ótiw"
 msgid "Qo'shimcha ma'lumotlarni kiriting"
 msgstr "Qosımsha maǵlıwmatlardı kiritiń"
 
-#: .\core\templates\registration_info_form.html:123
-#: .\core\templates\registration_info_form.html:361
+#: .\core\templates\registration_info_form.html:128
+#: .\core\templates\registration_info_form.html:366
 msgid "Saqlash va Davom Etish"
 msgstr "Saqlaw hám Dawam Etiw"
 
-#: .\core\templates\registration_info_form.html:169
+#: .\core\templates\registration_info_form.html:174
 msgid "Maʼlumot yuklashda xatolik"
 msgstr "Maǵlıwmat júklewde qátelik"
 
-#: .\core\templates\registration_info_form.html:196
+#: .\core\templates\registration_info_form.html:201
 msgid "Server bilan bogʻlanishda xatolik"
 msgstr "Server menen baylanısıwda qátelik"
 
-#: .\core\templates\registration_info_form.html:227
-#: .\core\templates\registration_info_form.html:253
+#: .\core\templates\registration_info_form.html:232
+#: .\core\templates\registration_info_form.html:258
 msgid "Yuklanmoqda..."
 msgstr "Júklenbekte..."
 
-#: .\core\templates\registration_info_form.html:227
+#: .\core\templates\registration_info_form.html:232
 msgid "Avval taʼlim turini tanlang"
 msgstr "Dáslep bilimlendiriw túrin saylań"
 
-#: .\core\templates\registration_info_form.html:228
+#: .\core\templates\registration_info_form.html:233
 msgid "Avval muassasa turini tanlang"
 msgstr "Dáslep mákeme túrin saylań"
 
-#: .\core\templates\registration_info_form.html:229
-#: .\core\templates\registration_info_form.html:253
+#: .\core\templates\registration_info_form.html:234
+#: .\core\templates\registration_info_form.html:258
 msgid "Avval muassasani tanlang"
 msgstr "Dáslep mákemeni saylań"
 
-#: .\core\templates\registration_info_form.html:346
+#: .\core\templates\registration_info_form.html:351
 msgid ""
 "Telegram foydalanuvchi ID si topilmadi. Iltimos, bot orqali qayta kiring."
-msgstr "Telegram paydalanıwshı ID si tabılmadı. Iltimas, bot arqalı qayta kiriń."
+msgstr ""
+"Telegram paydalanıwshı ID si tabılmadı. Iltimas, bot arqalı qayta kiriń."
 
 #: .\core\templates\registration_success.html:3
 msgid "Muvaffaqiyatli"
@@ -694,6 +819,49 @@ msgstr "Juwap berilmegen"
 msgid "Batafsil natijalar mavjud emas."
 msgstr "Tolıq nátiyjeler joq."
 
+#: .\core\utils.py:111
+msgid "Fayl yuklanmagan."
+msgstr "Fayl júklenbegen."
+
+#: .\core\utils.py:113
+msgid "Javoblar ketma-tetligi kiritilmagan."
+msgstr "Juwaplar izbe-izligi kiritilmegen."
+
+#: .\core\utils.py:135
+msgid "DOCX fayl yaroqsiz (document.xml topilmadi)."
+msgstr "DOCX faylı jaramsız (document.xml tabılmadı)."
+
+#: .\core\utils.py:192
+msgid ""
+"DOCX faylidan savollar ajratib olinmadi (ehtimol delimiter \"{}\" topilmadi "
+"yoki fayl formati noto'g'ri), lekin javoblar mavjud."
+msgstr ""
+"DOCX faylınan sorawlar ajıratıp alınbadı (itimal ajıratıwshı \"{}\" "
+"tabılmadı yaki fayl formatı nadurıs), biraq juwaplar bar."
+
+#: .\core\utils.py:194
+msgid "DOCX fayli bo'sh yoki savol topilmadi va javoblar ham kiritilmagan."
+msgstr "DOCX faylı bos yaki soraw tabılmadı hám juwaplar da kiritilmegen."
+
+#: .\core\utils.py:198
+msgid ""
+"Ajratilgan savollar soni ({}) kiritilgan javoblar soniga ({}) mos kelmadi."
+msgstr ""
+"Ajıratılǵan sorawlar sanı ({}) kiritilgen juwaplar sanına ({}) sáykes "
+"kelmedi."
+
+#: .\core\utils.py:277
+msgid "DOCX fayl yaroqsiz zip arxiv (asosiy fayl)."
+msgstr "DOCX faylı jaramsız zip arxiv (tiykarǵı fayl)."
+
+#: .\core\utils.py:280
+msgid "DOCX fayl yaroqsiz XML tuzilishiga ega: {}"
+msgstr "DOCX faylı jaramsız XML dúzilisine iye: {}"
+
+#: .\core\utils.py:283
+msgid "DOCX faylini qayta ishlashda kutilmagan xato: {}"
+msgstr "DOCX faylın qayta islewde kútilmegen qáte: {}"
+
 #: .\core\views.py:37
 msgid "Telegram ID topilmadi. Iltimos, bot orqali qayta urinib ko'ring."
 msgstr "Telegram ID tabılmadı. Iltimas, bot arqalı qayta urınıp kóriń."
@@ -718,7 +886,8 @@ msgstr "Maǵlıwmatlarıńız tabıslı saqlandı!"
 msgid ""
 "Formani to'ldirishda xatoliklar mavjud. Iltimos, tekshirib qayta urinib "
 "ko'ring."
-msgstr "Formanı toltırıwda qátelikler bar. Iltimas, tekserip qayta urınıp kóriń."
+msgstr ""
+"Formanı toltırıwda qátelikler bar. Iltimas, tekserip qayta urınıp kóriń."
 
 #: .\core\views.py:110
 msgid "Xatolik yuz berdi."

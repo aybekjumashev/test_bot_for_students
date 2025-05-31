@@ -67,7 +67,7 @@ def get_photo(fullname, date_str, voucher_template_filename, num_code, subjectna
         # Matnlarni yozish (koordinatalar sizning shabloningizga mos bo'lishi kerak)
         # Bu koordinatalar eski loyihadagi get_photo dan olingan
         draw.text((335, 970), date_str, fill="#400025", font=font_date_num)
-        draw.text((695, 970), str(num_code), fill="#400025", font=font_date_num)
+        draw.text((655, 970), str(num_code), fill="#400025", font=font_date_num)
 
         # Ism-sharifni markazlashtirish
         # Pillow 9.0.0+ da textbbox, undan oldin textsize
@@ -82,7 +82,7 @@ def get_photo(fullname, date_str, voucher_template_filename, num_code, subjectna
         image_width = image.width # 1560
         # Yoziladigan joyning markazi (taxminan, o'zingiznikiga moslang)
         center_x_for_name = image_width / 2 # 780
-        text_x = center_x_for_name - (text_width / 2)
+        text_x = center_x_for_name - (text_width / 2) - 90
         text_y = 420 # Eski kodingizdagi Y koordinata
 
         draw.text((text_x, text_y), fullname, fill="#400025", font=font_fullname_obj)

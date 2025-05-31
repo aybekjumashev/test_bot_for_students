@@ -159,7 +159,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=100, blank=True, null=True, unique=True, # unique=True qilish tavsiya etiladi agar USERNAME_FIELD bo'lsa
         verbose_name=_("Telegram Username")
     ) # Agar USERNAME_FIELD uchun ishlatsangiz, unique=True bo'lishi kerak
-    full_name = models.CharField(max_length=150, blank=True, null=True, verbose_name=_("Ism va sharif"))
+    name = models.CharField(max_length=150, blank=True, null=True, verbose_name=_("Ismi"))
+    surname = models.CharField(max_length=150, blank=True, null=True, verbose_name=_("Familiyasi"))
+    patronymic = models.CharField(max_length=150, blank=True, null=True, verbose_name=_("Otasining ismi"))
     phone_number = models.CharField(max_length=20, blank=True, null=True, unique=True, verbose_name=_("Telefon raqami"))
 
     LANGUAGE_CHOICES = [
@@ -209,6 +211,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return str(self.telegram_id) # Yoki self.full_name or str(self.telegram_id)
+    
+    @property
+    def full_name(self):
+        return f"{self.name} {self.surname}"
 
     def get_full_name(self): # Django admin buni kutishi mumkin
         return self.full_name or str(self.telegram_id)

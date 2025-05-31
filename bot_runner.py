@@ -9,6 +9,7 @@ from aiogram.filters import CommandStart, Command
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 from aiogram.utils.keyboard import InlineKeyboardBuilder # Yangi InlineKeyboardBuilder
 from dotenv import load_dotenv
+from io import BytesIO
 
 load_dotenv() # .env faylidagi o'zgaruvchilarni yuklash
 
@@ -112,6 +113,57 @@ async def send_welcome(message: Message):
         logger.error(f"Failed to register/get user {user_id}: {api_response}")
 
 
+
+@dp.message(Command("export_data"))
+async def export_all_data_command(message: types.Message):
+    # if message.from_user.id not in TELEGRAM_ADMIN_IDS: # Agar IsAdmin filtrini ishlatmasangiz
+    #     await message.reply("Sizda bu buyruqni bajarish uchun ruxsat yo'q.")
+    #     return
+
+    await message.reply("Maǵlıwmatlar Excel faylına tayarlanbaqta...")
+
+    # API endpointiga so'rov yuborish
+    # API_EXPORT_URL = f"{os.getenv('DJANGO_BASE_URL', 'http://127.0.0.1:8000')}/api/export-all-tests/"
+    # Agar DJANGO_API_BASE_URL da /api/tg/ bo'lsa, undan /tg/ ni olib tashlash kerak
+    # Yoki yangi DJANGO_CORE_API_URL yaratish
+    base_django_url = DJANGO_API_BASE_URL.replace("/tg", "") # Taxminiy
+    api_export_url = f"{base_django_url}/export-all-tests/" # CONFIG/urls.py dagi yo'lga moslang
+
+    # Agar API himoyalangan bo'lsa, token yoki boshqa parametr qo'shish kerak
+    # params = {"secret_key": "SIZNING_MAXFIY_KALITINGIZ"} # Misol uchun
+
+    async with httpx.AsyncClient(timeout=60.0) as client: # Kattaroq timeout
+        try:
+            # response = await client.get(api_export_url, params=params)
+            response = await client.get(api_export_url) # Hozircha himoyasiz
+            response.raise_for_status()
+
+            # Faylni Telegramga yuborish
+            file_bytes = BytesIO(response.content)
+            file_name = response.headers.get(
+                "Content-Disposition", "attachment; filename=test_results.xlsx"
+            ).split("filename=")[1].strip('"') or "test_results.xlsx"
+            
+            input_file = types.BufferedInputFile(file_bytes.getvalue(), filename=file_name)
+            await message.reply_document(input_file, caption="Barlıq test nátiyjeleri.")
+
+        except httpx.HTTPStatusError as e:
+            error_text = e.response.text
+            try:
+                error_json = e.response.json()
+                error_text = error_json.get("error", error_json.get("detail", str(error_json)))
+            except:
+                pass
+            await message.reply(f"Excel faylın alıwda qátelik júz berdi (Server qátesi {e.response.status_code}):\n{error_text}")
+            logger.error(f"Failed to get Excel export from API: {e.response.status_code} - {e.response.text}")
+        except httpx.RequestError as e:
+            await message.reply(f"Excel faylın alıwda jalǵanıwda qátelik: {e}")
+            logger.error(f"Failed to connect for Excel export: {e}")
+        except Exception as e:
+            await message.reply(f"Excel faylın alıwda kútilmegen qátelik: {e}")
+            logger.error(f"Unexpected error during Excel export: {e}", exc_info=True)
+
+
 @dp.callback_query(F.data.startswith("setlang_"))
 async def process_language_select(callback_query: types.CallbackQuery):
     user_id = callback_query.from_user.id
@@ -196,6 +248,9 @@ async def process_contact(message: Message):
             .get(lang_code, "Telefon nomerin anıqlawda qátelik.")
         )
         logger.error(f"Failed to set phone for {user_id}: {api_response}")
+
+
+
 
 
 async def main():

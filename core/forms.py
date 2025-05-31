@@ -11,11 +11,13 @@ class UserRegistrationInfoForm(forms.ModelForm):
     class Meta:
         model = User
         fields = [
-            'full_name', 'education_type', 'institution',
+            'name', 'surname', 'patronymic', 'education_type', 'institution',
             'education_level', 'faculty', 'course_year'
         ]
         widgets = {
-            'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _("Ism va sharifingiz")}),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _("Ismingiz")}),
+            'surname': forms.TextInput(attrs={'class': 'form-control required', 'placeholder': _("Familiyangiz")}),
+            'patronymic': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _("Otangizning ismi")}),
             'education_type': forms.Select(attrs={'class': 'form-select'}),
             'institution': forms.Select(attrs={'class': 'form-select'}), # Dastlab bo'sh bo'ladi
             'education_level': forms.Select(attrs={'class': 'form-select'}), # Dastlab bo'sh/yashirin
@@ -23,7 +25,9 @@ class UserRegistrationInfoForm(forms.ModelForm):
             'course_year': forms.NumberInput(attrs={'class': 'form-control', 'min': 1, 'max': 7, 'placeholder': _("Masalan: 1")}),
         }
         labels = { # Maydon nomlarini o'zgartirish
-            'full_name': _("Ism va sharif"),
+            'name': _("Ismingiz"),
+            'surname': _("Familiyangiz"),
+            'patronymic': _("Otangizning ismi"),
             'education_type': _("Ta'lim muassasasi turi"),
             'institution': _("Muassasa nomi"),
             'education_level': _("Ta'lim bosqichi (OTM uchun)"),

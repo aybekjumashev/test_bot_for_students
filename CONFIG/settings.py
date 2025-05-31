@@ -122,7 +122,7 @@ LANGUAGES = [
 
 LANGUAGE_CODE = 'uz' # Standart til
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tashkent'
 
 USE_I18N = True
 USE_L10N = True # Lokal formatlash uchun (sana, vaqt)
