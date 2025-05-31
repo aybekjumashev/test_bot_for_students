@@ -16,6 +16,7 @@ load_dotenv() # .env faylidagi o'zgaruvchilarni yuklash
 API_TOKEN = os.getenv("BOT_TOKEN")
 DJANGO_API_BASE_URL = os.getenv("DJANGO_API_URL", "http://127.0.0.1:8000/api/tg") 
 WEBAPP_BASE_URL = os.getenv("WEBAPP_BASE_URL", "http://127.0.0.1:8000") 
+CHANNELS_URL = os.getenv("CHANNELS_URL", "https://t.me/addlist/K4iMXLXFYLQzYzEy") 
 
 # Logging sozlamalari
 logging.basicConfig(level=logging.INFO)
@@ -75,8 +76,7 @@ def request_contact_keyboard(lang_code):
 def channels_keyboard(lang_code): # Kanallarga a'zolikni tekshirish uchun
     builder = InlineKeyboardBuilder()
     # Kanallaringiz linklarini qo'shing
-    builder.button(text="Kanal 1", url="https://t.me/your_channel_1")
-    builder.button(text="Kanal 2", url="https://t.me/your_channel_2")
+    builder.button(text="Nukus-2025", url=CHANNELS_URL)
     builder.button(text={"kaa": "🔁 Tekseriw", "ru": "🔁 Проверить","uz": "🔁 Tekshirish"}.get(lang_code, "🔁 Tekseriw"), callback_data="check_channels")  
     builder.adjust(1)
     return builder.as_markup()
