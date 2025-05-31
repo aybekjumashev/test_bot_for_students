@@ -31,6 +31,7 @@ class UserRegistrationInfoFormView(View):
     template_name = 'registration_info_form.html' # Shablon nomi
 
     def get(self, request: HttpRequest, *args, **kwargs):
+        print(f"Current language in view: {request.LANGUAGE_CODE}")
         telegram_id = request.GET.get('tgWebAppStartParam')
         if not telegram_id:
             messages.error(request, _("Telegram ID topilmadi. Iltimos, bot orqali qayta urinib ko'ring."))
@@ -45,6 +46,13 @@ class UserRegistrationInfoFormView(View):
         except User.DoesNotExist:
             messages.error(request, _("Foydalanuvchi topilmadi. Iltimos, botda /start buyrug'ini bering."))
             return redirect(reverse('core:some_error_page')) # Misol
+        
+        if Test.objects.filter(user=user, score__isnull=False).exists():
+            messages.info(request, _("Siz allaqachon test topshirgansiz."))
+            # Natijalar sahifasiga yo'naltirish yoki boshqa joyga
+            # Masalan, user_profile sahifasiga:
+            # return redirect(reverse('core:user_profile') + f'?user_tg_id={user.telegram_id}')
+            return render(request, 'test_already_completed.html', {'user': user})
 
         # Agar foydalanuvchi allaqachon ma'lumotlarini to'ldirgan bo'lsa (masalan, institution mavjud bo'lsa)
         # uni fanlar sahifasiga yo'naltirish mumkin. Bu logikani keyinroq qo'shamiz.
@@ -53,7 +61,7 @@ class UserRegistrationInfoFormView(View):
 
         form = self.form_class(instance=user) # Mavjud ma'lumotlar bilan formani to'ldirish
         form.fields['telegram_id_hidden'].initial = telegram_id # Yashirin maydonni to'ldirish
-        return render(request, self.template_name, {'form': form, 'telegram_user_id': telegram_id})
+        return render(request, self.template_name, {'form': form, 'telegram_user_id': telegram_id, 'lang': user.language_code})
 
     def post(self, request, *args, **kwargs):
         telegram_id_from_form = request.POST.get('telegram_id_hidden') # Yashirin maydondan olish

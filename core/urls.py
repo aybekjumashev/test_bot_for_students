@@ -53,3 +53,4 @@ urlpatterns = [
     # Testni yakunlash/natijalarni ko'rish uchun URL (vaqtinchalik view bilan)
     path('submit-test/', SubmitTestView.as_view(), name='submit_test'),
 ]
+

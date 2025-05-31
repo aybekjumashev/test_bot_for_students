@@ -6,30 +6,22 @@
 <div class="container mt-4">
     <div class="card text-center shadow-sm">
         <div class="card-header">
-            <h4 class="card-title">{% translate "Aralash Test" %}</h4>
-        </div>
-        <div class="card-body">
-            <p class="card-text">
+            <h4 class="card-title">
                 {% blocktranslate with user_name=user.full_name|default:user.telegram_id %}
                 Assalomu alaykum, {{ user_name }}!
                 {% endblocktranslate %}
-            </p>
-            <p>
-                {% blocktranslate trimmed %}
-                Siz umumiy aralash test topshirasiz. Test quyidagi fanlardan savollarni o'z ichiga oladi (agar mavjud bo'lsa):
-                {% endblocktranslate %}
-                <br><strong>{{ subjects_in_test|default:_("Fanlar aniqlanmadi") }}</strong>.
-            </p>
+            </h4>
+        </div>
+        <div class="card-body">
             <p>
                 {% blocktranslate count count=total_questions_for_test %}
                 Test jami <strong>{{ count }}</strong> savoldan iborat.
                 {% plural %}
                 Test jami <strong>{{ count }}</strong> savoldan iborat.
                 {% endblocktranslate %}
-                <em>({% blocktranslate %}Har bir fandan taxminan {{ questions_per_subject }} tadan.{% endblocktranslate %})</em>
             </p>
             <p class="text-muted">
-                <i class="bi bi-stopwatch"></i> {% translate "Test uchun taxminiy vaqt" %}: {% widthratio total_questions_for_test 2 1 %} {% translate "daqiqa" %} (har bir savolga ~30 sekund).
+                <i class="bi bi-stopwatch"></i> {% translate "Test uchun ajratilgan vaqt" %}: 30 {% translate "daqiqa" %}.
             </p>
 
             <form method="post" action="{% url 'core:start_mixed_test' %}">

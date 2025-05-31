@@ -16,7 +16,13 @@
 {% endblock %}
 
 {% block content %}
-<div id="loading-indicator">{% translate "Yuklanmoqda..." %}</div>
+
+<div id="loading-indicator" class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 text-white" style="z-index: 1050;">
+    <div class="position-absolute top-50 start-50 translate-middle d-flex flex-column align-items-center justify-content-center h-100">
+        <div class="spinner-border text-light" role="status"></div>
+    </div>
+</div>
+
 <div class="container mt-3 mb-5">
     <div class="d-flex justify-content-between align-items-center mb-2">
         <h5 id="question-counter" class="mb-0">
@@ -31,6 +37,18 @@
 
     <div class="progress mb-3" style="height: 5px;">
         <div id="progress-bar" class="progress-bar" role="progressbar" style="width: {% widthratio question_number total_questions 100 %}%;" aria-valuenow="{{ question_number }}" aria-valuemin="0" aria-valuemax="{{ total_questions }}"></div>
+    </div>
+
+    <div class="d-flex justify-content-between my-3">
+        <button id="prev-question-btn" class="btn btn-primary" {% if question_number == 1 %}disabled{% endif %}>
+            <i class="bi bi-chevron-left"></i> {% translate "Oldingi" %}
+        </button>
+        <button id="next-question-btn" class="btn btn-primary">
+            {% translate "Keyingi" %} <i class="bi bi-chevron-right"></i>
+        </button>
+        <button id="submit-test-btn" class="btn btn-success" style="display: none;">
+            <i class="bi bi-check2-circle"></i> {% translate "Testni Yakunlash" %}
+        </button>
     </div>
 
     <div id="question-area" class="card shadow-sm">
@@ -49,18 +67,14 @@
         </div>
     </div>
 
-    <div class="d-flex justify-content-between mt-3 fixed-bottom bg-light p-3 border-top">
-        <button id="prev-question-btn" class="btn btn-outline-secondary" {% if question_number == 1 %}disabled{% endif %}>
-            <i class="bi bi-arrow-left"></i> {% translate "Oldingi" %}
-        </button>
-        <button id="next-question-btn" class="btn btn-primary">
-            {% translate "Keyingi" %} <i class="bi bi-arrow-right"></i>
-        </button>
-        <button id="submit-test-btn" class="btn btn-success" style="display: none;">
-            <i class="bi bi-check2-circle"></i> {% translate "Testni Yakunlash" %}
-        </button>
-    </div>
+
 </div>
+<script>
+    window.addEventListener('load', function () {
+      document.getElementById('loading-indicator').style.display = 'none';
+    });
+  </script>
+  
 {% endblock %}
 
 {% block scripts_extra %}
@@ -177,9 +191,6 @@
     }
 
     function submitTest() {
-        if (!confirm("{% translate 'Testni yakunlashga ishonchingiz komilmi?' %}")) {
-            return;
-        }
         clearInterval(timerInterval); // Taymerni to'xtatish
 
         const timeSpentSeconds = Math.floor((Date.now() - testStartTime) / 1000);
@@ -232,8 +243,8 @@
 
             if (timeLeftSeconds <= 0) {
                 clearInterval(timerInterval);
-                alert("{% translate 'Vaqt tugadi! Test avtomatik yakunlanadi.' %}");
-                submitTest();
+                // alert("{% translate 'Vaqt tugadi! Test avtomatik yakunlanadi.' %}");
+                submitTest(); // Testni avtomatik yakunlash
             } else if (timeLeftSeconds <= 60) { // Oxirgi 1 daqiqa
                 timeDisplay.classList.add('timer-highlight');
             }
@@ -263,4 +274,5 @@
     });
 
 </script>
+
 {% endblock %}

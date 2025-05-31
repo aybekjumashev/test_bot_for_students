@@ -1,7 +1,8 @@
 # core/forms.py
 from django import forms
 from django.utils.translation import gettext_lazy as _
-from .models import User, EducationType, Institution, EducationLevel, Faculty
+from .models import User, EducationType, Institution, EducationLevel, Faculty, Subject
+from django.core.exceptions import ValidationError 
 
 class UserRegistrationInfoForm(forms.ModelForm):
     # Telegram ID ni botdan yashirin maydon orqali olamiz
@@ -140,4 +141,65 @@ class UserRegistrationInfoForm(forms.ModelForm):
                 cleaned_data["faculty"] = None
         
         print(f"--- End of Form Clean Method ---")
+        return cleaned_data
+
+
+class BulkUploadQuestionsForm(forms.Form):
+    subject = forms.ModelChoiceField(
+        queryset=Subject.objects.all().order_by('name_uz'),
+        label=_("Fan"),
+        empty_label=_("Fanni tanlang"),
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+    questions_file_uz = forms.FileField(
+        label=_("Savollar fayli (O'zbekcha, DOCX)"),
+        required=False, # Kamida bitta fayl kerak, buni clean() da tekshiramiz
+        widget=forms.ClearableFileInput(attrs={'class': 'form-control'})
+    )
+    questions_file_kaa = forms.FileField(
+        label=_("Savollar fayli (Qoraqalpoqcha, DOCX)"),
+        required=False,
+        widget=forms.ClearableFileInput(attrs={'class': 'form-control'})
+    )
+    questions_file_ru = forms.FileField(
+        label=_("Savollar fayli (Ruscha, DOCX)"),
+        required=False,
+        widget=forms.ClearableFileInput(attrs={'class': 'form-control'})
+    )
+    answers_string = forms.CharField(
+        label=_("Javoblar ketma-ketligi"),
+        help_text=_("Masalan: ABADDCB... Har bir fayldagi savollar soniga mos kelishi kerak."),
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'ABCDABCD...'}),
+        max_length=500 # Maksimal javoblar soni (ehtiyojga qarab)
+    )
+    delimiter = forms.CharField(
+        label=_("Savol ajratuvchi belgi"),
+        initial="###",
+        max_length=10,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        help_text=_("DOCX faylida savollarni ajratib turuvchi belgi.")
+    )
+
+    def clean_answers_string(self):
+        data = self.cleaned_data['answers_string'].upper().replace(" ", "")
+        allowed_chars = {'A', 'B', 'C', 'D'}
+        if not all(char in allowed_chars for char in data):
+            raise ValidationError(_("Javoblar faqat A, B, C, D harflaridan iborat bo'lishi kerak."))
+        return data
+
+    def clean(self):
+        cleaned_data = super().clean()
+        file_uz = cleaned_data.get('questions_file_uz')
+        file_kaa = cleaned_data.get('questions_file_kaa')
+        file_ru = cleaned_data.get('questions_file_ru')
+        answers = cleaned_data.get('answers_string')
+
+        if not (file_uz or file_kaa or file_ru):
+            raise ValidationError(_("Hech bo'lmaganda bitta tilda savollar faylini yuklang."))
+        
+        if not answers:
+             raise ValidationError(_("Javoblar ketma-ketligini kiriting."))
+
+        # Fayllar va javoblar sonini tekshirishni utils funksiyasiga qoldiramiz,
+        # chunki u yerda DOCX ichidagi savollar soni aniqlanadi.
         return cleaned_data

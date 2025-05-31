@@ -8,25 +8,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-29 00:57+0500\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2025-05-31 11:51+0500\n"
+"PO-Revision-Date: 2024-06-14 12:00+0000\n"
+"Last-Translator: AI Assistant <>\n"
+"Language-Team: Karakalpak <kar@li.org>\n"
+"Language: kaa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\CONFIG\settings.py:119 .\core\models.py:166
+#: .\CONFIG\settings.py:118 .\core\models.py:166
 msgid "Uzbek"
 msgstr "Ózbek"
 
-#: .\CONFIG\settings.py:120 .\core\models.py:167
+#: .\CONFIG\settings.py:119 .\core\models.py:167
 msgid "Karakalpak"
 msgstr "Qaraqalpaq"
 
-#: .\CONFIG\settings.py:121 .\core\models.py:168
+#: .\CONFIG\settings.py:120 .\core\models.py:168
 msgid "Russian"
 msgstr "Rus"
 
@@ -36,9 +36,9 @@ msgstr "Jeke maǵlıwmatlar"
 
 #: .\core\admin.py:27
 msgid "Taʻlim maʻlumotlari"
-msgstr "Tálim maǵlıwmatları"
+msgstr "Bilimlendiriw maǵlıwmatları"
 
-#: .\core\admin.py:28 .\core\admin.py:119
+#: .\core\admin.py:28 .\core\admin.py:129
 msgid "Vaqt belgilari"
 msgstr "Waqıt belgileri"
 
@@ -46,428 +46,444 @@ msgstr "Waqıt belgileri"
 msgid "Nomi"
 msgstr "Atı"
 
-#: .\core\admin.py:103
+#: .\core\admin.py:106
+msgid "Fayl yo'q"
+msgstr "Fayl joq"
+
+#: .\core\admin.py:107
+msgid "Mavjud Tillar"
+msgstr "Bar Tiller"
+
+#: .\core\admin.py:113
 msgid "Test Savoli"
 msgstr "Test Sorawı"
 
-#: .\core\admin.py:104 .\core\admin.py:120 .\core\admin.py:142
+#: .\core\admin.py:114 .\core\admin.py:130 .\core\admin.py:152
 msgid "Test Savollari"
 msgstr "Test Sorawları"
 
-#: .\core\admin.py:129 .\core\admin.py:183 .\core\models.py:318
-#: .\core\templates\prepare_test.html:9
+#: .\core\admin.py:139 .\core\admin.py:193 .\core\models.py:356
 msgid "Aralash Test"
 msgstr "Aralas Test"
 
-#: .\core\admin.py:130
+#: .\core\admin.py:140
 msgid "Test Tavsifi"
-msgstr "Test Haqqında"
+msgstr "Test Sıpatlaması"
 
-#: .\core\admin.py:140
+#: .\core\admin.py:150
 msgid "va yana"
-msgstr "hám taǵı"
+msgstr "hám jáne"
 
-#: .\core\admin.py:140
+#: .\core\admin.py:150
 msgid "ta savol..."
-msgstr "dana soraw..."
+msgstr "soraw..."
 
-#: .\core\admin.py:145
+#: .\core\admin.py:155
 msgid "Tanlangan testlarni Excelga eksport qilish"
-msgstr "Saylanǵan testlerdi Excelge eksport qılıw"
+msgstr "Saylanǵan testlerdi Excelge eksport etiw"
 
-#: .\core\admin.py:148
+#: .\core\admin.py:158
 msgid "Eksport uchun testlar tanlanmadi."
-msgstr "Eksport ushın testler saylanbadı"
+msgstr "Eksport ushın testler saylanbadı."
 
-#: .\core\admin.py:162
+#: .\core\admin.py:172
 msgid "Test ID"
 msgstr "Test ID"
 
-#: .\core\admin.py:163 .\core\models.py:157
+#: .\core\admin.py:173 .\core\models.py:157
 msgid "Telegram ID"
 msgstr "Telegram ID"
 
-#: .\core\admin.py:164
+#: .\core\admin.py:174
 msgid "F.I.Sh."
-msgstr "F.A.Á"
+msgstr "A.Á.F."
 
-#: .\core\admin.py:165 .\tgbot\utils.py:138
+#: .\core\admin.py:175
 msgid "Telefon"
-msgstr ""
+msgstr "Telefon"
 
-#: .\core\admin.py:166 .\tgbot\utils.py:139
+#: .\core\admin.py:176
 msgid "Ta'lim Turi"
-msgstr "Tálim Túri"
+msgstr "Bilimlendiriw Túri"
 
-#: .\core\admin.py:167 .\tgbot\utils.py:140
+#: .\core\admin.py:177
 msgid "Muassasa"
-msgstr "Oqıw ornı"
+msgstr "Mákeme"
 
-#: .\core\admin.py:168 .\tgbot\utils.py:141
+#: .\core\admin.py:178
 msgid "Bosqich (OTM)"
 msgstr "Basqısh (JOO)"
 
-#: .\core\admin.py:169 .\core\models.py:180 .\tgbot\utils.py:142
+#: .\core\admin.py:179 .\core\models.py:180
 msgid "Fakultet (OTM)"
 msgstr "Fakultet (JOO)"
 
-#: .\core\admin.py:170 .\tgbot\utils.py:143
+#: .\core\admin.py:180
 msgid "Kurs/Sinf"
 msgstr "Kurs/Klass"
 
-#: .\core\admin.py:171
+#: .\core\admin.py:181
 msgid "Test Boshlangan Sanasi"
 msgstr "Test Baslanǵan Sánesi"
 
-#: .\core\admin.py:172
+#: .\core\admin.py:182
 msgid "Test Tugatilgan Sanasi"
-msgstr "Test Juwmaqlanǵan Sánesi"
+msgstr "Test Pitkerilgen Sánesi"
 
-#: .\core\admin.py:173
+#: .\core\admin.py:183
 msgid "Natija (Ball)"
-msgstr "Nátiyje (Bal)"
+msgstr "Nátiyje (Ball)"
 
-#: .\core\admin.py:174
+#: .\core\admin.py:184
 msgid "Jami Savollar"
 msgstr "Jámi Sorawlar"
 
-#: .\core\admin.py:175
+#: .\core\admin.py:185
 msgid "Sarflangan Vaqt (s)"
-msgstr "Sarıplanpan Waqıt (s)"
+msgstr "Sarplanǵan Waqıt (s)"
 
-#: .\core\admin.py:176
+#: .\core\admin.py:186
 msgid "Voucher Kodi"
-msgstr "Voucher Kodı"
+msgstr "Vaucher Kodı"
 
-#: .\core\admin.py:177
+#: .\core\admin.py:187
 msgid "Voucher Yuborildi"
-msgstr "Voucher Jiberildi"
+msgstr "Vaucher Jiberildi"
 
-#: .\core\admin.py:178
+#: .\core\admin.py:188
 msgid "Testdagi Fanlar"
 msgstr "Testtegi Pánler"
 
-#: .\core\admin.py:209
+#: .\core\admin.py:219
 msgid "Ha"
-msgstr ""
+msgstr "Awa"
 
-#: .\core\admin.py:209
+#: .\core\admin.py:219
 msgid "Yo'q"
-msgstr ""
+msgstr "Joq"
 
-#: .\core\admin.py:214
+#: .\core\admin.py:224
 msgid "Eksport uchun ma'lumot topilmadi."
-msgstr ""
+msgstr "Eksport ushın maǵlıwmat tabılmadı."
 
-#: .\core\admin.py:220
+#: .\core\admin.py:230
 msgid "Test_Natijalari"
-msgstr ""
+msgstr "Test_Nátiyjeleri"
 
 #: .\core\forms.py:17
 msgid "Ism va sharifingiz"
-msgstr "Atıńız familiyańız"
+msgstr "Atıńız hám familiyańız"
 
 #: .\core\forms.py:22
 msgid "Masalan: 1"
-msgstr ""
+msgstr "Mısalı: 1"
 
 #: .\core\forms.py:25 .\core\models.py:162
 msgid "Ism va sharif"
-msgstr "Atıńız familiyańız"
+msgstr "Atı hám familiyası"
 
 #: .\core\forms.py:26 .\core\models.py:32 .\core\models.py:177
 msgid "Ta'lim muassasasi turi"
-msgstr ""
+msgstr "Bilimlendiriw mákemesiniń túri"
 
 #: .\core\forms.py:27 .\core\models.py:178
 msgid "Muassasa nomi"
-msgstr ""
+msgstr "Mákeme atı"
 
 #: .\core\forms.py:28
 msgid "Ta'lim bosqichi (OTM uchun)"
-msgstr ""
+msgstr "Bilimlendiriw basqıshı (JOO ushın)"
 
 #: .\core\forms.py:29
 msgid "Fakultet (OTM uchun)"
-msgstr ""
+msgstr "Fakultet (JOO ushın)"
 
 #: .\core\forms.py:30 .\core\models.py:181
 msgid "Kurs (bosqich)"
-msgstr ""
+msgstr "Kurs (basqısh)"
 
 #: .\core\forms.py:33
 msgid ""
 "Nechanchi kursda (yoki litsey/kollejda nechanchi bosqichda) o'qishingizni "
 "kiriting."
-msgstr ""
+msgstr "Neshenshi kursta (yamasa licey/kolledjde neshenshi basqıshta) oqıytuǵınıńızdı kiritiń."
 
 #: .\core\forms.py:42 .\core\forms.py:85 .\core\forms.py:88 .\core\forms.py:95
-#: .\core\templates\registration_info_form.html:148
-#: .\core\templates\registration_info_form.html:263
+#: .\core\templates\registration_info_form.html:153
+#: .\core\templates\registration_info_form.html:268
 msgid "Tanlang..."
-msgstr ""
+msgstr "Saylań..."
 
 #: .\core\forms.py:49
 msgid "Avval ta'lim turini tanlang"
-msgstr ""
+msgstr "Dáslep bilimlendiriw túrin saylań"
 
 #: .\core\forms.py:50 .\core\forms.py:51
-#: .\core\templates\registration_info_form.html:263
+#: .\core\templates\registration_info_form.html:268
 msgid "OTM tanlanganda ochiladi"
-msgstr ""
+msgstr "JOO saylanǵanda ashıladı"
 
 #: .\core\forms.py:128
 msgid "OTM uchun ta'lim bosqichini tanlang."
-msgstr ""
+msgstr "JOO ushın bilimlendiriw basqıshın saylań."
 
 #: .\core\forms.py:132
 msgid "OTM uchun fakultetni tanlang."
-msgstr ""
+msgstr "JOO ushın fakultetti saylań."
 
 #: .\core\models.py:13 .\core\models.py:39 .\core\models.py:62
 #: .\core\models.py:94 .\core\models.py:227
 msgid "Nomi (O'zbekcha)"
-msgstr ""
+msgstr "Atı (Ózbekshe)"
 
 #: .\core\models.py:14 .\core\models.py:40 .\core\models.py:63
 #: .\core\models.py:95 .\core\models.py:228
 msgid "Nomi (Qoraqalpoqcha)"
-msgstr ""
+msgstr "Atı (Qaraqalpaqsha)"
 
 #: .\core\models.py:15 .\core\models.py:41 .\core\models.py:64
 #: .\core\models.py:96 .\core\models.py:229
 msgid "Nomi (Ruscha)"
-msgstr ""
+msgstr "Atı (Russha)"
 
 #: .\core\models.py:16
 msgid "Bu OTMmi?"
-msgstr ""
+msgstr "Bul JOO ma?"
 
 #: .\core\models.py:33
 msgid "Ta'lim muassasasi turlari"
-msgstr ""
+msgstr "Bilimlendiriw mákemeleriniń túrleri"
 
 #: .\core\models.py:38
 msgid "Ta'lim turi"
-msgstr ""
+msgstr "Bilimlendiriw túri"
 
 #: .\core\models.py:55 .\core\models.py:91
 msgid "Ta'lim muassasasi"
-msgstr ""
+msgstr "Bilimlendiriw mákemesi"
 
 #: .\core\models.py:56
 msgid "Ta'lim muassasalari"
-msgstr ""
+msgstr "Bilimlendiriw mákemeleri"
 
 #: .\core\models.py:78 .\core\models.py:179
 msgid "Ta'lim bosqichi (OTM)"
-msgstr ""
+msgstr "Bilimlendiriw basqıshı (JOO)"
 
 #: .\core\models.py:79
 msgid "Ta'lim bosqichlari (OTM)"
-msgstr ""
+msgstr "Bilimlendiriw basqıshları (JOO)"
 
 #: .\core\models.py:111
 msgid "Fakultet"
-msgstr ""
+msgstr "Fakultet"
 
 #: .\core\models.py:112
 msgid "Fakultetlar"
-msgstr ""
+msgstr "Fakultetler"
 
 #: .\core\models.py:120
 msgid "The Telegram ID must be set"
-msgstr ""
+msgstr "Telegram ID belgilenген bolıwı kerek"
 
 #: .\core\models.py:146
 msgid "Superuser must have is_staff=True."
-msgstr ""
+msgstr "Superpaydalanıwshıda is_staff=True bolıwı kerek."
 
 #: .\core\models.py:148
 msgid "Superuser must have is_superuser=True."
-msgstr ""
+msgstr "Superpaydalanıwshıda is_superuser=True bolıwı kerek."
 
 #: .\core\models.py:150
 msgid "Superusers must have a password."
-msgstr ""
+msgstr "Superpaydalanıwshılarda qupıya sóz bolıwı kerek."
 
 #: .\core\models.py:160
 msgid "Telegram Username"
-msgstr ""
+msgstr "Telegram Paydalanıwshı Atı"
 
 #: .\core\models.py:163
 msgid "Telefon raqami"
-msgstr ""
+msgstr "Telefon nomeri"
 
 #: .\core\models.py:174
 msgid "Til"
-msgstr ""
+msgstr "Til"
 
 #: .\core\models.py:184
 msgid "staff status"
-msgstr ""
+msgstr "xızmetker statusı"
 
 #: .\core\models.py:186
 msgid "Designates whether the user can log into this admin site."
-msgstr ""
+msgstr "Paydalanıwshınıń usı administrator saytına kire alatuǵınlıǵın belgileydi."
 
 #: .\core\models.py:189
 msgid "active"
-msgstr ""
+msgstr "aktiv"
 
 #: .\core\models.py:192
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
-msgstr ""
+msgstr "Bul paydalanıwshınıń aktiv dep esaplanıwın belgileydi. Akkauntlardı óshiriw ornına bunı biykarlań."
 
 #: .\core\models.py:198
 msgid "Yaratilgan sana"
-msgstr ""
+msgstr "Dóretilgen sáne"
 
 #: .\core\models.py:199
 msgid "Yangilangan sana"
-msgstr ""
+msgstr "Jańalanǵan sáne"
 
-#: .\core\models.py:220 .\core\models.py:299
+#: .\core\models.py:220 .\core\models.py:337
 #: .\core\templates\test_results.html:29
 msgid "Foydalanuvchi"
-msgstr ""
+msgstr "Paydalanıwshı"
 
 #: .\core\models.py:221
 msgid "Foydalanuvchilar"
-msgstr ""
+msgstr "Paydalanıwshılar"
 
 #: .\core\models.py:236
 msgid "Minimal kurs/bosqich"
-msgstr ""
+msgstr "Minimal kurs/basqısh"
 
 #: .\core\models.py:237
 msgid "Maksimal kurs/bosqich"
-msgstr ""
+msgstr "Maksimal kurs/basqısh"
 
 #: .\core\models.py:244
 msgid ""
 "Voucher rasmi uchun shablon nomi (masalan, Matematika -> VoucherMatematika). "
 "Agar bo'sh bo'lsa, standart ishlatiladi."
-msgstr ""
+msgstr "Vaucher súwreti ushın shablon atı (mısalı, Matematika -> VaucherMatematika). Eger bos bolsa, standart qollanıladı."
 
 #: .\core\models.py:245
 msgid "Voucher shabloni nomi"
-msgstr ""
+msgstr "Vaucher shablonınıń atı"
 
-#: .\core\models.py:247 .\core\models.py:284
+#: .\core\models.py:247 .\core\models.py:301
 msgid "Aktiv"
-msgstr ""
+msgstr "Aktiv"
 
-#: .\core\models.py:262 .\core\models.py:272
+#: .\core\models.py:262 .\core\models.py:283
 msgid "Fan"
-msgstr ""
+msgstr "Pán"
 
 #: .\core\models.py:263
 msgid "Fanlar"
-msgstr ""
+msgstr "Pánler"
 
-#: .\core\models.py:275
-msgid "Savol fayli (DOCX)"
-msgstr ""
+#: .\core\models.py:286
+msgid "Savol fayli (O'zbekcha, DOCX)"
+msgstr "Soraw faylı (Ózbekshe, DOCX)"
 
-#: .\core\models.py:283 .\core\templates\test_results.html:81
+#: .\core\models.py:287
+msgid "Savol fayli (Qoraqalpoqcha, DOCX)"
+msgstr "Soraw faylı (Qaraqalpaqsha, DOCX)"
+
+#: .\core\models.py:288
+msgid "Savol fayli (Ruscha, DOCX)"
+msgstr "Soraw faylı (Russha, DOCX)"
+
+#: .\core\models.py:300 .\core\templates\test_results.html:62
 msgid "To'g'ri javob"
-msgstr ""
+msgstr "Durıs juwap"
 
-#: .\core\models.py:289 .\core\models.py:293
-#: .\core\templates\test_in_progress.html:98 .\core\views.py:458
+#: .\core\models.py:322
+msgid "Fayl yuklanmagan"
+msgstr "Fayl júklenbegen"
+
+#: .\core\models.py:323 .\core\models.py:332
+#: .\core\templates\test_in_progress.html:112 .\core\views.py:487
 msgid "Savol"
-msgstr ""
+msgstr "Soraw"
 
-#: .\core\models.py:294
+#: .\core\models.py:329
+msgid "Hech bo'lmaganda bitta tilda savol faylini yuklang."
+msgstr "Keminde bir tilde soraw faylın júkleń."
+
+#: .\core\models.py:333
 msgid "Savollar"
-msgstr ""
+msgstr "Sorawlar"
 
-#: .\core\models.py:301
+#: .\core\models.py:339
 msgid "Boshlangan vaqti"
-msgstr ""
+msgstr "Baslanǵan waqtı"
 
-#: .\core\models.py:302
+#: .\core\models.py:340
 msgid "Tugatilgan vaqti"
-msgstr ""
+msgstr "Pitkerilgen waqtı"
 
-#: .\core\models.py:304
+#: .\core\models.py:342
 msgid "Natija (ball)"
-msgstr ""
+msgstr "Nátiyje (ball)"
 
-#: .\core\models.py:306
+#: .\core\models.py:344
 msgid "Berilgan savollar"
-msgstr ""
+msgstr "Berilgen sorawlar"
 
-#: .\core\models.py:310
+#: .\core\models.py:348
 msgid "Sarflangan vaqt (sekund)"
-msgstr ""
+msgstr "Sarplanǵan waqıt (sekund)"
 
-#: .\core\models.py:311
+#: .\core\models.py:349
 msgid "Voucher yuborildimi?"
-msgstr ""
+msgstr "Vaucher jiberildi me?"
 
-#: .\core\models.py:312
+#: .\core\models.py:350
 msgid "Voucher kodi/raqami"
-msgstr ""
+msgstr "Vaucher kodı/nomeri"
 
-#: .\core\models.py:323
+#: .\core\models.py:361
 msgid "Test"
-msgstr ""
+msgstr "Test"
 
-#: .\core\models.py:324
+#: .\core\models.py:362
 msgid "Testlar"
-msgstr ""
+msgstr "Testler"
 
 #: .\core\templates\error_page.html:3
 msgid "Xatolik"
-msgstr ""
+msgstr "Qátelik"
 
 #: .\core\templates\error_page.html:7
 msgid "Xatolik!"
-msgstr ""
+msgstr "Qátelik!"
 
 #: .\core\templates\error_page.html:8
 msgid "Kechirasiz, kutilmagan xatolik yuz berdi."
-msgstr ""
+msgstr "Keshiriń, kútilmegen qátelik júz berdi."
 
 #: .\core\templates\error_page.html:10
 msgid ""
 "Iltimos, keyinroq qayta urinib ko'ring yoki bot orqali administratorga "
 "murojaat qiling."
-msgstr ""
+msgstr "Iltimas, keyinirek qayta urınıp kóriń yaki bot arqalı administratorǵa múrájat etiń."
 
 #: .\core\templates\error_page.html:12
 #: .\core\templates\test_already_completed.html:11
-#: .\core\templates\test_results.html:98
+#: .\core\templates\test_results.html:79
 msgid "Yopish"
-msgstr ""
+msgstr "Jabıw"
 
 #: .\core\templates\prepare_test.html:3
 msgid "Testga Tayyorgarlik"
-msgstr ""
+msgstr "Testke Tayarlıq"
 
-#: .\core\templates\prepare_test.html:13
+#: .\core\templates\prepare_test.html:10
 #, python-format
 msgid ""
 "\n"
 "                Assalomu alaykum, %(user_name)s!\n"
 "                "
 msgstr ""
+"\n"
+"                Assalawma áleykum, %(user_name)s!\n"
+"                "
 
-#: .\core\templates\prepare_test.html:18
-msgid ""
-"Siz umumiy aralash test topshirasiz. Test quyidagi fanlardan savollarni o'z "
-"ichiga oladi (agar mavjud bo'lsa):"
-msgstr ""
-
-#: .\core\templates\prepare_test.html:21
-msgid "Fanlar aniqlanmadi"
-msgstr ""
-
-#: .\core\templates\prepare_test.html:24
+#: .\core\templates\prepare_test.html:17
 #, python-format
 msgid ""
 "\n"
@@ -478,163 +494,162 @@ msgid_plural ""
 "                Test jami <strong>%(count)s</strong> savoldan iborat.\n"
 "                "
 msgstr[0] ""
+"\n"
+"                Test jámi <strong>%(count)s</strong> sorawdan ibarat.\n"
+"                "
 msgstr[1] ""
+"\n"
+"                Test jámi <strong>%(count)s</strong> sorawdan ibarat.\n"
+"                "
 
-#: .\core\templates\prepare_test.html:29
-#, python-format
-msgid "Har bir fandan taxminan %(questions_per_subject)s tadan."
-msgstr ""
+#: .\core\templates\prepare_test.html:24
+msgid "Test uchun ajratilgan vaqt"
+msgstr "Test ushın ajıratılǵan waqıt"
 
-#: .\core\templates\prepare_test.html:32
-msgid "Test uchun taxminiy vaqt"
-msgstr ""
-
-#: .\core\templates\prepare_test.html:32
+#: .\core\templates\prepare_test.html:24
 msgid "daqiqa"
-msgstr ""
+msgstr "minut"
 
-#: .\core\templates\prepare_test.html:39
+#: .\core\templates\prepare_test.html:31
 msgid "Testni Boshlash"
-msgstr ""
+msgstr "Testti Baslaw"
 
-#: .\core\templates\prepare_test.html:44
+#: .\core\templates\prepare_test.html:36
 msgid "Omad tilaymiz!"
-msgstr ""
+msgstr "Áwmet tileymiz!"
 
 #: .\core\templates\registration_info_form.html:8
 msgid "Ro'yxatdan o'tish"
-msgstr ""
+msgstr "Dizimnen ótiw"
 
-#: .\core\templates\registration_info_form.html:65
-#: .\core\templates\registration_info_form.html:222
-#: .\core\templates\registration_info_form.html:248
-#: .\core\templates\test_in_progress.html:19
-msgid "Yuklanmoqda..."
-msgstr ""
-
-#: .\core\templates\registration_info_form.html:67
+#: .\core\templates\registration_info_form.html:72
 msgid "Qo'shimcha ma'lumotlarni kiriting"
-msgstr ""
+msgstr "Qosımsha maǵlıwmatlardı kiritiń"
 
-#: .\core\templates\registration_info_form.html:164
+#: .\core\templates\registration_info_form.html:123
+#: .\core\templates\registration_info_form.html:361
+msgid "Saqlash va Davom Etish"
+msgstr "Saqlaw hám Dawam Etiw"
+
+#: .\core\templates\registration_info_form.html:169
 msgid "Maʼlumot yuklashda xatolik"
-msgstr ""
+msgstr "Maǵlıwmat júklewde qátelik"
 
-#: .\core\templates\registration_info_form.html:191
+#: .\core\templates\registration_info_form.html:196
 msgid "Server bilan bogʻlanishda xatolik"
-msgstr ""
+msgstr "Server menen baylanısıwda qátelik"
 
-#: .\core\templates\registration_info_form.html:222
+#: .\core\templates\registration_info_form.html:227
+#: .\core\templates\registration_info_form.html:253
+msgid "Yuklanmoqda..."
+msgstr "Júklenbekte..."
+
+#: .\core\templates\registration_info_form.html:227
 msgid "Avval taʼlim turini tanlang"
-msgstr ""
+msgstr "Dáslep bilimlendiriw túrin saylań"
 
-#: .\core\templates\registration_info_form.html:223
+#: .\core\templates\registration_info_form.html:228
 msgid "Avval muassasa turini tanlang"
-msgstr ""
+msgstr "Dáslep mákeme túrin saylań"
 
-#: .\core\templates\registration_info_form.html:224
-#: .\core\templates\registration_info_form.html:248
+#: .\core\templates\registration_info_form.html:229
+#: .\core\templates\registration_info_form.html:253
 msgid "Avval muassasani tanlang"
-msgstr ""
+msgstr "Dáslep mákemeni saylań"
 
-#: .\core\templates\registration_info_form.html:341
+#: .\core\templates\registration_info_form.html:346
 msgid ""
 "Telegram foydalanuvchi ID si topilmadi. Iltimos, bot orqali qayta kiring."
-msgstr ""
-
-#: .\core\templates\registration_info_form.html:356
-msgid "Saqlash va Davom Etish"
-msgstr ""
+msgstr "Telegram paydalanıwshı ID si tabılmadı. Iltimas, bot arqalı qayta kiriń."
 
 #: .\core\templates\registration_success.html:3
 msgid "Muvaffaqiyatli"
-msgstr ""
+msgstr "Tabıslı"
 
 #: .\core\templates\registration_success.html:7
-#: .\core\templates\test_results.html:44
 msgid "Tabriklaymiz!"
-msgstr ""
+msgstr "Qutlıqlaymız!"
 
 #: .\core\templates\registration_success.html:8
 msgid "Ma'lumotlaringiz muvaffaqiyatli saqlandi."
-msgstr ""
+msgstr "Maǵlıwmatlarıńız tabıslı saqlandı."
 
 #: .\core\templates\registration_success.html:10
 msgid "Endi WebApp oynasini yopishingiz mumkin."
-msgstr ""
+msgstr "Endi WebApp áynekishesin jabıwıńız múmkin."
 
 #: .\core\templates\registration_success.html:11
 msgid "Yopish va Botga Qaytish"
-msgstr ""
+msgstr "Jabıw hám Botqa Qaytıw"
 
 #: .\core\templates\test_already_completed.html:3
 msgid "Test Topshirilgan"
-msgstr ""
+msgstr "Test Tapsırılǵan"
 
 #: .\core\templates\test_already_completed.html:7
 msgid "Ma'lumot!"
-msgstr ""
+msgstr "Maǵlıwmat!"
 
-#: .\core\templates\test_already_completed.html:8 .\core\views.py:173
+#: .\core\templates\test_already_completed.html:8 .\core\views.py:51
+#: .\core\views.py:181
 msgid "Siz allaqachon test topshirgansiz."
-msgstr ""
+msgstr "Siz álleqashan test tapsırǵansız."
 
 #: .\core\templates\test_in_progress.html:3
 msgid "Test Jarayonida"
-msgstr ""
+msgstr "Test Barısında"
 
-#: .\core\templates\test_in_progress.html:23
+#: .\core\templates\test_in_progress.html:29
 #, python-format
 msgid ""
 "\n"
 "            Savol %(current)s/%(total)s\n"
 "            "
 msgstr ""
+"\n"
+"            Soraw %(current)s/%(total)s\n"
+"            "
 
-#: .\core\templates\test_in_progress.html:54
+#: .\core\templates\test_in_progress.html:44
 msgid "Oldingi"
-msgstr ""
+msgstr "Aldıńǵı"
 
-#: .\core\templates\test_in_progress.html:57
+#: .\core\templates\test_in_progress.html:47
 msgid "Keyingi"
-msgstr ""
+msgstr "Keyingi"
 
-#: .\core\templates\test_in_progress.html:60
+#: .\core\templates\test_in_progress.html:50
 msgid "Testni Yakunlash"
-msgstr ""
+msgstr "Testti Juwmaqlaw"
 
-#: .\core\templates\test_in_progress.html:170
+#: .\core\templates\test_in_progress.html:184
 msgid "Xatolik yuz berdi:"
-msgstr ""
+msgstr "Qátelik júz berdi:"
 
-#: .\core\templates\test_in_progress.html:170
+#: .\core\templates\test_in_progress.html:184
 msgid "Nomaʼlum xato."
-msgstr ""
+msgstr "Námálim qáte."
 
-#: .\core\templates\test_in_progress.html:175
-#: .\core\templates\test_in_progress.html:222
+#: .\core\templates\test_in_progress.html:189
+#: .\core\templates\test_in_progress.html:233
 msgid "Server bilan bogʻlanishda xatolik."
-msgstr ""
+msgstr "Server menen baylanısıwda qátelik."
 
-#: .\core\templates\test_in_progress.html:180
-msgid "Testni yakunlashga ishonchingiz komilmi?"
-msgstr ""
-
-#: .\core\templates\test_in_progress.html:216
+#: .\core\templates\test_in_progress.html:227
 msgid "Testni yakunlashda xatolik yuz berdi."
-msgstr ""
+msgstr "Testti juwmaqlawda qátelik júz berdi."
 
-#: .\core\templates\test_in_progress.html:235
+#: .\core\templates\test_in_progress.html:246
 msgid "Vaqt tugadi! Test avtomatik yakunlanadi."
-msgstr ""
+msgstr "Waqıt tawsıldı! Test avtomat túrde juwmaqlanadı."
 
 #: .\core\templates\test_results.html:3
 msgid "Test Natijalari"
-msgstr ""
+msgstr "Test Nátiyjeleri"
 
 #: .\core\templates\test_results.html:25
 msgid "Sizning Test Natijangiz"
-msgstr ""
+msgstr "Siziń Test Nátiyjeńiz"
 
 #: .\core\templates\test_results.html:33
 #, python-format
@@ -643,216 +658,148 @@ msgid ""
 "                %(score)s / %(total)s\n"
 "                "
 msgstr ""
+"\n"
+"                %(score)s / %(total)s\n"
+"                "
 
 #: .\core\templates\test_results.html:39
 msgid "Sarflangan vaqt"
-msgstr ""
+msgstr "Sarplanǵan waqıt"
 
 #: .\core\templates\test_results.html:39
 msgid "sekund"
-msgstr ""
+msgstr "sekund"
 
-#: .\core\templates\test_results.html:46
-#, python-format
-msgid "Siz %(amount)s voucher yutib oldingiz!"
-msgstr ""
-
-#: .\core\templates\test_results.html:51
-msgid "Voucher kodingiz"
-msgstr ""
-
-#: .\core\templates\test_results.html:53
-msgid "Voucher tez orada Telegram orqali yuboriladi."
-msgstr ""
-
-#: .\core\templates\test_results.html:57
-msgid "Yaxshi harakat! Keyingi safar omad tilaymiz."
-msgstr ""
-
-#: .\core\templates\test_results.html:63
+#: .\core\templates\test_results.html:44
 msgid "Batafsil Natijalarni Ko'rish"
-msgstr ""
+msgstr "Tolıq Nátiyjelerdi Kóriw"
 
-#: .\core\templates\test_results.html:68
+#: .\core\templates\test_results.html:49
 msgid "Javoblaringiz:"
-msgstr ""
+msgstr "Juwaplarıńız:"
+
+#: .\core\templates\test_results.html:52
+msgid "savol"
+msgstr "soraw"
+
+#: .\core\templates\test_results.html:54
+msgid "Sizning javobingiz"
+msgstr "Siziń juwabıńız"
+
+#: .\core\templates\test_results.html:59
+msgid "Javob berilmagan"
+msgstr "Juwap berilmegen"
 
 #: .\core\templates\test_results.html:73
-msgid "Sizning javobingiz"
-msgstr ""
-
-#: .\core\templates\test_results.html:78
-msgid "Javob berilmagan"
-msgstr ""
-
-#: .\core\templates\test_results.html:92
 msgid "Batafsil natijalar mavjud emas."
-msgstr ""
+msgstr "Tolıq nátiyjeler joq."
 
-#: .\core\views.py:36
+#: .\core\views.py:37
 msgid "Telegram ID topilmadi. Iltimos, bot orqali qayta urinib ko'ring."
-msgstr ""
+msgstr "Telegram ID tabılmadı. Iltimas, bot arqalı qayta urınıp kóriń."
 
-#: .\core\views.py:46
+#: .\core\views.py:47
 msgid "Foydalanuvchi topilmadi. Iltimos, botda /start buyrug'ini bering."
-msgstr ""
+msgstr "Paydalanıwshı tabılmadı. Iltimas, botta /start buyrıǵın beriń."
 
-#: .\core\views.py:68
+#: .\core\views.py:76
 msgid "Telegram ID topilmadi. Xatolik."
-msgstr ""
+msgstr "Telegram ID tabılmadı. Qátelik."
 
-#: .\core\views.py:77
+#: .\core\views.py:85
 msgid "Foydalanuvchi topilmadi. Qayta urinib ko'ring."
-msgstr ""
+msgstr "Paydalanıwshı tabılmadı. Qayta urınıp kóriń."
 
-#: .\core\views.py:84
+#: .\core\views.py:92
 msgid "Ma'lumotlaringiz muvaffaqiyatli saqlandi!"
-msgstr ""
+msgstr "Maǵlıwmatlarıńız tabıslı saqlandı!"
 
-#: .\core\views.py:96
+#: .\core\views.py:104
 msgid ""
 "Formani to'ldirishda xatoliklar mavjud. Iltimos, tekshirib qayta urinib "
 "ko'ring."
-msgstr ""
+msgstr "Formanı toltırıwda qátelikler bar. Iltimas, tekserip qayta urınıp kóriń."
 
-#: .\core\views.py:102
+#: .\core\views.py:110
 msgid "Xatolik yuz berdi."
-msgstr ""
+msgstr "Qátelik júz berdi."
 
-#: .\core\views.py:107
+#: .\core\views.py:115
 msgid "Muvaffaqiyatli ro'yxatdan o'tdingiz!"
-msgstr ""
+msgstr "Tabıslı dizimnen óttińiz!"
 
-#: .\core\views.py:204
+#: .\core\views.py:212
 msgid "Test uchun savollar mavjud emas."
-msgstr ""
+msgstr "Test ushın sorawlar joq."
 
-#: .\core\views.py:253
+#: .\core\views.py:269
 msgid "Test uchun savollar topilmadi."
-msgstr ""
+msgstr "Test ushın sorawlar tabılmadı."
 
-#: .\core\views.py:273
+#: .\core\views.py:289
 msgid "Aktiv test topilmadi. Iltimos, testni qayta boshlang."
-msgstr ""
+msgstr "Aktiv test tabılmadı. Iltimas, testti qayta baslań."
 
-#: .\core\views.py:283 .\core\views.py:436
+#: .\core\views.py:299 .\core\views.py:465
 msgid "Test topilmadi."
-msgstr ""
+msgstr "Test tabılmadı."
 
-#: .\core\views.py:300
+#: .\core\views.py:316
 msgid "Testda savollar topilmadi."
-msgstr ""
+msgstr "Testte sorawlar tabılmadı."
 
-#: .\core\views.py:387
+#: .\core\views.py:330 .\core\views.py:419
+msgid "Savol matni topilmadi."
+msgstr "Soraw tekstı tabılmadı."
+
+#: .\core\views.py:410
 msgid "Barcha savollarga javob berildi. Testni yakunlang."
-msgstr ""
+msgstr "Barlıq sorawlarǵa juwap berildi. Testti juwmaqlan."
 
-#: .\core\views.py:420
+#: .\core\views.py:449
 msgid "Test hali yakunlanmagan yoki allaqachon qayta ishlangan."
-msgstr ""
+msgstr "Test házirshe juwmaqlanbaǵan yaki álleqashan qayta islengen."
 
-#: .\core\views.py:426
+#: .\core\views.py:455
 msgid "Test ID si topilmadi. Natijalarni ko'rsatib bo'lmaydi."
-msgstr ""
-
-#: .\core\views.py:482
-msgid "250 000 so'mlik"
-msgstr ""
-
-#: .\core\views.py:486
-msgid "100 000 so'mlik"
-msgstr ""
-
-#: .\core\views.py:490
-msgid "50 000 so'mlik"
-msgstr ""
-
-#: .\core\views.py:493
-msgid "0 so'mlik"
-msgstr ""
+msgstr "Test ID si tabılmadı. Nátiyjelerdi kórsetip bolmaydı."
 
 #: .\tgbot\serializers.py:28
 msgid "Bu telefon raqami allaqachon mavjud."
-msgstr ""
+msgstr "Bul telefon nomeri álleqashan bar."
 
 #: .\tgbot\utils.py:62
 msgid "sizning test natijangiz"
-msgstr ""
+msgstr "siziń test nátiyjeńiz"
 
-#: .\tgbot\utils.py:64
-msgid "Siz"
-msgstr ""
-
-#: .\tgbot\utils.py:64
-msgid "voucherni qoʻlga kiritdingiz."
-msgstr ""
-
-#: .\tgbot\utils.py:65
-msgid "Voucherning amal qilish muddati"
-msgstr ""
-
-#: .\tgbot\utils.py:65
-msgid "sanasigacha."
-msgstr ""
-
-#: .\tgbot\utils.py:67
+#: .\tgbot\utils.py:63
 msgid "Ishtirokingiz uchun rahmat!"
-msgstr ""
+msgstr "Qatnasıwıńız ushın raxmet!"
 
-#: .\tgbot\utils.py:68
+#: .\tgbot\utils.py:64
 msgid "Toʻliq maʻlumot uchun telefon"
-msgstr ""
-
-#: .\tgbot\utils.py:69
-msgid "Manzil"
-msgstr ""
-
-#: .\tgbot\utils.py:101 .\tgbot\utils.py:102 .\tgbot\utils.py:103
-#: .\tgbot\utils.py:104 .\tgbot\utils.py:105 .\tgbot\utils.py:106
-#: .\tgbot\utils.py:116 .\tgbot\utils.py:117
-msgid "Noma'lum"
-msgstr ""
-
-#: .\tgbot\utils.py:135
-msgid "Yangi Test Natijasi!"
-msgstr ""
-
-#: .\tgbot\utils.py:136
-msgid "F.I.Sh"
-msgstr ""
-
-#: .\tgbot\utils.py:144
-msgid "Natija"
-msgstr ""
-
-#: .\tgbot\utils.py:145
-msgid "Voucher"
-msgstr ""
-
-#: .\tgbot\utils.py:146
-msgid "Vaqt"
-msgstr ""
+msgstr "Tolıq maǵlıwmat ushın telefon"
 
 #: .\tgbot\views.py:28
 msgid "Telegram ID majburiy."
-msgstr ""
+msgstr "Telegram ID májburiy."
 
 #: .\tgbot\views.py:34
 msgid "Foydalanuvchi allaqachon mavjud."
-msgstr ""
+msgstr "Paydalanıwshı álleqashan bar."
 
 #: .\tgbot\views.py:42
 msgid "Foydalanuvchi muvaffaqiyatli ro'yxatdan o'tkazildi."
-msgstr ""
+msgstr "Paydalanıwshı tabıslı dizimnen ótkizildi."
 
 #: .\tgbot\views.py:62
 msgid "Faqat til yoki telefon raqamini yangilash mumkin."
-msgstr ""
+msgstr "Tek ǵana til yaki telefon nomerin jańalaw múmkin."
 
 #: .\tgbot\views.py:76
 msgid "Til muvaffaqiyatli yangilandi."
-msgstr ""
+msgstr "Til tabıslı jańalandı."
 
 #: .\tgbot\views.py:87
 msgid "Telefon raqami muvaffaqiyatli yangilandi."
-msgstr ""
+msgstr "Telefon nomeri tabıslı jańalandı."

@@ -1,13 +1,17 @@
 # core/admin.py
-from django.contrib import admin
 from .models import User, EducationType, Institution, EducationLevel, Faculty, Subject, Question, Test
 from django.utils.translation import gettext_lazy as _
 import pandas as pd
 from io import BytesIO
 from django.http import HttpResponse
 from django.utils import timezone
-from django.contrib import messages
 
+from django.contrib import admin, messages
+from django.shortcuts import render, redirect
+from django.urls import path
+from .forms import BulkUploadQuestionsForm # Yangi forma
+from .utils import split_docx_into_questions # Yangi util funksiya
+from django.core.files.base import ContentFile # Question modeliga saqlash uchun
 
 
 @admin.register(User)
@@ -90,7 +94,7 @@ class QuestionInline(admin.TabularInline): # Yoki StackedInline
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'subject', 'get_available_files_summary', 'correct_answer', 'is_active', 'created_at')
+    list_display = ('id', 'subject', 'get_available_files_summary_admin', 'correct_answer', 'is_active', 'created_at')
     list_filter = ('subject', 'is_active', 'correct_answer')
     search_fields = ('subject__name_uz', 'id')
     autocomplete_fields = ['subject']
@@ -98,13 +102,127 @@ class QuestionAdmin(admin.ModelAdmin):
     fields = ('subject', 'correct_answer', 'is_active', 'question_file_uz', 'question_file_kaa', 'question_file_ru')
     # readonly_fields = ('get_question_preview_admin',) # Buni ham har bir til uchun alohida qilish kerak bo'ladi
 
-    def get_available_files_summary(self, obj):
+    def get_available_files_summary_admin(self, obj):
         langs = []
         if obj.question_file_uz: langs.append("UZ")
         if obj.question_file_kaa: langs.append("KAA")
         if obj.question_file_ru: langs.append("RU")
         return ", ".join(langs) if langs else _("Fayl yo'q")
-    get_available_files_summary.short_description = _("Mavjud Tillar")
+    get_available_files_summary_admin.short_description = _("Mavjud Tillar")
+
+    
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path(
+                'bulk-upload/',
+                self.admin_site.admin_view(self.bulk_upload_view),
+                name='core_question_bulk_upload'
+            ),
+        ]
+        return custom_urls + urls
+
+    def bulk_upload_view(self, request):
+        if request.method == 'POST':
+            form = BulkUploadQuestionsForm(request.POST, request.FILES)
+            if form.is_valid():
+                subject = form.cleaned_data['subject']
+                answers_str = form.cleaned_data['answers_string']
+                delimiter = form.cleaned_data['delimiter']
+                
+                file_uz_bytes = form.cleaned_data['questions_file_uz'].read() if form.cleaned_data['questions_file_uz'] else None
+                file_kaa_bytes = form.cleaned_data['questions_file_kaa'].read() if form.cleaned_data['questions_file_kaa'] else None
+                file_ru_bytes = form.cleaned_data['questions_file_ru'].read() if form.cleaned_data['questions_file_ru'] else None
+
+                # Har bir til uchun savollarni ajratib olish
+                # Bu yerda har bir fayldagi savollar soni bir xil bo'lishi va javoblar soniga mos kelishi kerak.
+                # split_docx_into_questions buni tekshiradi.
+
+                parsed_q_uz, error_uz = split_docx_into_questions(file_uz_bytes, answers_str, delimiter)
+                parsed_q_kaa, error_kaa = split_docx_into_questions(file_kaa_bytes, answers_str, delimiter)
+                parsed_q_ru, error_ru = split_docx_into_questions(file_ru_bytes, answers_str, delimiter)
+                print(parsed_q_uz)
+                # Xatoliklarni tekshirish
+                errors = []
+                if error_uz: errors.append(f"UZ: {error_uz}")
+                if error_kaa: errors.append(f"KAA: {error_kaa}")
+                if error_ru: errors.append(f"RU: {error_ru}")
+
+                # Turli tillardagi savollar soni mos kelishini tekshirish (agar kamida ikkita fayl yuklangan bo'lsa)
+                counts = []
+                if parsed_q_uz: counts.append(len(parsed_q_uz))
+                if parsed_q_kaa: counts.append(len(parsed_q_kaa))
+                if parsed_q_ru: counts.append(len(parsed_q_ru))
+
+                if len(counts) > 1 and len(set(counts)) > 1: # Agar yuklangan fayllarda savollar soni har xil bo'lsa
+                    errors.append(_("Turli tillardagi fayllarda savollar soni mos kelmadi: {}").format(counts))
+
+                if errors:
+                    for error_msg in errors:
+                        messages.error(request, error_msg)
+                    # Formani xatolar bilan qayta ko'rsatish
+                    context = self.admin_site.each_context(request)
+                    context['opts'] = self.model._meta
+                    context['form'] = form
+                    context['title'] = _("Savollarni ommaviy yuklash xatosi")
+                    return render(request, 'bulk_upload_form.html', context)
+
+                # Agar xatolik bo'lmasa, savollarni bazaga saqlash
+                # parsed_q_uz, parsed_q_kaa, parsed_q_ru ichida (docx_bytes, answer_char) tuple'lari bor.
+                # Ularning soni bir xil bo'lishi kerak (yuqorida tekshirildi).
+                # Qaysi birida eng ko'p savol bo'lsa (yoki birinchisida), o'sha bo'yicha aylanamiz.
+                
+                num_questions_to_save = 0
+                if parsed_q_uz: num_questions_to_save = len(parsed_q_uz)
+                elif parsed_q_kaa: num_questions_to_save = len(parsed_q_kaa)
+                elif parsed_q_ru: num_questions_to_save = len(parsed_q_ru)
+
+                if num_questions_to_save == 0:
+                     messages.warning(request, _("Yuklash uchun savollar topilmadi (fayllar bo'sh yoki ajratilmadi)."))
+                else:
+                    saved_count = 0
+                    for i in range(num_questions_to_save):
+                        q_data_uz = parsed_q_uz[i][0] if parsed_q_uz and i < len(parsed_q_uz) else None
+                        q_data_kaa = parsed_q_kaa[i][0] if parsed_q_kaa and i < len(parsed_q_kaa) else None
+                        q_data_ru = parsed_q_ru[i][0] if parsed_q_ru and i < len(parsed_q_ru) else None
+                        
+                        # Javobni birinchi mavjud parse qilingan ro'yxatdan olish
+                        correct_ans = None
+                        if parsed_q_uz and i < len(parsed_q_uz): correct_ans = parsed_q_uz[i][1]
+                        elif parsed_q_kaa and i < len(parsed_q_kaa): correct_ans = parsed_q_kaa[i][1]
+                        elif parsed_q_ru and i < len(parsed_q_ru): correct_ans = parsed_q_ru[i][1]
+
+                        if not correct_ans: # Bu holat bo'lmasligi kerak
+                            messages.error(request, _("{}-savol uchun javob topilmadi.").format(i+1))
+                            continue
+
+                        new_question = Question(subject=subject, correct_answer=correct_ans.lower(), is_active=True)
+                        
+                        if q_data_uz:
+                            new_question.question_file_uz.save(f"q_uz_{subject.id}_{i+1}.docx", ContentFile(q_data_uz), save=False)
+                        if q_data_kaa:
+                            new_question.question_file_kaa.save(f"q_kaa_{subject.id}_{i+1}.docx", ContentFile(q_data_kaa), save=False)
+                        if q_data_ru:
+                            new_question.question_file_ru.save(f"q_ru_{subject.id}_{i+1}.docx", ContentFile(q_data_ru), save=False)
+                        
+                        new_question.save() # Barcha fayllar biriktirilgandan keyin saqlash
+                        saved_count +=1
+
+                    messages.success(request, _("{} ta savol muvaffaqiyatli yuklandi.").format(saved_count))
+                
+                return redirect('admin:core_question_changelist') # Savollar ro'yxatiga qaytish
+        else:
+            form = BulkUploadQuestionsForm()
+
+        context = self.admin_site.each_context(request)
+        context['opts'] = self.model._meta # Question modeli uchun meta ma'lumotlar
+        context['form'] = form
+        context['title'] = _("Savollarni Ommaviy Yuklash")
+        # Shablon admin papkasi ichida bo'lishi kerak
+        return render(request, 'bulk_upload_form.html', context)
+
+    # Question ro'yxati sahifasiga "Ko'p savol yuklash" tugmasini qo'shish
+    change_list_template = "question_changelist.html"
 
 
 class TestQuestionsInline(admin.TabularInline): # Testga qaysi savollar tushganini ko'rsatish
@@ -171,44 +289,34 @@ class TestAdmin(admin.ModelAdmin):
         column_names = {
             'test_id': str(_('Test ID')),
             'tg_id': str(_('Telegram ID')),
-            'full_name': str(_('F.I.Sh.')),
+            'full_name': str(_('F.A.Á.')),
             'phone': str(_('Telefon')),
-            'edu_type': str(_('Ta\'lim Turi')),
-            'institution': str(_('Muassasa')),
-            'edu_level_otm': str(_('Bosqich (OTM)')),
-            'faculty_otm': str(_('Fakultet (OTM)')),
-            'course': str(_('Kurs/Sinf')),
-            'test_date_started': str(_('Test Boshlangan Sanasi')),
-            'test_date_completed': str(_('Test Tugatilgan Sanasi')),
-            'score': str(_('Natija (Ball)')),
-            'total_q': str(_('Jami Savollar')),
-            'time_spent': str(_('Sarflangan Vaqt (s)')),
-            'voucher_code': str(_('Voucher Kodi')),
-            'voucher_sent': str(_('Voucher Yuborildi')),
-            'test_subjects': str(_('Testdagi Fanlar')),
+            'edu_type': str(_('Bilimlendiriw Túri')),
+            'institution': str(_('Mákeme')),
+            'edu_level_otm': str(_('Basqısh (JOO)')),
+            'faculty_otm': str(_('Fakultet (JOO)')),
+            'course': str(_('Kurs')),
+            'test_date_started': str(_('Test Baslanıw Waqıtı')),
+            'test_date_completed': str(_('Test Tamamlanıw Waqıtı')),
+            'score': str(_('Nátiyje (Ball)')),
+            'total_q': str(_('Jámi Sorawlar')),
+            'time_spent': str(_('Sarplaǵan Waqıtı (s)')),
+            'voucher_code': str(_('Sertifikat Kodı')),
+            'voucher_sent': str(_('Sertifikat Jiberildi')),
         }
 
         for test_obj in queryset:
             user = test_obj.user
-            subject_names_in_test = str(_("Aralash Test"))
-            if test_obj.questions.exists():
-                unique_subject_names = list(set(
-                    str(q.subject.get_localized_name()) for q in test_obj.questions.all()[:5]
-                ))
-                if unique_subject_names:
-                    subject_names_in_test = ", ".join(unique_subject_names)
-                    if test_obj.questions.count() > 5:
-                        subject_names_in_test += "..."
             
             data_for_excel.append({
                 column_names['test_id']: test_obj.id,
                 column_names['tg_id']: user.telegram_id,
                 column_names['full_name']: user.full_name or "",
                 column_names['phone']: user.phone_number or "",
-                column_names['edu_type']: str(user.education_type.get_localized_name()) if user.education_type else "",
-                column_names['institution']: str(user.institution.get_localized_name()) if user.institution else "",
-                column_names['edu_level_otm']: str(user.education_level.get_localized_name()) if user.education_level else "",
-                column_names['faculty_otm']: str(user.faculty.get_localized_name()) if user.faculty else "",
+                column_names['edu_type']: str(user.education_type.name_kaa) if user.education_type else "",
+                column_names['institution']: str(user.institution.name_kaa) if user.institution else "",
+                column_names['edu_level_otm']: str(user.education_level.name_kaa) if user.education_level else "",
+                column_names['faculty_otm']: str(user.faculty.name_kaa) if user.faculty else "",
                 column_names['course']: user.course_year or "",
                 column_names['test_date_started']: test_obj.started_at.strftime('%Y-%m-%d %H:%M') if test_obj.started_at else "",
                 column_names['test_date_completed']: test_obj.completed_at.strftime('%Y-%m-%d %H:%M') if test_obj.completed_at else "",
@@ -216,8 +324,7 @@ class TestAdmin(admin.ModelAdmin):
                 column_names['total_q']: test_obj.questions.count(),
                 column_names['time_spent']: test_obj.time_spent_seconds,
                 column_names['voucher_code']: test_obj.voucher_code or "",
-                column_names['voucher_sent']: str(_("Ha")) if test_obj.voucher_sent else str(_("Yo'q")),
-                column_names['test_subjects']: subject_names_in_test,
+                column_names['voucher_sent']: str(_("Awa")) if test_obj.voucher_sent else str(_("Yaq")),
             })
 
         if not data_for_excel:

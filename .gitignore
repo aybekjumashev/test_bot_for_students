@@ -84,3 +84,5 @@ dist/
 # Tilda/Figma export
 *.tilda*
 *.fig
+
+not.txt

@@ -102,7 +102,7 @@ async def send_welcome(message: Message):
 
     if api_response and "error" not in api_response:
         await message.answer(
-            "🗺️ Til saylań / Выберите язык / Til tanlang:",
+            "🗺️ Ózińizge qolaylı tildi saylań \n🗺️ Выберите удобный для вас язык \n🗺️ O'zingiz uchun qulayli tilni tanlang",
             reply_markup=language_keyboard()
         )
     elif api_response and "error" in api_response and api_response.get("status_code") == 400 and "telegram_id" in api_response["error"]:
@@ -121,9 +121,9 @@ async def process_language_select(callback_query: types.CallbackQuery):
 
     if api_response and "error" not in api_response:
         await callback_query.message.edit_text(
-            {"kaa": "Dawam etiw ushın kanallarımızǵa aǵza bolıń:", 
-             "ru": "Для продолжения подпишитесь на наши каналы:",
-             "uz": "Davom etish uchun kanallarimizga a'zo bo'ling:"}
+            {"kaa": "Telegram bottan paydalanıp arnawlı sertifikattı alıw ushın tómendegi kanallarǵa aǵza bolıń 👇👇👇", 
+             "ru": "Подпишитесь на каналы ниже, чтобы получить специальный сертификат с помощью Telegram-бота 👇👇👇",
+             "uz": "Telegram bottan foydalanib maxsus sertifikatni olish uchun pastdagi kanallarga a'zo bo'ling 👇👇👇"}
             .get(lang_code, "Dawam etiw ushın kanallarımızǵa aǵza bolıń:"),
             reply_markup=channels_keyboard(lang_code)
         )

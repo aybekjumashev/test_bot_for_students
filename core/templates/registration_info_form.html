@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>{% translate "Ro'yxatdan o'tish" %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
@@ -62,18 +63,13 @@
     </style>
 </head>
 <body>
-    <div id="loading-indicator">{% translate "Yuklanmoqda..." %}</div>
+    <div id="loading-indicator" class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 text-white" style="z-index: 1050;">
+        <div class="position-absolute top-50 start-50 translate-middle d-flex flex-column align-items-center justify-content-center h-100">
+            <div class="spinner-border text-light" role="status"></div>
+        </div>
+    </div>
     <div class="container pb-3">
         <h4 class="mb-3 mt-2 text-center">{% translate "Qo'shimcha ma'lumotlarni kiriting" %}</h4>
-
-        {% if messages %}
-            {% for message in messages %}
-            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            {% endfor %}
-        {% endif %}
 
         <form method="post" id="registrationForm" novalidate> {# novalidate HTML5 validatsiyasini o'chiradi, JS ga topshiramiz #}
             {% csrf_token %}
@@ -113,10 +109,9 @@
             <div class="mb-3">
                 <label for="{{ form.course_year.id_for_label }}" class="form-label">{{ form.course_year.label }} <span class="text-danger">*</span></label>
                 {{ form.course_year }}
-                {% if form.course_year.help_text %}<div class="form-text">{{ form.course_year.help_text|safe }}</div>{% endif %}
                 {% if form.course_year.errors %}<div class="invalid-feedback">{{ form.course_year.errors }}</div>{% endif %}
             </div>
-            <button type="submit">Submit</button>
+            <button type="submit" class="btn btn-primary w-100 mt-3">{% translate 'Saqlash va Davom Etish' %}</button>
         </form>
     </div>
 
@@ -139,9 +134,10 @@
         const registrationForm = document.getElementById('registrationForm');
 
 
-        const currentLang = "{{ request.LANGUAGE_CODE|escapejs }}";
+        const currentLang = "{{ lang|escapejs }}";
+        console.log("JS currentLang:", currentLang);
         // Django loglarida /uz/api/core/... ko'rinayotgan edi. Shuni qoldiramiz.
-        const apiBaseUrl = `/api`;
+        const apiBaseUrl = `/${currentLang}/api`;
 
         let allEducationTypesData = [];
 
@@ -352,9 +348,9 @@
         }
         
         // Telegram MainButton ni sozlash
-        if (tg && tg.MainButton && telegramUserId && telegramUserId !== "None" && telegramUserId !== "") {
-            tg.MainButton.setText("{% translate 'Saqlash va Davom Etish' %}");
-            tg.MainButton.onClick(function() {
+        //if (tg && tg.MainButton && telegramUserId && telegramUserId !== "None" && telegramUserId !== "") {
+        //    tg.MainButton.setText("{% translate 'Saqlash va Davom Etish' %}");
+        //    tg.MainButton.onClick(function() {
                 // Formani validatsiya qilish (ixtiyoriy, brauzer o'zi qiladi agar novalidate bo'lmasa)
                 // if (registrationForm.checkValidity()) {
                 //     registrationForm.submit();
@@ -363,12 +359,12 @@
                 //     tg.MainButton.hideProgress();
                 //     tg.MainButton.enable();
                 // }
-                if (registrationForm) registrationForm.requestSubmit();
-            });
-            tg.MainButton.show();
-        } else if (tg && tg.MainButton) {
-            tg.MainButton.hide(); // Agar ID yo'q bo'lsa tugmani yashirish
-        }
+                //if (registrationForm) registrationForm.requestSubmit();
+            //});
+            //tg.MainButton.show();
+        //} else if (tg && tg.MainButton) {
+        //    tg.MainButton.hide(); // Agar ID yo'q bo'lsa tugmani yashirish
+        //}
 
         // Sahifa to'liq yuklangandan so'ng formani initsializatsiya qilish
         document.addEventListener('DOMContentLoaded', function() {
