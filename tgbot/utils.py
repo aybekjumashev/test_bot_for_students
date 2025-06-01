@@ -47,32 +47,27 @@ async def send_telegram_photo_message(chat_id: int, caption: str, photo_bytes: B
 
 async def send_test_result_to_user(
     user_telegram_id: int,
-    user_fullname: str,
-    score: int,
+    user_fullname: tuple,
+    score: tuple,
     total_questions: int,
-    voucher_amount_text: str,
     voucher_code: str,
-    voucher_image_postfix: str,
-    admin_chat_id: int = None
 ):
     logger.info(f"send_test_result_to_user chaqirildi: user_id={user_telegram_id}, fullname={user_fullname}")
     
-    future_date = (timezone.now() + timezone.timedelta(weeks=1)).strftime("%d.%m.%Y")
-    
-    message_to_user = f"<b>{user_fullname}, {_('sizning test natijangiz')}: {score}/{total_questions}</b>\n\n"    
+    message_to_user = f"<b>{' '.join(user_fullname)}, {_('sizning test natijangiz')}: {score[0]}/{total_questions}</b>\n\n"    
     message_to_user += f"{_('Ishtirokingiz uchun rahmat!')}\n\n"
     message_to_user += f"📞 {_('Toʻliq maʻlumot uchun telefon')}: +998 XX XXX XX XX\n"
 
-    voucher_template_filename = f"voucher.jpg"
+    voucher_template_filename = f"voucher.png"
     logger.info(f"Voucher shabloni izlanmoqda: {voucher_template_filename}")
-
+    
     # get_photo sinxron funksiya, uni sync_to_async bilan chaqirish kerak
     image_bytes = await sync_to_async(get_photo, thread_sensitive=True)( # thread_sensitive=True Pillow uchun kerak bo'lishi mumkin
         fullname=user_fullname,
-        date_str=future_date,
+        date_str=timezone.now().strftime("%d.%m.%Y"),
         voucher_template_filename=voucher_template_filename,
         num_code=voucher_code,
-        subjectname_text=""
+        score=score,
     )
 
     user_message_sent = False

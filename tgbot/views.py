@@ -142,7 +142,6 @@ class ExportTestsAPIView(APIView):
                 'total_q': str(_('Jámi Sorawlar')),
                 'time_spent': str(_('Sarplaǵan Waqıtı (s)')),
                 'voucher_code': str(_('Sertifikat Kodı')),
-                'voucher_sent': str(_('Sertifikat Jiberildi')),
             }
             # Agar User modelida name, surname, patronymic alohida bo'lsa:
             # column_names['name'] = str(_('Atı'))
@@ -152,15 +151,6 @@ class ExportTestsAPIView(APIView):
 
             for test_obj in tests_queryset:
                 user = test_obj.user
-                subject_names_in_test = str(_("Aralash Test"))
-                if test_obj.questions.exists():
-                    unique_subject_names = list(set(
-                        str(q.subject.get_localized_name()) for q in test_obj.questions.all()[:5]
-                    ))
-                    if unique_subject_names:
-                        subject_names_in_test = ", ".join(unique_subject_names)
-                        if test_obj.questions.count() > 5:
-                            subject_names_in_test += "..."
                 
                 row_data = {
                     column_names['test_id']: test_obj.id,
@@ -169,18 +159,17 @@ class ExportTestsAPIView(APIView):
                     column_names['surname']: user.surname or "",
                     column_names['patronymic']: user.patronymic or "",
                     column_names['phone']: user.phone_number or "",
-                    column_names['edu_type']: str(user.education_type.get_localized_name()) if user.education_type else "",
-                    column_names['institution']: str(user.institution.get_localized_name()) if user.institution else "",
-                    column_names['edu_level_otm']: str(user.education_level.get_localized_name()) if user.education_level else "",
-                    column_names['faculty_otm']: str(user.faculty.get_localized_name()) if user.faculty else "",
+                    column_names['edu_type']: str(user.education_type.name_kaa) if user.education_type else "",
+                    column_names['institution']: str(user.institution.name_kaa) if user.institution else "",
+                    column_names['edu_level_otm']: str(user.education_level.name_kaa) if user.education_level else "",
+                    column_names['faculty_otm']: str(user.faculty.name_kaa) if user.faculty else "",
                     column_names['course']: user.course_year or "",
-                    column_names['test_date_started']: test_obj.started_at.strftime('%Y-%m-%d %H:%M') if test_obj.started_at else "",
-                    column_names['test_date_completed']: test_obj.completed_at.strftime('%Y-%m-%d %H:%M') if test_obj.completed_at else "",
+                    column_names['test_date_started']: timezone.localtime(test_obj.started_at).strftime('%Y-%m-%d %H:%M') if test_obj.started_at else "",
+                    column_names['test_date_completed']: timezone.localtime(test_obj.completed_at).strftime('%Y-%m-%d %H:%M') if test_obj.completed_at else "",
                     column_names['score']: test_obj.score if test_obj.score is not None else "",
                     column_names['total_q']: test_obj.questions.count(),
                     column_names['time_spent']: test_obj.time_spent_seconds if test_obj.time_spent_seconds is not None else "",
                     column_names['voucher_code']: test_obj.voucher_code or "",
-                    column_names['voucher_sent']: str(_("Awa")) if test_obj.voucher_sent else str(_("Yaq")),
                 }
                 # Agar User modelida name, surname, patronymic alohida bo'lsa:
                 # row_data[column_names['name']] = user.name or ""

@@ -33,7 +33,7 @@ def convert_docx_to_html(docx_file_field):
         print(f"Error converting DOCX to HTML: {e}")
         return "<p>Error displaying question.</p>"
 
-def get_photo(fullname, date_str, voucher_template_filename, num_code, subjectname_text=''):
+def get_photo(fullname, date_str, voucher_template_filename, num_code, score):
     """
     Generates a voucher image.
     voucher_template_filename - 'vouchers/' papkasidagi shablon fayl nomi (masalan, 'VoucherUmumiy1.jpg')
@@ -58,7 +58,7 @@ def get_photo(fullname, date_str, voucher_template_filename, num_code, subjectna
 
         try:
             font_date_num = ImageFont.truetype(font_arial_path, 36)
-            font_fullname_obj = ImageFont.truetype(font_fullname_path, 72)
+            font_fullname_obj = ImageFont.truetype(font_arial_path, 24)
         except IOError as e:
             print(f"Warning: Fonts not found ({e}), using default.")
             font_date_num = ImageFont.load_default()
@@ -66,30 +66,26 @@ def get_photo(fullname, date_str, voucher_template_filename, num_code, subjectna
 
         # Matnlarni yozish (koordinatalar sizning shabloningizga mos bo'lishi kerak)
         # Bu koordinatalar eski loyihadagi get_photo dan olingan
-        draw.text((335, 970), date_str, fill="#400025", font=font_date_num)
-        draw.text((655, 970), str(num_code), fill="#400025", font=font_date_num)
+        draw.text((250, 1500), date_str, fill="#000000", font=font_date_num)
+        draw.text((325, 679), str(num_code[1]), fill="#000000", font=font_fullname_obj)
+        draw.text((471, 713), str(num_code[0]), fill="#000000", font=font_fullname_obj)
+        draw.text((528, 1155), str(score[0]), fill="#000000", font=font_date_num)
+        draw.text((993, 1198), str(score[1])+'%', fill="#000000", font=font_date_num)
 
-        # Ism-sharifni markazlashtirish
-        # Pillow 9.0.0+ da textbbox, undan oldin textsize
-        try:
-            text_bbox = draw.textbbox((0, 0), fullname, font=font_fullname_obj)
-            text_width = text_bbox[2] - text_bbox[0]
-            # text_height = text_bbox[3] - text_bbox[1] # Agar balandlik ham kerak bo'lsa
-        except AttributeError: # Eski Pillow uchun fallback
-            text_width, _ = draw.textsize(fullname, font=font_fullname_obj)
+        name, surname, patronymic = fullname 
 
-        # Shablon rasmining eni (taxminan, o'zingiznikiga moslang)
-        image_width = image.width # 1560
-        # Yoziladigan joyning markazi (taxminan, o'zingiznikiga moslang)
-        center_x_for_name = image_width / 2 # 780
-        text_x = center_x_for_name - (text_width / 2) - 90
-        text_y = 420 # Eski kodingizdagi Y koordinata
+        # Boshlang'ich koordinatalar
+        text_x = 250  # Chapdan qancha masofada yozilsin, o'zingiz moslashtiring
+        text_y = 781  # Birinchi qatorning Y koordinatasi
 
-        draw.text((text_x, text_y), fullname, fill="#400025", font=font_fullname_obj)
+        # Har bir qator uchun yozish
+        line_spacing = 10  # Qatorlar oralig'i, kerak bo‘lsa sozlang
 
-        if subjectname_text: # Agar fan nomi ham yozilishi kerak bo'lsa (eski kodda bor edi)
-             # draw.text((10, 10), subjectname_text, fill="black", font=font_date_num)
-             pass # Hozircha aralash test uchun bu shart emas
+        for i, text_line in enumerate([surname, name, patronymic]):
+            draw.text((text_x, text_y + i * (font_fullname_obj.size + line_spacing)),
+                    text_line.upper(), 
+                    fill="#000000",
+                    font=font_fullname_obj)
 
         image_bytes = BytesIO()
         image.save(image_bytes, format='JPEG')

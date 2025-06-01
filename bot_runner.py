@@ -11,13 +11,13 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder # Yangi InlineKeyboardB
 from dotenv import load_dotenv
 from io import BytesIO
 
-load_dotenv() # .env faylidagi o'zgaruvchilarni yuklash
+load_dotenv(override=True) # .env faylidagi o'zgaruvchilarni yuklash
 
 API_TOKEN = os.getenv("BOT_TOKEN")
 DJANGO_API_BASE_URL = os.getenv("DJANGO_API_URL", "http://127.0.0.1:8000/api/tg") 
 WEBAPP_BASE_URL = os.getenv("WEBAPP_BASE_URL", "http://127.0.0.1:8000") 
 CHANNELS_URL = os.getenv("CHANNELS_URL", "https://t.me/addlist/K4iMXLXFYLQzYzEy") 
-
+print(WEBAPP_BASE_URL)
 # Logging sozlamalari
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -120,7 +120,7 @@ async def export_all_data_command(message: types.Message):
     #     await message.reply("Sizda bu buyruqni bajarish uchun ruxsat yo'q.")
     #     return
 
-    await message.reply("Maǵlıwmatlar Excel faylına tayarlanbaqta...")
+    load_msg = await message.reply("Maǵlıwmatlar Excel faylına tayarlanbaqta...")
 
     # API endpointiga so'rov yuborish
     # API_EXPORT_URL = f"{os.getenv('DJANGO_BASE_URL', 'http://127.0.0.1:8000')}/api/export-all-tests/"
@@ -146,6 +146,7 @@ async def export_all_data_command(message: types.Message):
             
             input_file = types.BufferedInputFile(file_bytes.getvalue(), filename=file_name)
             await message.reply_document(input_file, caption="Barlıq test nátiyjeleri.")
+            await load_msg.delete() # Yuklash xabarini o'chirish
 
         except httpx.HTTPStatusError as e:
             error_text = e.response.text
@@ -226,7 +227,7 @@ async def process_contact(message: Message):
 
     if api_response and "error" not in api_response:        
         msg = await message.answer(
-            {"kaa": "Raxmet!", "ru": "Спасибо!","uz": "Rahmat!"}.get(lang_code, "Raxmet!"), 
+            {"kaa": "Maǵlıwmatlarıńız saqlandi.", "ru": "Ваши данные сохранены.","uz": "Ma'lumotlaringiz saqlandi."}.get(lang_code, "Raxmet!"), 
             reply_markup=types.ReplyKeyboardRemove()
         )
         await message.answer(

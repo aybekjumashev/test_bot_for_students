@@ -500,7 +500,7 @@ class SubmitTestView(View):
         
         total_q_count = test_questions.count() if test_questions.exists() else 1 # exists() bilan tekshirish yaxshiroq
         percentage_correct = (correct_answers_count / total_q_count) * 100 if total_q_count > 0 else 0
-        test_instance.voucher_code = f"IBT{timezone.now().strftime('%m%d')}{test_instance.id}"   
+        test_instance.voucher_code = f"IBT{timezone.now().strftime('%m%d')}{test_instance.id}{random.randint(1, 9)}"   
         
         # test_instance ni birinchi marta saqlash (voucher_code bilan, voucher_sent hali False)
         test_instance.save()
@@ -513,12 +513,10 @@ class SubmitTestView(View):
             try:
                 message_was_sent_to_user = async_to_sync(send_test_result_to_user)(
                     user_telegram_id=int(user.telegram_id), # Int ga o'tkazish
-                    user_fullname=user.full_name or str(user.telegram_id),
-                    score=correct_answers_count,
+                    user_fullname=(user.name or '', user.surname or '', user.patronymic or ''), # Foydalanuvchi ismi va familiyasini olish
+                    score=(correct_answers_count, round(percentage_correct, 1)),
                     total_questions=total_q_count,
-                    voucher_amount_text="", 
-                    voucher_code=test_instance.voucher_code,
-                    voucher_image_postfix=""
+                    voucher_code=(test_instance.id, test_instance.voucher_code),
                 )
                 logger.info(f"Telegramga yuborish statusi (user {user.telegram_id}): {message_was_sent_to_user}")
 
