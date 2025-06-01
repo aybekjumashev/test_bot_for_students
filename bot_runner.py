@@ -13,20 +13,117 @@ from io import BytesIO
 
 load_dotenv(override=True) # .env faylidagi o'zgaruvchilarni yuklash
 
+
+# Logging sozlamalari
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 API_TOKEN = os.getenv("BOT_TOKEN")
 DJANGO_API_BASE_URL = os.getenv("DJANGO_API_URL", "http://127.0.0.1:8000/api/tg") 
 WEBAPP_BASE_URL = os.getenv("WEBAPP_BASE_URL", "http://127.0.0.1:8000") 
 CHANNELS_URL = os.getenv("CHANNELS_URL", "https://t.me/addlist/K4iMXLXFYLQzYzEy") 
-print(WEBAPP_BASE_URL)
-# Logging sozlamalari
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+TARGET_CHANNEL_ID = -1002514048287
+CHANNELS_ENV = os.getenv("REQUIRED_CHANNELS", "")
+
+
+REQUIRED_CHANNELS_LIST = []
+if CHANNELS_ENV:
+    for ch in CHANNELS_ENV.split(','):
+        ch_stripped = ch.strip()
+        if ch_stripped:
+            if ch_stripped.startswith('@'):
+                REQUIRED_CHANNELS_LIST.append(ch_stripped)
+            else:
+                try:
+                    REQUIRED_CHANNELS_LIST.append(int(ch_stripped))
+                except ValueError:
+                    logger.warning(f"Noto'g'ri kanal IDsi yoki username formatı: {ch_stripped}")
+
+
 
 # Bot va Dispatcher obyektlari
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher()
 
 # {"kaa": "", "ru": "","uz": ""}.get(lang_code, "")
+
+async def check_all_channel_memberships(user_id: int) -> bool:
+    """
+    Foydalanuvchining berilgan barcha kanallarga a'zoligini tekshiradi.
+
+    Args:
+        bot_instance: Aiogram Bot obyekti.
+        user_id: Tekshirilayotgan foydalanuvchining Telegram ID si.
+        channel_ids_list: Tekshiriladigan kanallarning ID (int) yoki @username (str) ro'yxati.
+
+    Returns:
+        bool: Agar foydalanuvchi barcha kanallarga a'zo bo'lsa True, aks holda False.
+    """
+    bot_instance = bot
+    channel_ids_list = REQUIRED_CHANNELS_LIST # Global o'zgaruvchini olish
+    if not channel_ids_list: # Agar tekshiriladigan kanal bo'lmasa
+        return True # Barcha (bo'sh) shartlar bajarildi deb hisoblash
+
+    all_subscribed = True
+    for channel_id_or_username in channel_ids_list:
+        try:
+            # Agar bot_instance shu funksiya ichida global bo'lmasa, uni parametr orqali olish kerak.
+            # Men bot_instance ni parametr sifatida qo'shdim.
+            member = await bot_instance.get_chat_member(chat_id=channel_id_or_username, user_id=user_id)
+            
+            # Foydalanuvchi statusi 'member', 'administrator' yoki 'creator' bo'lishi kerak.
+            # 'left' (chiqib ketgan) yoki 'kicked' (chetlatilgan) bo'lmasligi kerak.
+            # 'restricted' statusi ham a'zo emas deb hisoblanishi mumkin (agar shunday xohlasangiz).
+            if member.status not in [
+                types.ChatMemberStatus.MEMBER,
+                types.ChatMemberStatus.ADMINISTRATOR,
+                types.ChatMemberStatus.CREATOR,
+                # types.ChatMemberStatus.RESTRICTED # Agar restricted ham a'zo hisoblansa, qo'shing
+            ]:
+                all_subscribed = False
+                logger.info(f"Foydalanuvchi {user_id} kanalga ({channel_id_or_username}) a'zo emas. Status: {member.status}")
+                break # Bitta kanalga a'zo bo'lmasa, qolganini tekshirish shart emas
+            else:
+                logger.debug(f"Foydalanuvchi {user_id} kanalga ({channel_id_or_username}) a'zo. Status: {member.status}")
+
+        except Exception as e:
+            # Bu xatoliklar Telegram API tomonidan qaytarilishi mumkin:
+            # - ChatNotFound: Agar kanal ID/username noto'g'ri bo'lsa.
+            # - UserNotFound: Agar user_id noto'g'ri bo'lsa (bu kamdan-kam uchraydi, chunki user_id odatda message.from_user.id dan olinadi).
+            # - BotKicked: Agar bot kanaldan chiqarib yuborilgan bo'lsa.
+            # - BotIsNotAMember: Agar bot kanalga a'zo bo'lmasa va kanal public bo'lmasa (yoki maxsus huquqlar kerak bo'lsa).
+            logger.warning(f"Kanalga ({channel_id_or_username}) a'zolikni tekshirishda xatolik (user: {user_id}): {e}")
+            # Xatolik yuzaga kelganda, foydalanuvchi a'zo emas deb hisoblaymiz,
+            # chunki a'zolikni tasdiqlay olmadik.
+            all_subscribed = True
+            break # Xatolik bo'lsa, davom etmaymiz
+
+    return all_subscribed
+
+
+
+async def get_all_user_ids_from_api():
+    """Django API orqali barcha foydalanuvchi Telegram IDlarini oladi."""
+    base_url = DJANGO_API_BASE_URL.replace("/tg", "")  # /tg ni olib tashlash, agar kerak bo'lsa
+    DJANGO_API_URL_FOR_IDS = f"{base_url}/get-all-user-tg-ids/"  # API endpointini to'g'rilang
+
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        try:
+            response = await client.get(DJANGO_API_URL_FOR_IDS)
+            response.raise_for_status()
+            data = response.json()
+            if data.get("success") and "telegram_ids" in data:
+                return data["telegram_ids"]
+            else:
+                logger.error(f"API dan IDlarni olishda xatolik: {data.get('error', 'Noma\'lum javob')}")
+                return []
+        except httpx.HTTPStatusError as e:
+            logger.error(f"API ga IDlar uchun murojaatda HTTP xatosi: {e.response.status_code} - {e.response.text}")
+            return []
+        except Exception as e:
+            logger.error(f"API dan IDlarni olishda kutilmagan xato: {e}", exc_info=True)
+            return []
+
 
 # --- API bilan ishlash uchun yordamchi funksiyalar ---
 async def api_request(method: str, endpoint: str, data: dict = None, params: dict = None):
@@ -173,13 +270,25 @@ async def process_language_select(callback_query: types.CallbackQuery):
     api_response = await api_request("POST", f"users/{user_id}/set-language/", data={"language_code": lang_code})
 
     if api_response and "error" not in api_response:
-        await callback_query.message.edit_text(
-            {"kaa": "Telegram bottan paydalanıp arnawlı sertifikattı alıw ushın tómendegi kanallarǵa aǵza bolıń 👇👇👇", 
-             "ru": "Подпишитесь на каналы ниже, чтобы получить специальный сертификат с помощью Telegram-бота 👇👇👇",
-             "uz": "Telegram bottan foydalanib maxsus sertifikatni olish uchun pastdagi kanallarga a'zo bo'ling 👇👇👇"}
-            .get(lang_code, "Dawam etiw ushın kanallarımızǵa aǵza bolıń:"),
-            reply_markup=channels_keyboard(lang_code)
-        )
+        if not await check_all_channel_memberships(user_id):
+            await callback_query.message.edit_text(
+                {"kaa": "Telegram bottan paydalanıp arnawlı sertifikattı alıw ushın tómendegi kanallarǵa aǵza bolıń 👇👇👇", 
+                "ru": "Подпишитесь на каналы ниже, чтобы получить специальный сертификат с помощью Telegram-бота 👇👇👇",
+                "uz": "Telegram bottan foydalanib maxsus sertifikatni olish uchun pastdagi kanallarga a'zo bo'ling 👇👇👇"}
+                .get(lang_code, "Dawam etiw ushın kanallarımızǵa aǵza bolıń:"),
+                reply_markup=channels_keyboard(lang_code)
+            )
+        else:
+            await callback_query.message.answer( # Yoki bot.send_message(chat_id=callback_query.message.chat.id, ...)
+                text=(
+                    {"uz": "Telefon raqamingizni yuboring.",
+                    "kaa": "Telefon nomerińizdi jiberiń.", # To'g'rilang
+                    "ru": "Теперь отправьте свой номер телефона."}
+                    .get(lang_code, "Telefon nomerińizdi jiberiń.")
+                ),
+                reply_markup=request_contact_keyboard(lang_code)
+            )
+            await callback_query.message.delete() # Inline klaviaturani olib tashlash
     else:
         await callback_query.message.answer("Tildi saylawda qátelik.")
         logger.error(f"Failed to set language for {user_id}: {api_response}")
@@ -192,6 +301,13 @@ async def process_channels_check(callback_query: types.CallbackQuery):
     # Foydalanuvchidan tilni olamiz (agar saqlangan bo'lsa)
     user_api_response = await api_request("GET", f"users/{user_id}/") # O'zgaruvchi nomini aniqroq qildim
     lang_code = user_api_response.get("language_code", "uz") if user_api_response and "error" not in user_api_response else "uz" # API javobini tekshirish
+
+    if not await check_all_channel_memberships(user_id):
+        await callback_query.answer(
+            text={"kaa": "Telegram kanallarǵa tolıq aǵza bolıwıńız kerek!", "ru": "Подпишитесь на все каналы, чтобы продолжить!","uz": "Telegram kanallarga to'liq a'zo bo'ling!"}.get(lang_code, "Telegram kanallarǵa tolıq aǵza bolıwıńız kerek!"), 
+            show_alert=True
+        )
+        return
 
     # 1. Avvalgi inline klaviaturani olib tashlash uchun xabarni tahrirlash (ixtiyoriy, lekin chiroyli)
     try:
@@ -249,6 +365,90 @@ async def process_contact(message: Message):
             .get(lang_code, "Telefon nomerin anıqlawda qátelik.")
         )
         logger.error(f"Failed to set phone for {user_id}: {api_response}")
+
+
+
+
+
+
+
+@dp.channel_post() # Barcha kanallardagi postlarni ushlaydi
+async def handle_channel_post(message: types.Message): # Funksiya nomini o'zgartirdim, "post" bilan chalkashmasligi uchun
+    if message.chat.id == TARGET_CHANNEL_ID:
+        logger.info(f"Kanal ({TARGET_CHANNEL_ID}) dan yangi post qabul qilindi. Foydalanuvchilarga yuborish boshlandi...")
+        loading_message = None
+        try:
+            loading_message = await message.reply('Xabar uzatılmaqta...') # reply() kanal postiga javob qaytaradi
+        except Exception as e:
+            logger.warning(f"Kanalga 'Xabar uzatilmaqta...' deb javob qaytarib bo'lmadi: {e}")
+            # Agar reply ishlamasa (masalan, botda kanalga yozish huquqi yo'q bo'lsa),
+            # adminlardan biriga xabar yuborish mumkin
+            # await bot.send_message(chat_id=TELEGRAM_ADMIN_IDS[0], text="Kanal postini tarqatish boshlandi...")
+
+
+        users_telegram_ids = await get_all_user_ids_from_api()
+
+        if not users_telegram_ids:
+            logger.warning("API dan foydalanuvchi IDlari olinmadi yoki ro'yxat bo'sh.")
+            if loading_message:
+                await loading_message.edit_text('Paydalanıwshılar tabılmadı. Xabar jiberiw toxtatıldı.') # loading_message ni tahrirlash
+            else:
+                # Agar loading_message yuborilmagan bo'lsa, asl postga javob qaytarish
+                try:
+                    await message.reply('Paydalanıwshılar tabılmadı. Xabar jiberiw toxtatıldı.')
+                except Exception as e_reply:
+                     logger.error(f"Kanalga xatolik haqida javob qaytarib bo'lmadi: {e_reply}")
+            return
+
+        successful_sends = 0
+        failed_sends = 0
+        
+        # Asl xabarni nusxalash (forward o'rniga, "forwarded from" yozuvi bo'lmasligi uchun)
+        # send_copy har doim ham barcha turdagi xabarlar uchun ishlamasligi mumkin (masalan, poll)
+        # Agar muammo bo'lsa, message.forward() ni ishlatish mumkin.
+        for user_id in users_telegram_ids:
+            try:
+                # message.forward(chat_id=int(user_id)) # Forward qilish varianti
+                await bot.copy_message(
+                    chat_id=int(user_id),
+                    from_chat_id=message.chat.id,
+                    message_id=message.message_id,
+                    reply_markup=message.reply_markup # Agar asl xabarda inline tugmalar bo'lsa
+                )
+                successful_sends += 1
+                logger.info(f"Xabar {user_id} ga muvaffaqiyatli yuborildi.")
+                # Telegram API limitlariga duch kelmaslik uchun pauza
+                if successful_sends % 20 == 0: # Har 20 ta xabardan keyin
+                    await asyncio.sleep(0.5) # 1 sekund kutish
+            except Exception as e:
+                failed_sends += 1
+                logger.error(f"Xabarni {user_id} ga yuborishda xatolik: {e}")
+                # Bu yerda xatolik turlarini aniqroq ushlash mumkin (masalan, BotBlocked, UserDeactivated)
+                # if isinstance(e, aiogram.exceptions.TelegramForbiddenError): # Bot bloklangan
+                #     logger.warning(f"Foydalanuvchi {user_id} botni bloklagan.")
+                # elif isinstance(e, aiogram.exceptions.TelegramNotFound): # Chat topilmadi
+                #     logger.warning(f"Foydalanuvchi {user_id} uchun chat topilmadi.")
+
+        result_text = f"✅ Xabar {successful_sends} paydalanıwshıǵa jetkerildi."
+        if failed_sends > 0:
+            result_text += f"\n❌ {failed_sends} paydalanıwshıǵa jetkeriwde qátelik júz berdi."
+        
+        if loading_message:
+            try:
+                await loading_message.edit_text(text=result_text)
+            except Exception as e_edit:
+                 logger.error(f"loading_message ni tahrirlashda xatolik: {e_edit}")
+                 # Agar edit_text ishlamasa, yangi xabar yuborish
+                 try:
+                    await message.reply(text=result_text)
+                 except Exception as e_reply_final:
+                     logger.error(f"Kanalga yakuniy javob qaytarib bo'lmadi: {e_reply_final}")
+
+        elif message.chat.id == TARGET_CHANNEL_ID: # Agar loading_message bo'lmasa ham, kanaldan bo'lsa
+            try:
+                await message.reply(text=result_text)
+            except Exception as e_reply_final_alt:
+                logger.error(f"Kanalga yakuniy javob qaytarib bo'lmadi (alt): {e_reply_final_alt}")
 
 
 

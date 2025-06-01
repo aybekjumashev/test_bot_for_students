@@ -212,3 +212,40 @@ class ExportTestsAPIView(APIView):
             import traceback
             traceback.print_exc() # Batafsil xato uchun
             return JsonResponse({"error": _("Excel faylini yaratishda xatolik yuz berdi."), "details": str(e)}, status=500)
+
+
+
+
+class GetAllUserTelegramIdsAPIView(APIView):
+    # Bu viewni himoyalash kerak!
+    # permission_classes = [IsAdminUser] # DRF uchun misol
+
+    def get(self, request, *args, **kwargs):
+        # Xavfsizlik tekshiruvi (masalan, maxsus 'API-KEY' sarlavhasi bilan)
+        # api_key = request.headers.get('X-API-KEY')
+        # expected_key = os.getenv('INTERNAL_API_KEY') # .env dan olish
+        # if not api_key or api_key != expected_key:
+        #     return JsonResponse({"error": _("Ruxsat etilmagan.")}, status=401)
+
+        try:
+            # Barcha aktiv foydalanuvchilarning telegram_id larini olish
+            # `values_list` faqat ko'rsatilgan maydonlarni qaytaradi, bu samaraliroq.
+            # `flat=True` esa tuple o'rniga to'g'ridan-to'g'ri qiymatlar ro'yxatini beradi.
+            telegram_ids = [
+                user_id for user_id in User.objects.filter(is_active=True).values_list('telegram_id', flat=True)
+            ]
+            # Yoki sinxron variant (agar view sinxron bo'lsa):
+            # telegram_ids = list(User.objects.filter(is_active=True).values_list('telegram_id', flat=True))
+
+            return JsonResponse({
+                "success": True,
+                "telegram_ids": telegram_ids,
+                "count": len(telegram_ids)
+            }, status=200)
+
+        except Exception as e:
+            # logger.error(f"Error fetching all user Telegram IDs: {e}", exc_info=True)
+            print(f"Error fetching all user Telegram IDs: {e}")
+            import traceback
+            traceback.print_exc()
+            return JsonResponse({"error": _("Telegram IDlarni olishda xatolik yuz berdi."), "details": str(e)}, status=500)
