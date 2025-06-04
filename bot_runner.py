@@ -117,7 +117,7 @@ async def get_all_user_ids_from_api():
             if data.get("success") and "telegram_ids" in data:
                 return data["telegram_ids"]
             else:
-                logger.error(f"API dan IDlarni olishda xatolik: {data.get('error', 'Noma\'lum javob')}")
+                logger.error(f"API dan IDlarni olishda xatolik: {data.get('error', 'Nomalum javob')}")
                 return []
         except httpx.HTTPStatusError as e:
             logger.error(f"API ga IDlar uchun murojaatda HTTP xatosi: {e.response.status_code} - {e.response.text}")
