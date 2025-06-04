@@ -25,7 +25,9 @@
             </p>
 
             <div class="d-flex justify-content-center align-items-center gap-3 mt-4"> 
+                {% if back %}
                 <a href="{% url 'core:user_registration_info' %}?tgWebAppStartParam={{ user.telegram_id }}" class="btn btn-outline-secondary"><i class="bi bi-chevron-left"></i> {% translate "Orqaga" %}</a>
+                {% endif %}
                 <form method="post" action="{% url 'core:start_mixed_test' %}">
                     {% csrf_token %}
                     <input type="hidden" name="user_tg_id" value="{{ user.telegram_id }}">

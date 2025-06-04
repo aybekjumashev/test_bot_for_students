@@ -52,7 +52,9 @@ class UserRegistrationInfoFormView(View):
             # Natijalar sahifasiga yo'naltirish yoki boshqa joyga
             # Masalan, user_profile sahifasiga:
             # return redirect(reverse('core:user_profile') + f'?user_tg_id={user.telegram_id}')
-            return render(request, 'test_already_completed.html', {'user': user})
+            prepare_test_url = reverse('core:prepare_test') + f'?user_tg_id={user.telegram_id}'
+            return redirect(prepare_test_url)
+            # return render(request, 'test_already_completed.html', {'user': user})
 
         # Agar foydalanuvchi allaqachon ma'lumotlarini to'ldirgan bo'lsa (masalan, institution mavjud bo'lsa)
         # uni fanlar sahifasiga yo'naltirish mumkin. Bu logikani keyinroq qo'shamiz.
@@ -177,12 +179,14 @@ class PrepareTestView(View): # Nomini o'zgartirdim, bu sahifa testga tayyorgarli
         # yoki hozircha, agar subject bo'lmagan test bo'lsa, uni aralash deb hisoblash.
         # Yoki user uchun faqat bitta topshirilgan test bo'lishini tekshirish.
         # Hozircha, agar user uchun score bilan tugagan test bo'lsa, qayta topshirmaydi deb hisoblaymiz.
+        back = True
         if Test.objects.filter(user=user, score__isnull=False).exists():
-            messages.info(request, _("Siz allaqachon test topshirgansiz."))
-            # Natijalar sahifasiga yo'naltirish yoki boshqa joyga
-            # Masalan, user_profile sahifasiga:
-            # return redirect(reverse('core:user_profile') + f'?user_tg_id={user.telegram_id}')
-            return render(request, 'test_already_completed.html', {'user': user})
+            back = False
+        #     messages.info(request, _("Siz allaqachon test topshirgansiz."))
+        #     # Natijalar sahifasiga yo'naltirish yoki boshqa joyga
+        #     # Masalan, user_profile sahifasiga:
+        #     # return redirect(reverse('core:user_profile') + f'?user_tg_id={user.telegram_id}')
+        #     return render(request, 'test_already_completed.html', {'user': user})
 
 
         # Qancha savol borligini va test haqida ma'lumotni shablonga yuborish
@@ -218,6 +222,7 @@ class PrepareTestView(View): # Nomini o'zgartirdim, bu sahifa testga tayyorgarli
             'total_questions_for_test': total_questions_for_test,
             'subjects_in_test': ", ".join(possible_subjects_for_test),
             'questions_per_subject': questions_per_subject, # Bu shartli bo'lishi mumkin
+            'back': back
         }
         return render(request, self.template_name, context)
 
@@ -237,8 +242,8 @@ class StartMixedTestView(View):
             # ... xatolik ...
             return redirect(reverse('core:user_registration_info'))
 
-        if Test.objects.filter(user=user, score__isnull=False).exists():
-            return redirect(reverse('core:prepare_test') + f'?user_tg_id={user_telegram_id}') # Qayta prepare sahifasiga
+        # if Test.objects.filter(user=user, score__isnull=False).exists():
+        #     return redirect(reverse('core:prepare_test') + f'?user_tg_id={user_telegram_id}') # Qayta prepare sahifasiga
 
         user_course = user.course_year if user.course_year else 0
         active_subjects = Subject.objects.filter(

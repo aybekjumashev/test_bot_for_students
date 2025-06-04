@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-31 21:32+0500\n"
+"POT-Creation-Date: 2025-06-03 21:16+0500\n"
 "PO-Revision-Date: 2024-06-14 18:00+0000\n"
 "Last-Translator: AI Assistant <>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -73,13 +73,11 @@ msgid "{}-savol uchun javob topilmadi."
 msgstr "Ответ для {}-го вопроса не найден."
 
 #: .\core\admin.py:211
+#, fuzzy
+#| msgid "{} ta savol muvaffaqiyatli yuklandi."
+#| msgid_plural "{} ta savol muvaffaqiyatli yuklandi."
 msgid "{} ta savol muvaffaqiyatli yuklandi."
-msgid_plural "{} ta savol muvaffaqiyatli yuklandi."
-msgstr[0] "{} вопрос успешно загружен."
-msgstr[1] "{} вопроса успешно загружено."
-msgstr[2] "{} вопросов успешно загружено."
-msgstr[3] "{} вопросов успешно загружено."
-
+msgstr "{} вопрос успешно загружен."
 
 #: .\core\admin.py:220
 msgid "Savollarni Ommaviy Yuklash"
@@ -117,83 +115,93 @@ msgstr "Экспортировать выбранные тесты в Excel"
 msgid "Eksport uchun testlar tanlanmadi."
 msgstr "Тесты для экспорта не выбраны."
 
-#: .\core\admin.py:290
+#: .\core\admin.py:290 .\tgbot\views.py:128
 msgid "Test ID"
 msgstr "ID Теста"
 
-#: .\core\admin.py:291 .\core\models.py:157
+#: .\core\admin.py:291 .\core\models.py:157 .\tgbot\views.py:129
 msgid "Telegram ID"
 msgstr "ID Telegram"
 
-#: .\core\admin.py:292
-msgid "F.A.Á."
-msgstr "Ф.И.О."
+#: .\core\admin.py:292 .\tgbot\views.py:130
+msgid "Atı"
+msgstr ""
 
-#: .\core\admin.py:293
+#: .\core\admin.py:293 .\tgbot\views.py:131
+#, fuzzy
+#| msgid "Familiyasi"
+msgid "Familiyası"
+msgstr "Фамилия"
+
+#: .\core\admin.py:294 .\tgbot\views.py:132
+msgid "Ákesiniń Atı"
+msgstr ""
+
+#: .\core\admin.py:295 .\tgbot\views.py:133
 msgid "Telefon"
 msgstr "Телефон"
 
-#: .\core\admin.py:294
+#: .\core\admin.py:296 .\tgbot\views.py:134
 msgid "Bilimlendiriw Túri"
 msgstr "Тип образования"
 
-#: .\core\admin.py:295
+#: .\core\admin.py:297 .\tgbot\views.py:135
 msgid "Mákeme"
 msgstr "Учреждение"
 
-#: .\core\admin.py:296
+#: .\core\admin.py:298 .\tgbot\views.py:136
 msgid "Basqısh (JOO)"
 msgstr "Ступень (ВУЗ)"
 
-#: .\core\admin.py:297
+#: .\core\admin.py:299 .\tgbot\views.py:137
 msgid "Fakultet (JOO)"
 msgstr "Факультет (ВУЗ)"
 
-#: .\core\admin.py:298
+#: .\core\admin.py:300 .\tgbot\views.py:138
 msgid "Kurs"
 msgstr "Курс"
 
-#: .\core\admin.py:299
+#: .\core\admin.py:301 .\tgbot\views.py:139
 msgid "Test Baslanıw Waqıtı"
 msgstr "Время начала теста"
 
-#: .\core\admin.py:300
+#: .\core\admin.py:302 .\tgbot\views.py:140
 msgid "Test Tamamlanıw Waqıtı"
 msgstr "Время окончания теста"
 
-#: .\core\admin.py:301
+#: .\core\admin.py:303 .\tgbot\views.py:141
 msgid "Nátiyje (Ball)"
 msgstr "Результат (Балл)"
 
-#: .\core\admin.py:302
+#: .\core\admin.py:304 .\tgbot\views.py:142
 msgid "Jámi Sorawlar"
 msgstr "Всего вопросов"
 
-#: .\core\admin.py:303
+#: .\core\admin.py:305 .\tgbot\views.py:143
 msgid "Sarplaǵan Waqıtı (s)"
 msgstr "Затраченное время (с)"
 
-#: .\core\admin.py:304
+#: .\core\admin.py:306 .\tgbot\views.py:144
 msgid "Sertifikat Kodı"
 msgstr "Код сертификата"
 
-#: .\core\admin.py:305
+#: .\core\admin.py:307
 msgid "Sertifikat Jiberildi"
 msgstr "Сертификат отправлен"
 
-#: .\core\admin.py:327
+#: .\core\admin.py:331
 msgid "Awa"
 msgstr "Да"
 
-#: .\core\admin.py:327
+#: .\core\admin.py:331
 msgid "Yaq"
 msgstr "Нет"
 
-#: .\core\admin.py:331
+#: .\core\admin.py:335
 msgid "Eksport uchun ma'lumot topilmadi."
 msgstr "Данные для экспорта не найдены."
 
-#: .\core\admin.py:337
+#: .\core\admin.py:341 .\tgbot\views.py:183
 msgid "Test_Natijalari"
 msgstr "Результаты_Теста"
 
@@ -289,7 +297,9 @@ msgstr "Последовательность ответов"
 
 #: .\core\forms.py:175
 msgid "Masalan: ABADDCB... Har bir fayldagi savollar soniga mos kelishi kerak."
-msgstr "Например: ABADDCB... Должно соответствовать количеству вопросов в каждом файле."
+msgstr ""
+"Например: ABADDCB... Должно соответствовать количеству вопросов в каждом "
+"файле."
 
 #: .\core\forms.py:180
 msgid "Savol ajratuvchi belgi"
@@ -493,7 +503,7 @@ msgid "Fayl yuklanmagan"
 msgstr "Файл не загружен"
 
 #: .\core\models.py:329 .\core\models.py:338
-#: .\core\templates\test_in_progress.html:112 .\core\views.py:487
+#: .\core\templates\test_in_progress.html:112 .\core\views.py:489
 msgid "Savol"
 msgstr "Вопрос"
 
@@ -546,12 +556,18 @@ msgid "Home"
 msgstr "Главная"
 
 #: .\core\templates\bulk_upload_form.html:27
+#, fuzzy
+#| msgid "Please correct the error below."
+#| msgid_plural "Please correct the errors below."
 msgid "Please correct the error below."
-msgid_plural "Please correct the errors below."
-msgstr[0] "Пожалуйста, исправьте ошибку ниже."
-msgstr[1] "Пожалуйста, исправьте ошибки ниже."
-msgstr[2] "Пожалуйста, исправьте ошибки ниже."
-msgstr[3] "Пожалуйста, исправьте ошибки ниже."
+msgstr "Пожалуйста, исправьте ошибку ниже."
+
+#: .\core\templates\bulk_upload_form.html:27
+#, fuzzy
+#| msgid "Please correct the error below."
+#| msgid_plural "Please correct the errors below."
+msgid "Please correct the errors below."
+msgstr "Пожалуйста, исправьте ошибку ниже."
 
 #: .\core\templates\bulk_upload_form.html:54
 msgid "Yuklash"
@@ -722,7 +738,6 @@ msgid "Ma'lumot!"
 msgstr "Информация!"
 
 #: .\core\templates\test_already_completed.html:8 .\core\views.py:51
-#: .\core\views.py:181
 msgid "Siz allaqachon test topshirgansiz."
 msgstr "Вы уже прошли тест."
 
@@ -825,19 +840,19 @@ msgstr "Ответ не дан"
 msgid "Batafsil natijalar mavjud emas."
 msgstr "Подробные результаты отсутствуют."
 
-#: .\core\utils.py:111
+#: .\core\utils.py:107
 msgid "Fayl yuklanmagan."
 msgstr "Файл не загружен."
 
-#: .\core\utils.py:113
+#: .\core\utils.py:109
 msgid "Javoblar ketma-tetligi kiritilmagan."
 msgstr "Последовательность ответов не введена."
 
-#: .\core\utils.py:135
+#: .\core\utils.py:131
 msgid "DOCX fayl yaroqsiz (document.xml topilmadi)."
 msgstr "Файл DOCX недействителен (document.xml не найден)."
 
-#: .\core\utils.py:192
+#: .\core\utils.py:188
 msgid ""
 "DOCX faylidan savollar ajratib olinmadi (ehtimol delimiter \"{}\" topilmadi "
 "yoki fayl formati noto'g'ri), lekin javoblar mavjud."
@@ -845,24 +860,26 @@ msgstr ""
 "Вопросы из файла DOCX не извлечены (возможно, разделитель \"{}\" не найден "
 "или формат файла неверный), но ответы присутствуют."
 
-#: .\core\utils.py:194
+#: .\core\utils.py:190
 msgid "DOCX fayli bo'sh yoki savol topilmadi va javoblar ham kiritilmagan."
 msgstr "Файл DOCX пуст или вопрос не найден, и ответы также не введены."
 
-#: .\core\utils.py:198
+#: .\core\utils.py:194
 msgid ""
 "Ajratilgan savollar soni ({}) kiritilgan javoblar soniga ({}) mos kelmadi."
-msgstr "Количество извлеченных вопросов ({}) не соответствует количеству введенных ответов ({})."
+msgstr ""
+"Количество извлеченных вопросов ({}) не соответствует количеству введенных "
+"ответов ({})."
 
-#: .\core\utils.py:277
+#: .\core\utils.py:273
 msgid "DOCX fayl yaroqsiz zip arxiv (asosiy fayl)."
 msgstr "Файл DOCX является недействительным zip-архивом (основной файл)."
 
-#: .\core\utils.py:280
+#: .\core\utils.py:276
 msgid "DOCX fayl yaroqsiz XML tuzilishiga ega: {}"
 msgstr "Файл DOCX имеет недействительную структуру XML: {}"
 
-#: .\core\utils.py:283
+#: .\core\utils.py:279
 msgid "DOCX faylini qayta ishlashda kutilmagan xato: {}"
 msgstr "Непредвиденная ошибка при обработке файла DOCX: {}"
 
@@ -874,19 +891,19 @@ msgstr "ID Telegram не найден. Пожалуйста, попробуйт�
 msgid "Foydalanuvchi topilmadi. Iltimos, botda /start buyrug'ini bering."
 msgstr "Пользователь не найден. Пожалуйста, дайте команду /start в боте."
 
-#: .\core\views.py:76
+#: .\core\views.py:78
 msgid "Telegram ID topilmadi. Xatolik."
 msgstr "ID Telegram не найден. Ошибка."
 
-#: .\core\views.py:85
+#: .\core\views.py:87
 msgid "Foydalanuvchi topilmadi. Qayta urinib ko'ring."
 msgstr "Пользователь не найден. Попробуйте снова."
 
-#: .\core\views.py:92
+#: .\core\views.py:94
 msgid "Ma'lumotlaringiz muvaffaqiyatli saqlandi!"
 msgstr "Ваши данные успешно сохранены!"
 
-#: .\core\views.py:104
+#: .\core\views.py:106
 msgid ""
 "Formani to'ldirishda xatoliklar mavjud. Iltimos, tekshirib qayta urinib "
 "ko'ring."
@@ -894,47 +911,47 @@ msgstr ""
 "При заполнении формы возникли ошибки. Пожалуйста, проверьте и попробуйте "
 "снова."
 
-#: .\core\views.py:110
+#: .\core\views.py:112
 msgid "Xatolik yuz berdi."
 msgstr "Произошла ошибка."
 
-#: .\core\views.py:115
+#: .\core\views.py:117
 msgid "Muvaffaqiyatli ro'yxatdan o'tdingiz!"
 msgstr "Вы успешно зарегистрировались!"
 
-#: .\core\views.py:212
+#: .\core\views.py:214
 msgid "Test uchun savollar mavjud emas."
 msgstr "Вопросы для теста отсутствуют."
 
-#: .\core\views.py:269
+#: .\core\views.py:271
 msgid "Test uchun savollar topilmadi."
 msgstr "Вопросы для теста не найдены."
 
-#: .\core\views.py:289
+#: .\core\views.py:291
 msgid "Aktiv test topilmadi. Iltimos, testni qayta boshlang."
 msgstr "Активный тест не найден. Пожалуйста, начните тест заново."
 
-#: .\core\views.py:299 .\core\views.py:465
+#: .\core\views.py:301 .\core\views.py:467
 msgid "Test topilmadi."
 msgstr "Тест не найден."
 
-#: .\core\views.py:316
+#: .\core\views.py:318
 msgid "Testda savollar topilmadi."
 msgstr "В тесте не найдены вопросы."
 
-#: .\core\views.py:330 .\core\views.py:419
+#: .\core\views.py:332 .\core\views.py:421
 msgid "Savol matni topilmadi."
 msgstr "Текст вопроса не найден."
 
-#: .\core\views.py:410
+#: .\core\views.py:412
 msgid "Barcha savollarga javob berildi. Testni yakunlang."
 msgstr "На все вопросы даны ответы. Завершите тест."
 
-#: .\core\views.py:449
+#: .\core\views.py:451
 msgid "Test hali yakunlanmagan yoki allaqachon qayta ishlangan."
 msgstr "Тест еще не завершен или уже обработан."
 
-#: .\core\views.py:455
+#: .\core\views.py:457
 msgid "Test ID si topilmadi. Natijalarni ko'rsatib bo'lmaydi."
 msgstr "ID теста не найден. Невозможно показать результаты."
 
@@ -942,38 +959,71 @@ msgstr "ID теста не найден. Невозможно показать �
 msgid "Bu telefon raqami allaqachon mavjud."
 msgstr "Этот номер телефона уже существует."
 
-#: .\tgbot\utils.py:62
+#: .\tgbot\utils.py:92 .\tgbot\utils.py:124
 msgid "sizning test natijangiz"
 msgstr "ваш результат теста"
 
-#: .\tgbot\utils.py:63
+#: .\tgbot\utils.py:93
 msgid "Ishtirokingiz uchun rahmat!"
 msgstr "Спасибо за участие!"
 
-#: .\tgbot\utils.py:64
+#: .\tgbot\utils.py:94 .\tgbot\utils.py:127
 msgid "Toʻliq maʻlumot uchun telefon"
 msgstr "Телефон для полной информации"
 
-#: .\tgbot\views.py:28
+#: .\tgbot\utils.py:125
+msgid "Foiz ko'rsatkichi"
+msgstr "В процентах"
+
+#: .\tgbot\utils.py:126
+msgid ""
+"Natija 80 foizdan kam bo'lsa sertifikat berilmaydi! Sizda testni qayta "
+"yechib ko'rish imkoniyati bor."
+msgstr ""
+"Если результат меньше 80 процентов, сертификат не выдаётся! У вас есть возможность "
+"пройти тест ещё раз."
+
+#: .\tgbot\views.py:32
 msgid "Telegram ID majburiy."
 msgstr "ID Telegram обязателен."
 
-#: .\tgbot\views.py:34
+#: .\tgbot\views.py:38
 msgid "Foydalanuvchi allaqachon mavjud."
 msgstr "Пользователь уже существует."
 
-#: .\tgbot\views.py:42
+#: .\tgbot\views.py:46
 msgid "Foydalanuvchi muvaffaqiyatli ro'yxatdan o'tkazildi."
 msgstr "Пользователь успешно зарегистрирован."
 
-#: .\tgbot\views.py:62
+#: .\tgbot\views.py:66
 msgid "Faqat til yoki telefon raqamini yangilash mumkin."
 msgstr "Можно обновить только язык или номер телефона."
 
-#: .\tgbot\views.py:76
+#: .\tgbot\views.py:80
 msgid "Til muvaffaqiyatli yangilandi."
 msgstr "Язык успешно обновлен."
 
-#: .\tgbot\views.py:87
+#: .\tgbot\views.py:91
 msgid "Telefon raqami muvaffaqiyatli yangilandi."
 msgstr "Номер телефона успешно обновлен."
+
+#: .\tgbot\views.py:123
+#, fuzzy
+#| msgid "Eksport uchun ma'lumot topilmadi."
+msgid "Eksport uchun test ma'lumotlari topilmadi."
+msgstr "Данные для экспорта не найдены."
+
+#: .\tgbot\views.py:214
+#, fuzzy
+#| msgid "Testni yakunlashda xatolik yuz berdi."
+msgid "Excel faylini yaratishda xatolik yuz berdi."
+msgstr "Произошла ошибка при завершении теста."
+
+#: .\tgbot\views.py:251
+#, fuzzy
+#| msgid "Testni yakunlashda xatolik yuz berdi."
+msgid "Telegram IDlarni olishda xatolik yuz berdi."
+msgstr "Произошла ошибка при завершении теста."
+
+#~ msgid "F.A.Á."
+#~ msgstr "Ф.И.О."

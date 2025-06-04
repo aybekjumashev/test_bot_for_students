@@ -16,7 +16,7 @@ urlpatterns = [
 urlpatterns += i18n_patterns(
     # Boshqa ilovalarning URLlari (agar kerak bo'lsa)
     path('', include('core.urls')),
-    prefix_default_language=False # Standart til uchun prefiks qo'shmaslik (masalan, /uz/ -> / )
+    # prefix_default_language=False # Standart til uchun prefiks qo'shmaslik (masalan, /uz/ -> / )
 )
 
 if settings.DEBUG:

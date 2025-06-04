@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-31 21:35+0500\n"
+"POT-Creation-Date: 2025-06-03 21:16+0500\n"
 "PO-Revision-Date: 2024-06-14 18:00+0000\n"
 "Last-Translator: AI Assistant <>\n"
 "Language-Team: Karakalpak <kar@li.org>\n"
@@ -110,83 +110,93 @@ msgstr "Saylanǵan testlerdi Excelge eksport etiw"
 msgid "Eksport uchun testlar tanlanmadi."
 msgstr "Eksport ushın testler saylanbadı."
 
-#: .\core\admin.py:290
+#: .\core\admin.py:290 .\tgbot\views.py:128
 msgid "Test ID"
 msgstr "Test ID"
 
-#: .\core\admin.py:291 .\core\models.py:157
+#: .\core\admin.py:291 .\core\models.py:157 .\tgbot\views.py:129
 msgid "Telegram ID"
 msgstr "Telegram ID"
 
-#: .\core\admin.py:292
-msgid "F.A.Á."
-msgstr "A.Á.A."
+#: .\core\admin.py:292 .\tgbot\views.py:130
+msgid "Atı"
+msgstr ""
 
-#: .\core\admin.py:293
+#: .\core\admin.py:293 .\tgbot\views.py:131
+#, fuzzy
+#| msgid "Familiyasi"
+msgid "Familiyası"
+msgstr "Familiyası"
+
+#: .\core\admin.py:294 .\tgbot\views.py:132
+msgid "Ákesiniń Atı"
+msgstr ""
+
+#: .\core\admin.py:295 .\tgbot\views.py:133
 msgid "Telefon"
 msgstr "Telefon"
 
-#: .\core\admin.py:294
+#: .\core\admin.py:296 .\tgbot\views.py:134
 msgid "Bilimlendiriw Túri"
 msgstr "Bilimlendiriw Túri"
 
-#: .\core\admin.py:295
+#: .\core\admin.py:297 .\tgbot\views.py:135
 msgid "Mákeme"
 msgstr "Mákeme"
 
-#: .\core\admin.py:296
+#: .\core\admin.py:298 .\tgbot\views.py:136
 msgid "Basqısh (JOO)"
 msgstr "Basqısh (JOO)"
 
-#: .\core\admin.py:297
+#: .\core\admin.py:299 .\tgbot\views.py:137
 msgid "Fakultet (JOO)"
 msgstr "Fakultet (JOO)"
 
-#: .\core\admin.py:298
+#: .\core\admin.py:300 .\tgbot\views.py:138
 msgid "Kurs"
 msgstr "Kurs"
 
-#: .\core\admin.py:299
+#: .\core\admin.py:301 .\tgbot\views.py:139
 msgid "Test Baslanıw Waqıtı"
 msgstr "Test Baslanıw Waqıtı"
 
-#: .\core\admin.py:300
+#: .\core\admin.py:302 .\tgbot\views.py:140
 msgid "Test Tamamlanıw Waqıtı"
 msgstr "Test Tamamlanıw Waqıtı"
 
-#: .\core\admin.py:301
+#: .\core\admin.py:303 .\tgbot\views.py:141
 msgid "Nátiyje (Ball)"
 msgstr "Nátiyje (Ball)"
 
-#: .\core\admin.py:302
+#: .\core\admin.py:304 .\tgbot\views.py:142
 msgid "Jámi Sorawlar"
 msgstr "Jámi Sorawlar"
 
-#: .\core\admin.py:303
+#: .\core\admin.py:305 .\tgbot\views.py:143
 msgid "Sarplaǵan Waqıtı (s)"
 msgstr "Sarplaǵan Waqıtı (s)"
 
-#: .\core\admin.py:304
+#: .\core\admin.py:306 .\tgbot\views.py:144
 msgid "Sertifikat Kodı"
 msgstr "Sertifikat Kodı"
 
-#: .\core\admin.py:305
+#: .\core\admin.py:307
 msgid "Sertifikat Jiberildi"
 msgstr "Sertifikat Jiberildi"
 
-#: .\core\admin.py:327
+#: .\core\admin.py:331
 msgid "Awa"
 msgstr "Awa"
 
-#: .\core\admin.py:327
+#: .\core\admin.py:331
 msgid "Yaq"
 msgstr "Joq"
 
-#: .\core\admin.py:331
+#: .\core\admin.py:335
 msgid "Eksport uchun ma'lumot topilmadi."
 msgstr "Eksport ushın maǵlıwmat tabılmadı."
 
-#: .\core\admin.py:337
+#: .\core\admin.py:341 .\tgbot\views.py:183
 msgid "Test_Natijalari"
 msgstr "Test_Nátiyjeleri"
 
@@ -488,7 +498,7 @@ msgid "Fayl yuklanmagan"
 msgstr "Fayl júklenbegen"
 
 #: .\core\models.py:329 .\core\models.py:338
-#: .\core\templates\test_in_progress.html:112 .\core\views.py:487
+#: .\core\templates\test_in_progress.html:112 .\core\views.py:489
 msgid "Savol"
 msgstr "Soraw"
 
@@ -716,7 +726,6 @@ msgid "Ma'lumot!"
 msgstr "Maǵlıwmat!"
 
 #: .\core\templates\test_already_completed.html:8 .\core\views.py:51
-#: .\core\views.py:181
 msgid "Siz allaqachon test topshirgansiz."
 msgstr "Siz álleqashan test tapsırǵansız."
 
@@ -819,19 +828,19 @@ msgstr "Juwap berilmegen"
 msgid "Batafsil natijalar mavjud emas."
 msgstr "Tolıq nátiyjeler joq."
 
-#: .\core\utils.py:111
+#: .\core\utils.py:107
 msgid "Fayl yuklanmagan."
 msgstr "Fayl júklenbegen."
 
-#: .\core\utils.py:113
+#: .\core\utils.py:109
 msgid "Javoblar ketma-tetligi kiritilmagan."
 msgstr "Juwaplar izbe-izligi kiritilmegen."
 
-#: .\core\utils.py:135
+#: .\core\utils.py:131
 msgid "DOCX fayl yaroqsiz (document.xml topilmadi)."
 msgstr "DOCX faylı jaramsız (document.xml tabılmadı)."
 
-#: .\core\utils.py:192
+#: .\core\utils.py:188
 msgid ""
 "DOCX faylidan savollar ajratib olinmadi (ehtimol delimiter \"{}\" topilmadi "
 "yoki fayl formati noto'g'ri), lekin javoblar mavjud."
@@ -839,26 +848,26 @@ msgstr ""
 "DOCX faylınan sorawlar ajıratıp alınbadı (itimal ajıratıwshı \"{}\" "
 "tabılmadı yaki fayl formatı nadurıs), biraq juwaplar bar."
 
-#: .\core\utils.py:194
+#: .\core\utils.py:190
 msgid "DOCX fayli bo'sh yoki savol topilmadi va javoblar ham kiritilmagan."
 msgstr "DOCX faylı bos yaki soraw tabılmadı hám juwaplar da kiritilmegen."
 
-#: .\core\utils.py:198
+#: .\core\utils.py:194
 msgid ""
 "Ajratilgan savollar soni ({}) kiritilgan javoblar soniga ({}) mos kelmadi."
 msgstr ""
 "Ajıratılǵan sorawlar sanı ({}) kiritilgen juwaplar sanına ({}) sáykes "
 "kelmedi."
 
-#: .\core\utils.py:277
+#: .\core\utils.py:273
 msgid "DOCX fayl yaroqsiz zip arxiv (asosiy fayl)."
 msgstr "DOCX faylı jaramsız zip arxiv (tiykarǵı fayl)."
 
-#: .\core\utils.py:280
+#: .\core\utils.py:276
 msgid "DOCX fayl yaroqsiz XML tuzilishiga ega: {}"
 msgstr "DOCX faylı jaramsız XML dúzilisine iye: {}"
 
-#: .\core\utils.py:283
+#: .\core\utils.py:279
 msgid "DOCX faylini qayta ishlashda kutilmagan xato: {}"
 msgstr "DOCX faylın qayta islewde kútilmegen qáte: {}"
 
@@ -870,66 +879,66 @@ msgstr "Telegram ID tabılmadı. Iltimas, bot arqalı qayta urınıp kóriń."
 msgid "Foydalanuvchi topilmadi. Iltimos, botda /start buyrug'ini bering."
 msgstr "Paydalanıwshı tabılmadı. Iltimas, botta /start buyrıǵın beriń."
 
-#: .\core\views.py:76
+#: .\core\views.py:78
 msgid "Telegram ID topilmadi. Xatolik."
 msgstr "Telegram ID tabılmadı. Qátelik."
 
-#: .\core\views.py:85
+#: .\core\views.py:87
 msgid "Foydalanuvchi topilmadi. Qayta urinib ko'ring."
 msgstr "Paydalanıwshı tabılmadı. Qayta urınıp kóriń."
 
-#: .\core\views.py:92
+#: .\core\views.py:94
 msgid "Ma'lumotlaringiz muvaffaqiyatli saqlandi!"
 msgstr "Maǵlıwmatlarıńız tabıslı saqlandı!"
 
-#: .\core\views.py:104
+#: .\core\views.py:106
 msgid ""
 "Formani to'ldirishda xatoliklar mavjud. Iltimos, tekshirib qayta urinib "
 "ko'ring."
 msgstr ""
 "Formanı toltırıwda qátelikler bar. Iltimas, tekserip qayta urınıp kóriń."
 
-#: .\core\views.py:110
+#: .\core\views.py:112
 msgid "Xatolik yuz berdi."
 msgstr "Qátelik júz berdi."
 
-#: .\core\views.py:115
+#: .\core\views.py:117
 msgid "Muvaffaqiyatli ro'yxatdan o'tdingiz!"
 msgstr "Tabıslı dizimnen óttińiz!"
 
-#: .\core\views.py:212
+#: .\core\views.py:214
 msgid "Test uchun savollar mavjud emas."
 msgstr "Test ushın sorawlar joq."
 
-#: .\core\views.py:269
+#: .\core\views.py:271
 msgid "Test uchun savollar topilmadi."
 msgstr "Test ushın sorawlar tabılmadı."
 
-#: .\core\views.py:289
+#: .\core\views.py:291
 msgid "Aktiv test topilmadi. Iltimos, testni qayta boshlang."
 msgstr "Aktiv test tabılmadı. Iltimas, testti qayta baslań."
 
-#: .\core\views.py:299 .\core\views.py:465
+#: .\core\views.py:301 .\core\views.py:467
 msgid "Test topilmadi."
 msgstr "Test tabılmadı."
 
-#: .\core\views.py:316
+#: .\core\views.py:318
 msgid "Testda savollar topilmadi."
 msgstr "Testte sorawlar tabılmadı."
 
-#: .\core\views.py:330 .\core\views.py:419
+#: .\core\views.py:332 .\core\views.py:421
 msgid "Savol matni topilmadi."
 msgstr "Soraw tekstı tabılmadı."
 
-#: .\core\views.py:410
+#: .\core\views.py:412
 msgid "Barcha savollarga javob berildi. Testni yakunlang."
 msgstr "Barlıq sorawlarǵa juwap berildi. Testti juwmaqlan."
 
-#: .\core\views.py:449
+#: .\core\views.py:451
 msgid "Test hali yakunlanmagan yoki allaqachon qayta ishlangan."
 msgstr "Test házirshe juwmaqlanbaǵan yaki álleqashan qayta islengen."
 
-#: .\core\views.py:455
+#: .\core\views.py:457
 msgid "Test ID si topilmadi. Natijalarni ko'rsatib bo'lmaydi."
 msgstr "Test ID si tabılmadı. Nátiyjelerdi kórsetip bolmaydı."
 
@@ -937,38 +946,71 @@ msgstr "Test ID si tabılmadı. Nátiyjelerdi kórsetip bolmaydı."
 msgid "Bu telefon raqami allaqachon mavjud."
 msgstr "Bul telefon nomeri álleqashan bar."
 
-#: .\tgbot\utils.py:62
+#: .\tgbot\utils.py:92 .\tgbot\utils.py:124
 msgid "sizning test natijangiz"
 msgstr "siziń test nátiyjeńiz"
 
-#: .\tgbot\utils.py:63
+#: .\tgbot\utils.py:93
 msgid "Ishtirokingiz uchun rahmat!"
 msgstr "Qatnasıwıńız ushın raxmet!"
 
-#: .\tgbot\utils.py:64
+#: .\tgbot\utils.py:94 .\tgbot\utils.py:127
 msgid "Toʻliq maʻlumot uchun telefon"
 msgstr "Tolıq maǵlıwmat ushın telefon"
 
-#: .\tgbot\views.py:28
+#: .\tgbot\utils.py:125
+msgid "Foiz ko'rsatkichi"
+msgstr "Procent kórsetkishi"
+
+#: .\tgbot\utils.py:126
+msgid ""
+"Natija 80 foizdan kam bo'lsa sertifikat berilmaydi! Sizda testni qayta "
+"yechib ko'rish imkoniyati bor."
+msgstr ""
+"Nátiyje 80 procentten kem bolsa sertifikat berilmeydi! Sizde testti qayta "
+"sheship kóriw imkaniyatı bar."
+
+#: .\tgbot\views.py:32
 msgid "Telegram ID majburiy."
 msgstr "Telegram ID májburiy."
 
-#: .\tgbot\views.py:34
+#: .\tgbot\views.py:38
 msgid "Foydalanuvchi allaqachon mavjud."
 msgstr "Paydalanıwshı álleqashan bar."
 
-#: .\tgbot\views.py:42
+#: .\tgbot\views.py:46
 msgid "Foydalanuvchi muvaffaqiyatli ro'yxatdan o'tkazildi."
 msgstr "Paydalanıwshı tabıslı dizimnen ótkizildi."
 
-#: .\tgbot\views.py:62
+#: .\tgbot\views.py:66
 msgid "Faqat til yoki telefon raqamini yangilash mumkin."
 msgstr "Tek ǵana til yaki telefon nomerin jańalaw múmkin."
 
-#: .\tgbot\views.py:76
+#: .\tgbot\views.py:80
 msgid "Til muvaffaqiyatli yangilandi."
 msgstr "Til tabıslı jańalandı."
 
-#: .\tgbot\views.py:87
+#: .\tgbot\views.py:91
 msgid "Telefon raqami muvaffaqiyatli yangilandi."
 msgstr "Telefon nomeri tabıslı jańalandı."
+
+#: .\tgbot\views.py:123
+#, fuzzy
+#| msgid "Eksport uchun ma'lumot topilmadi."
+msgid "Eksport uchun test ma'lumotlari topilmadi."
+msgstr "Eksport ushın maǵlıwmat tabılmadı."
+
+#: .\tgbot\views.py:214
+#, fuzzy
+#| msgid "Testni yakunlashda xatolik yuz berdi."
+msgid "Excel faylini yaratishda xatolik yuz berdi."
+msgstr "Testti juwmaqlawda qátelik júz berdi."
+
+#: .\tgbot\views.py:251
+#, fuzzy
+#| msgid "Testni yakunlashda xatolik yuz berdi."
+msgid "Telegram IDlarni olishda xatolik yuz berdi."
+msgstr "Testti juwmaqlawda qátelik júz berdi."
+
+#~ msgid "F.A.Á."
+#~ msgstr "A.Á.A."

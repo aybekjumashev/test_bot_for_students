@@ -10,6 +10,7 @@ from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKe
 from aiogram.utils.keyboard import InlineKeyboardBuilder # Yangi InlineKeyboardBuilder
 from dotenv import load_dotenv
 from io import BytesIO
+from aiogram.enums import ChatMemberStatus
 
 load_dotenv(override=True) # .env faylidagi o'zgaruvchilarni yuklash
 
@@ -66,6 +67,7 @@ async def check_all_channel_memberships(user_id: int) -> bool:
 
     all_subscribed = True
     for channel_id_or_username in channel_ids_list:
+        print(channel_id_or_username)
         try:
             # Agar bot_instance shu funksiya ichida global bo'lmasa, uni parametr orqali olish kerak.
             # Men bot_instance ni parametr sifatida qo'shdim.
@@ -75,9 +77,9 @@ async def check_all_channel_memberships(user_id: int) -> bool:
             # 'left' (chiqib ketgan) yoki 'kicked' (chetlatilgan) bo'lmasligi kerak.
             # 'restricted' statusi ham a'zo emas deb hisoblanishi mumkin (agar shunday xohlasangiz).
             if member.status not in [
-                types.ChatMemberStatus.MEMBER,
-                types.ChatMemberStatus.ADMINISTRATOR,
-                types.ChatMemberStatus.CREATOR,
+                ChatMemberStatus.MEMBER,
+                ChatMemberStatus.ADMINISTRATOR,
+                ChatMemberStatus.CREATOR,
                 # types.ChatMemberStatus.RESTRICTED # Agar restricted ham a'zo hisoblansa, qo'shing
             ]:
                 all_subscribed = False

@@ -48,6 +48,7 @@
         </button>
         <button id="submit-test-btn" class="btn btn-success" style="display: none;">
             <i class="bi bi-check2-circle"></i> {% translate "Testni Yakunlash" %}
+            <span id="submit-loader" class="spinner-border spinner-border-sm ms-2" role="status" aria-hidden="true" style="display: none;"></span>
         </button>
     </div>
 
@@ -191,6 +192,8 @@
     }
 
     function submitTest() {
+        document.getElementById("submit-loader").style.display = "inline-block";
+        submitBtn.disabled = true; // Takroriy yuborishni oldini olish
         clearInterval(timerInterval); // Taymerni to'xtatish
 
         const timeSpentSeconds = Math.floor((Date.now() - testStartTime) / 1000);
