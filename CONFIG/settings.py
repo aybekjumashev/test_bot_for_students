@@ -30,7 +30,7 @@ TELEGRAM_BOT_TOKEN = os.getenv('BOT_TOKEN')
 DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 't')
 
 ALLOWED_HOSTS = ['*']
-
+CSRF_TRUSTED_ORIGINS = ['*']
 
 # Application definition
 
