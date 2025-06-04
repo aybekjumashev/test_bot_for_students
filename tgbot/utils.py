@@ -122,7 +122,7 @@ async def send_test_result_to_user(
             # Hozircha bu qismni qo'shmaymiz, rasm bilan yuborishga e'tibor qaratamiz
     else:        
         message_to_user = f"<b>{' '.join(user_fullname)}, {_('sizning test natijangiz')}: {score[0]}/{total_questions}</b>\n"    
-        message_to_user += f"<b>{_('Foiz ko\'rsatkichi')}: {score[1]}%</b>\n\n"    
+        message_to_user += f"<b>{_("Foiz ko'rsatkichi")}: {score[1]}%</b>\n\n"    
         message_to_user += f"❗️ {_('Natija 80 foizdan kam bo\'lsa sertifikat berilmaydi! Sizda testni qayta yechib ko\'rish imkoniyati bor.')}\n\n"
         message_to_user += f"📞 {_('Toʻliq maʻlumot uchun telefon')}: +998997794345\n"
         user_message_sent = await send_telegram_text_message(
