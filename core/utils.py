@@ -57,8 +57,8 @@ def get_photo(fullname, date_str, voucher_template_filename, num_code, score):
         if not font_fullname_path: font_fullname_path = font_arial_path # Fallback
 
         try:
-            font_date_num = ImageFont.truetype(font_arial_path, 36)
-            font_fullname_obj = ImageFont.truetype(font_arial_path, 24)
+            font_date_num = ImageFont.truetype(font_arial_path, 36*2)
+            font_fullname_obj = ImageFont.truetype(font_arial_path, 24*2)
         except IOError as e:
             print(f"Warning: Fonts not found ({e}), using default.")
             font_date_num = ImageFont.load_default()
