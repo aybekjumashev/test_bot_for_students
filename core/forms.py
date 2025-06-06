@@ -42,6 +42,14 @@ class UserRegistrationInfoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        # Name va surname ni required qilish
+        self.fields['name'].required = True
+        self.fields['surname'].required = True
+        
+        # Ularning widget attributes iga required qo'shish
+        self.fields['name'].widget.attrs.update({'required': 'required'})
+        self.fields['surname'].widget.attrs.update({'required': 'required'})
+
         # Dastlabki sozlamalar
         self.fields['education_type'].queryset = EducationType.objects.all()
         self.fields['education_type'].empty_label = _("Tanlang...")
