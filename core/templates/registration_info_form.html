@@ -71,7 +71,7 @@
     <div class="container pb-3">
         <h4 class="mb-3 mt-2 text-center">{% translate "Qo'shimcha ma'lumotlarni kiriting" %}</h4>
 
-        <form method="post" id="registrationForm" novalidate> {# novalidate HTML5 validatsiyasini o'chiradi, JS ga topshiramiz #}
+        <form method="post" id="registrationForm"> {# novalidate HTML5 validatsiyasini o'chiradi, JS ga topshiramiz #}
             {% csrf_token %}
             {{ form.telegram_id_hidden }}
 

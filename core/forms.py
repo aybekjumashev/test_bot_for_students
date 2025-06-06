@@ -16,7 +16,7 @@ class UserRegistrationInfoForm(forms.ModelForm):
         ]
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _("Ismingiz")}),
-            'surname': forms.TextInput(attrs={'class': 'form-control required', 'placeholder': _("Familiyangiz")}),
+            'surname': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _("Familiyangiz")}),
             'patronymic': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _("Otangizning ismi")}),
             'education_type': forms.Select(attrs={'class': 'form-select'}),
             'institution': forms.Select(attrs={'class': 'form-select'}), # Dastlab bo'sh bo'ladi
