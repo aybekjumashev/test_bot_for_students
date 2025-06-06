@@ -46,11 +46,15 @@ class UserRegistrationInfoForm(forms.ModelForm):
         self.fields['name'].required = True
         self.fields['surname'].required = True
         self.fields['course_year'].required = True
+        self.fields['education_type'].required = True
+        self.fields['institution'].required = True
         
         # Ularning widget attributes iga required qo'shish
         self.fields['name'].widget.attrs.update({'required': 'required'})
         self.fields['surname'].widget.attrs.update({'required': 'required'})
         self.fields['course_year'].widget.attrs.update({'required': 'required'})
+        self.fields['education_type'].widget.attrs.update({'required': 'required'})
+        self.fields['institution'].widget.attrs.update({'required': 'required'})
 
         # Dastlabki sozlamalar
         self.fields['education_type'].queryset = EducationType.objects.all()
