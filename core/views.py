@@ -198,7 +198,7 @@ class PrepareTestView(View): # Nomini o'zgartirdim, bu sahifa testga tayyorgarli
         ).prefetch_related('questions')
 
         total_questions_for_test = 0
-        questions_per_subject = 5 # Har bir fandan olinadigan savollar soni
+        questions_per_subject = 3
         possible_subjects_for_test = []
 
         for subject in active_subjects:
@@ -253,7 +253,7 @@ class StartMixedTestView(View):
         ).prefetch_related('questions')
 
         all_selected_questions = []
-        questions_per_subject = 5 # Har bir fandan olinadigan savollar soni
+        questions_per_subject = 3
 
         for subject in active_subjects:
             # Joriy til uchun fayli bor aktiv savollarni olish
@@ -348,7 +348,7 @@ class TestInProgressView(View):
             'question_number': question_index + 1,
             'total_questions': len(all_questions_in_test),
             'previous_answer': previous_answer, # Oldingi javobni shablonga yuborish
-            'time_limit_minutes': 30, # Masalan, 30 daqiqa (buni sozlamalardan olish mumkin)
+            'time_limit_minutes': len(all_questions_in_test),
         }
         return render(request, self.template_name, context)
 
