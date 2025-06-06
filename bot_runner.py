@@ -25,6 +25,7 @@ WEBAPP_BASE_URL = os.getenv("WEBAPP_BASE_URL", "http://127.0.0.1:8000")
 CHANNELS_URL = os.getenv("CHANNELS_URL", "https://t.me/addlist/K4iMXLXFYLQzYzEy") 
 TARGET_CHANNEL_ID = -1002514048287
 CHANNELS_ENV = os.getenv("REQUIRED_CHANNELS", "")
+TELEGRAM_ADMIN_IDS = [393247779, 681961023]  # O'zingizning admin IDlaringizni qo'shing (agar .env dan olmasangiz)
 
 
 REQUIRED_CHANNELS_LIST = []
@@ -97,8 +98,8 @@ async def check_all_channel_memberships(user_id: int) -> bool:
             logger.warning(f"Kanalga ({channel_id_or_username}) a'zolikni tekshirishda xatolik (user: {user_id}): {e}")
             # Xatolik yuzaga kelganda, foydalanuvchi a'zo emas deb hisoblaymiz,
             # chunki a'zolikni tasdiqlay olmadik.
-            all_subscribed = True
-            break # Xatolik bo'lsa, davom etmaymiz
+            # all_subscribed = True
+            # break # Xatolik bo'lsa, davom etmaymiz
 
     return all_subscribed
 
@@ -215,9 +216,8 @@ async def send_welcome(message: Message):
 
 @dp.message(Command("export_data"))
 async def export_all_data_command(message: types.Message):
-    # if message.from_user.id not in TELEGRAM_ADMIN_IDS: # Agar IsAdmin filtrini ishlatmasangiz
-    #     await message.reply("Sizda bu buyruqni bajarish uchun ruxsat yo'q.")
-    #     return
+    if message.from_user.id not in TELEGRAM_ADMIN_IDS: # Agar IsAdmin filtrini ishlatmasangiz
+        return
 
     load_msg = await message.reply("Maǵlıwmatlar Excel faylına tayarlanbaqta...")
 
